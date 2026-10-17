@@ -1,0 +1,68 @@
+name: Deploy to Cloudflare Workers
+
+# Push to this fork's main branch -> build the Docusaurus website and publish it
+# to the "docusaurus-docs" Worker (static assets + JSON API on /api/*).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Serialise deploys; a newer push cancels an in-flight build.
+concurrency:
+  group: cloudflare-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      # Same setting the Netlify production build uses.
+      NODE_OPTIONS: --max_old_space_size=8192
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 12.3.4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        # postinstall also runs "pnpm build:packages" (lerna), which the website
+        # build depends on.
+        run: pnpm install --frozen-lockfile
+
+      - name: Build website
+        run: pnpm build:website
+
+      - name: Prepare assets for Cloudflare
+        # Drops the domain-level _redirects rules Cloudflare does not support,
+        # and fails early if the build exceeds Cloudflare's limits.
+        run: node cloudflare/prepare-assets.mjs
+
+      - name: Apply D1 schema
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.151.1'
+          command: d1 execute docusaurus-db --remote --yes --file=cloudflare/schema.sql
+
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.151.1'
+          command: deploy

@@ -1,0 +1,49 @@
+{
+  // Cloudflare Workers configuration for this Docusaurus site.
+  // - "./website/build" is produced by `pnpm build:website`
+  // - the Worker script only handles /api/*, everything else is static assets
+  "name": "docusaurus-docs",
+  "compatibility_date": "2026-10-18",
+
+  "main": "cloudflare/worker.mjs",
+
+  "assets": {
+    "directory": "./website/build",
+    "binding": "ASSETS",
+    // Docusaurus generates 404.html; hand it to Cloudflare so unmatched
+    // navigations render the real 404 page instead of a bare "404 Not Found"
+    "not_found_handling": "404-page",
+    // The production build uses trailingSlash: false, so pages are emitted as
+    // "/docs/x.html"; the default handling maps "/docs/x" onto them.
+    "html_handling": "auto-trailing-slash",
+    // Keep static asset serving exactly as it would be for an assets-only
+    // Worker; only the JSON API is routed through the Worker script.
+    "run_worker_first": ["/api/*"],
+  },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "docusaurus-db",
+      "database_id": "99b520a4-15ce-4b12-928c-c8f5e106d7f3",
+    },
+  ],
+
+  "kv_namespaces": [
+    {
+      "binding": "KV",
+      "id": "dadc585946f949f6a09d0478f4d49702",
+    },
+  ],
+
+  "r2_buckets": [
+    {
+      "binding": "BUCKET",
+      "bucket_name": "docusaurus-assets",
+    },
+  ],
+
+  "observability": {
+    "enabled": true,
+  },
+}
