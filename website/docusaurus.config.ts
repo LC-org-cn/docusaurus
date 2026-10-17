@@ -137,6 +137,13 @@ const baseUrl = process.env.BASE_URL ?? '/';
 // https://docusaurus-i18n-staging.netlify.app/
 const isI18nStaging = process.env.I18N_STAGING === 'true';
 
+// Cloudflare Workers' free plan caps a Worker version at 20,000 static asset
+// files, which a full 5-locale build of this site exceeds. Set
+// DOCUSAURUS_LOCALES to a comma-separated subset, e.g. "en,zh-CN".
+const localesOverride = process.env.DOCUSAURUS_LOCALES
+  ? process.env.DOCUSAURUS_LOCALES.split(',')
+  : undefined;
+
 const isVersioningDisabled = !!process.env.DISABLE_VERSIONING || isI18nStaging;
 
 const isRsdoctor = process.env.RSDOCTOR === 'true';
@@ -206,14 +213,15 @@ export default async function createConfigAsync() {
       },
 
       locales:
-        isDeployPreview || isBranchDeploy
+        localesOverride ??
+        (isDeployPreview || isBranchDeploy
           ? // Deploy preview and branch deploys: keep them fast!
             [defaultLocale]
           : isI18nStaging
             ? // Staging locales: https://docusaurus-i18n-staging.netlify.app/
               [defaultLocale, 'ja']
             : // Production locales
-              [defaultLocale, 'fr', 'pt-BR', 'ko', 'zh-CN'],
+              [defaultLocale, 'fr', 'pt-BR', 'ko', 'zh-CN']),
     },
     markdown: {
       format: 'detect',

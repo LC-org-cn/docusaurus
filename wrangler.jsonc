@@ -3,7 +3,7 @@
   // - "./website/build" is produced by `pnpm build:website`
   // - the Worker script only handles /api/*, everything else is static assets
   "name": "docusaurus-docs",
-  "compatibility_date": "2026-10-18",
+  "compatibility_date": "2026-10-17",
 
   "main": "cloudflare/worker.mjs",
 

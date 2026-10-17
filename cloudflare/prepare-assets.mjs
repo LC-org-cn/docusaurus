@@ -11,26 +11,42 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 const LIMITS = {
-  /** Cloudflare Workers static assets: 20,000 files (free) / 100,000 (paid). */
-  files: 100_000,
+  /**
+   * Cloudflare Workers static assets: 20,000 files on the Free plan, 100,000
+   * on Workers Paid. Override with CF_ASSET_FILE_LIMIT after upgrading.
+   */
+  files: Number(process.env.CF_ASSET_FILE_LIMIT ?? 20_000),
   /** Cloudflare Workers static assets: 25 MiB per file. */
   fileSizeBytes: 25 * 1024 * 1024,
   /** Cloudflare `_redirects`: 2,100 rules (2,000 static + 100 dynamic). */
   redirectRules: 2_100,
 };
 
+/** The only status codes Cloudflare Workers `_redirects` accepts. */
+const SUPPORTED_REDIRECT_STATUS_CODES = new Set([200, 301, 302, 303, 307, 308]);
+
 async function main() {
   const buildDir = path.resolve(process.cwd(), 'website/build');
   await exitIfMissing(buildDir, 'build directory');
 
-  const files = await listFiles(buildDir);
-  const stats = await collectBuildStats(files);
-  const redirectRules = await sanitizeRedirects(
-    path.join(buildDir, '_redirects'),
-  );
-  const report = {...stats, redirectRules};
+  const redirects = await sanitizeRedirects(path.join(buildDir, '_redirects'));
 
-  reportBuild(buildDir, report);
+  if (redirects.droppedCount > 0) {
+    console.log(
+      `[prepare-assets] _redirects: dropped ${redirects.droppedCount} rule(s) Cloudflare cannot read`,
+    );
+    for (const [reason, count] of Object.entries(redirects.droppedByReason)) {
+      console.log(`  - ${reason}: ${count}`);
+    }
+  } else {
+    console.log('[prepare-assets] _redirects: nothing to rewrite');
+  }
+
+  const report = {
+    ...(await collectBuildStats(await listFiles(buildDir))),
+    redirectRules: redirects.ruleCount,
+  };
+  reportBuild(report);
   exitOnExceededLimits(report);
 }
 
@@ -75,40 +91,92 @@ async function collectBuildStats(files) {
 }
 
 /**
- * Cloudflare's `_redirects` only accepts path-based sources, but
- * website/static/_redirects contains Netlify rules such as
- * "https://v2.docusaurus.io/* https://docusaurus.io/:splat 301!". Those rules
- * target docusaurus.io and are meaningless on a *.workers.dev deployment, so
- * they are dropped here.
+ * Rewrite website/static/_redirects into the subset of rules Cloudflare
+ * Workers understands:
  *
- * @returns {Promise<number>} the number of rules left in the file.
+ *   - domain-level sources ("https://v2.docusaurus.io/*") are Netlify-only and
+ *     target docusaurus.io, so they are dropped;
+ *   - the Netlify "forced redirect" marker ("301!") is not part of the
+ *     Cloudflare grammar, so it is stripped (Cloudflare always prefers the
+ *     redirect over a matching asset anyway);
+ *   - status codes outside Cloudflare's set (Netlify's custom "404" rules) are
+ *     dropped; not_found_handling: "404-page" already serves the nearest
+ *     404.html, which is what those rules were emulating.
+ *
+ * @returns {Promise<{ruleCount: number, droppedCount: number, droppedByReason: object}>}
  */
 async function sanitizeRedirects(redirectsPath) {
   const lines = await readLines(redirectsPath);
   if (lines === null) {
-    return 0;
+    return {ruleCount: 0, droppedCount: 0, droppedByReason: {}};
   }
 
-  const kept = lines.filter((line) => !isDomainLevelRule(line));
-  const droppedCount = lines.length - kept.length;
+  const droppedByReason = {};
+  const keptLines = [];
 
-  if (droppedCount === 0) {
-    console.log('[prepare-assets] _redirects: no domain-level rules to drop');
-  } else {
-    const banner = [
-      '# Domain-level rules from website/static/_redirects were removed by',
-      '# cloudflare/prepare-assets.mjs: Cloudflare Workers _redirects only',
-      '# supports path-based sources, and these rules target docusaurus.io.',
-      '',
-    ];
-    const content = [...banner, ...kept].join('\n').trimEnd();
-    await fs.writeFile(redirectsPath, `${content}\n`);
-    console.log(
-      `[prepare-assets] _redirects: dropped ${droppedCount} domain-level line(s)`,
-    );
+  for (const line of lines) {
+    if (!isRule(line)) {
+      keptLines.push(line);
+      continue;
+    }
+
+    const dropReason = findDropReason(parseRule(line));
+    if (dropReason) {
+      droppedByReason[dropReason] = (droppedByReason[dropReason] ?? 0) + 1;
+      continue;
+    }
+
+    keptLines.push(formatRule(parseRule(line)));
   }
 
-  return kept.filter(isRule).length;
+  const droppedCount = Object.values(droppedByReason).reduce(
+    (total, count) => total + count,
+    0,
+  );
+  if (droppedCount > 0) {
+    await fs.writeFile(redirectsPath, buildRedirectsFile(keptLines));
+  }
+
+  return {
+    ruleCount: keptLines.filter(isRule).length,
+    droppedCount,
+    droppedByReason,
+  };
+}
+
+function parseRule(line) {
+  const [source, destination, status] = line.trim().split(/\s+/);
+  return {
+    source,
+    destination,
+    // Netlify marks forced redirects with a trailing "!", Cloudflare does not.
+    status: status?.replace(/!$/, ''),
+  };
+}
+
+/** @returns {string | null} the reason to drop the rule, or null to keep it. */
+function findDropReason({source, status}) {
+  if (/^https?:\/\//i.test(source)) {
+    return 'domain-level source (Netlify-only)';
+  }
+  if (status && !SUPPORTED_REDIRECT_STATUS_CODES.has(Number(status))) {
+    return `unsupported status code "${status}"`;
+  }
+  return null;
+}
+
+function formatRule({source, destination, status}) {
+  return [source, destination, status].filter(Boolean).join(' ');
+}
+
+function buildRedirectsFile(keptLines) {
+  const banner = [
+    '# This file was rewritten by cloudflare/prepare-assets.mjs.',
+    '# Rules Cloudflare Workers _redirects cannot express were removed:',
+    '# domain-level sources, Netlify "301!" markers and custom 404 statuses.',
+    '',
+  ];
+  return `${[...banner, ...keptLines].join('\n').trimEnd()}\n`;
 }
 
 /** @returns {Promise<string[] | null>} null when the file does not exist. */
@@ -120,34 +188,18 @@ async function readLines(filePath) {
   }
 }
 
-function isDomainLevelRule(line) {
-  if (!isRule(line)) {
-    return false;
-  }
-  return /^https?:\/\//i.test(line.trim().split(/\s+/)[0]);
-}
-
 function isRule(line) {
   const trimmed = line.trim();
   return trimmed.length > 0 && !trimmed.startsWith('#');
 }
 
-function reportBuild(
-  buildDir,
-  {fileCount, totalBytes, largestFile, redirectRules},
-) {
-  const relativeLargest = path
-    .relative(buildDir, largestFile.path)
-    .replaceAll(path.sep, '/');
-
+function reportBuild({fileCount, totalBytes, largestFile, redirectRules}) {
   console.log('[prepare-assets] build output');
   console.log(
     `  files:          ${formatCount(fileCount)} / ${formatCount(LIMITS.files)}`,
   );
   console.log(`  total size:     ${formatBytes(totalBytes)}`);
-  console.log(
-    `  largest file:   ${formatBytes(largestFile.size)} (${relativeLargest})`,
-  );
+  console.log(`  largest file:   ${formatBytes(largestFile.size)}`);
   console.log(
     `  redirect rules: ${formatCount(redirectRules)} / ${formatCount(LIMITS.redirectRules)}`,
   );

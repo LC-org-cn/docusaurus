@@ -23,6 +23,11 @@ jobs:
     env:
       # Same setting the Netlify production build uses.
       NODE_OPTIONS: --max_old_space_size=8192
+      # Cloudflare Workers Free allows 20,000 static files per Worker version,
+      # and a full 5-locale build of this site is ~27,500 files. Build a subset
+      # instead: add more locales here (e.g. "en,fr,zh-CN" fits in three), or
+      # build all five ("en,fr,pt-BR,ko,zh-CN") after upgrading to Workers Paid.
+      DOCUSAURUS_LOCALES: en,zh-CN
     steps:
       - name: Checkout
         uses: actions/checkout@v7
