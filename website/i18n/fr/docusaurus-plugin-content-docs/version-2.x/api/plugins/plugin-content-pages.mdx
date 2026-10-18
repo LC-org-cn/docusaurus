@@ -1,0 +1,101 @@
+---
+sidebar_position: 3
+slug: /api/plugins/@docusaurus/plugin-content-pages
+---
+
+# 📦 plugin-content-pages
+
+import APITable from '@site/src/components/APITable';
+
+Le plugin de pages par défaut pour Docusaurus. Le template classic est livré avec ce plugin avec les configurations par défaut. Ce plugin fournit des fonctionnalités de [création de pages](guides/creating-pages.mdx).
+
+## Installation {/* #installation */}
+
+```bash npm2yarn
+npm install --save @docusaurus/plugin-content-pages
+```
+
+:::tip
+
+Si vous utilisez le preset `@docusaurus/preset-classic`, vous n'avez pas besoin d'installer ce plugin en tant que dépendance.
+
+Vous pouvez configurer ce plugin via les [options du preset](../../using-plugins.mdx#docusauruspreset-classic).
+
+:::
+
+## Configuration {/* #configuration */}
+
+Champs acceptés :
+
+```mdx-code-block
+<APITable>
+```
+
+| Nom | Type | Par défaut | Description |
+| --- | --- | --- | --- |
+| `path` | `string` | `'src/pages'` | Chemin vers les données sur le système de fichiers par rapport au répertoire du site. Les composants de ce répertoire seront automatiquement convertis en pages. |
+| `routeBasePath` | `string` | `'/'` | Route URL pour la section des pages de votre site. **NE PAS** inclure un slash de fin. |
+| `include` | `string[]` | `['**/*.{js,jsx,ts,tsx,md,mdx}']` | Les fichiers correspondants seront inclus et traités. |
+| `exclude` | `string[]` | _Voir l'exemple de configuration_ | Aucune route ne sera créée pour les fichiers correspondants. |
+| `mdxPageComponent` | `string` | `'@theme/MDXPage'` | Composant utilisé par chaque page MDX. |
+| `remarkPlugins` | `[]` | `any[]` | Plugins Remark passés à MDX. |
+| `rehypePlugins` | `[]` | `any[]` | Plugins Rehype passés à MDX. |
+| `beforeDefaultRemarkPlugins` | `any[]` | `[]` | Les plugins Remark personnalisés sont transmis à MDX avant les plugins Remark par défaut de Docusaurus. |
+| `beforeDefaultRehypePlugins` | `any[]` | `[]` | Les plugins Rehype personnalisés sont transmis à MDX avant les plugins Rehype par défaut de Docusaurus. |
+
+```mdx-code-block
+</APITable>
+```
+
+### Exemple de configuration {/* #ex-config */}
+
+Vous pouvez configurer ce plugin via les options du preset ou du plugin.
+
+:::tip
+
+La plupart des utilisateurs de Docusaurus configurent ce plugin via les options du preset.
+
+:::
+
+```js config-tabs
+// Options du preset : pages
+// Options du plugin : @docusaurus/plugin-content-pages
+
+const config = {
+  path: 'src/pages',
+  routeBasePath: '',
+  include: ['**/*.{js,jsx,ts,tsx,md,mdx}'],
+  exclude: [
+    '**/_*.{js,jsx,ts,tsx,md,mdx}',
+    '**/_*/**',
+    '**/*.test.{js,jsx,ts,tsx}',
+    '**/__tests__/**',
+  ],
+  mdxPageComponent: '@theme/MDXPage',
+  remarkPlugins: [require('remark-math')],
+  rehypePlugins: [],
+  beforeDefaultRemarkPlugins: [],
+  beforeDefaultRehypePlugins: [],
+};
+```
+
+## i18n {/* #i18n */}
+
+Lisez d'abord [l'introduction i18n](../../i18n/i18n-introduction.mdx) .
+
+### Emplacement des fichiers de traduction {/* #translation-files-location */}
+
+- **Chemin de base** : `website/i18n/[locale]/docusaurus-plugin-content-pages`
+- **Chemin d'accès multi-instance** : `website/i18n/[locale]/docusaurus-plugin-content-pages-[pluginId]`
+- **Fichiers JSON** : extrait avec [`docusaurus write-translations`](../../cli.mdx#docusaurus-write-translations-sitedir)
+- **Fichiers Markdown** : `website/i18n/[locale]/docusaurus-plugin-content-pages`
+
+### Exemple de structure du système de fichiers {/* #example-file-system-structure */}
+
+```bash
+website/i18n/[locale]/docusaurus-plugin-content-pages
+│
+│ # traductions pour website/src/pages
+├── first-markdown-page.md
+└── second-markdown-page.md
+```

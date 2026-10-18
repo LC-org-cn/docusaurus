@@ -1,0 +1,127 @@
+---
+sidebar_position: 4
+slug: /api/plugins/@docusaurus/plugin-client-redirects
+---
+
+# 📦 plugin-client-redirects
+
+import APITable from '@site/src/components/APITable';
+
+Docusaurus Plugin to generate **client-side redirects**.
+
+플러그인에서는 자바스크립트로 만든 도큐사우루스 페이지로 리다이렉트할 수 있도록 여러분의 정적인 사이트에 HTML 페이지를 추가로 만듭니다.
+
+:::warning production only
+
+This plugin is always inactive in development and **only active in production** because it works on the build output.
+
+:::
+
+:::warning
+
+가능하다면 서버 측 리다이렉트를 사용하는 것을 권장합니다.
+
+플러그인을 사용하기 전에 여러분의 호스트 서비스 업체게 이 기능을 지원하지 않는지 먼저 확인해보세요.
+
+:::
+
+## 설치 {/* #installation */}
+
+```bash npm2yarn
+npm install --save @docusaurus/plugin-client-redirects
+```
+
+## 설정 {/* #configuration */}
+
+설정할 수 있는 필드
+
+```mdx-code-block
+<APITable>
+```
+
+| 옵션 | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `fromExtensions` | `string[]` | `[]` | 리다이렉트 후 경로에서 제거할 확장자입니다. |
+| `toExtensions` | `string[]` | `[]` | 리다이렉트 후 경로에 추가할 확장자입니다. |
+| `redirects` | <code>[RedirectRule](#RedirectRule)[]</code> | `[]` | 리다이렉트 규칙 목록입니다. |
+| `createRedirects` | <code>[CreateRedirectsFn](#CreateRedirectsFn)</code> | `undefined` | 리다이렉트 규칙을 만들기 위한 콜백입니다. 도큐사우루스는 생성한 모든 경로에 대해 콜백을 요청하고 반환값을 사용해 더 많은 경로를 출력합니다. |
+
+```mdx-code-block
+</APITable>
+```
+
+:::note
+
+This plugin will also read the [`siteConfig.onDuplicateRoutes`](../docusaurus.config.js.mdx#onDuplicateRoutes) config to adjust its logging level when multiple files will be emitted to the same location.
+
+:::
+
+### 타입 {/* #types */}
+
+#### `RedirectRule` {/* #RedirectRule */}
+
+```ts
+type RedirectRule = {
+  to: string;
+  from: string | string[];
+};
+```
+
+:::note
+
+"from"과 "to"의 개념은 이 플러그인의 핵심입니다. "From" means a path that you want to _create_, i.e. an extra HTML file that will be written; "to" means a path to want to redirect _to_, usually a route that Docusaurus already knows about.
+
+이 때문에 같은 "to"에 대해 여러 개의 "from"을 가질 수 있습니다. 모두 같은 목적지로 리다이렉트되는 여러 개의 HTML 파일을 생성합니다. 반면에 "from"은 하나보다 많은 "to"를 가질 수 없습니다. 작성된 HTML 파일은 명확한 목적지가 있어야 합니다.
+
+:::
+
+#### `CreateRedirectsFn` {/* #CreateRedirectsFn */}
+
+```ts
+// The parameter `path` is a route that Docusaurus has already created. It can
+// be seen as the "to", and your return value is the "from". Returning a falsy
+// value will not create any redirect pages for this particular path.
+type CreateRedirectsFn = (path: string) => string[] | string | null | undefined;
+```
+
+### 설정 예시 {/* #ex-config */}
+
+다음은 설정 예시입니다:
+
+```js title="docusaurus.config.js"
+export default {
+  plugins: [
+    [
+      '@docusaurus/plugin-client-redirects',
+      // highlight-start
+      {
+        fromExtensions: ['html', 'htm'], // /myPage.html -> /myPage
+        toExtensions: ['exe', 'zip'], // /myAsset -> /myAsset.zip (if latter exists)
+        redirects: [
+          // /docs/oldDoc -> /docs/newDoc
+          {
+            to: '/docs/newDoc',
+            from: '/docs/oldDoc',
+          },
+          // Redirect from multiple old paths to the new path
+          {
+            to: '/docs/newDoc2',
+            from: ['/docs/oldDocFrom2019', '/docs/legacyDocFrom2016'],
+          },
+        ],
+        createRedirects(existingPath) {
+          if (existingPath.includes('/community')) {
+            // Redirect from /docs/team/X to /community/X and /docs/support/X to /community/X
+            return [
+              existingPath.replace('/community', '/docs/team'),
+              existingPath.replace('/community', '/docs/support'),
+            ];
+          }
+          return undefined; // Return a falsy value: no redirect created
+        },
+      },
+      // highlight-end
+    ],
+  ],
+};
+```

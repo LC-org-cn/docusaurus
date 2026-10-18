@@ -1,0 +1,58 @@
+---
+sidebar_position: 0
+slug: /api/misc/create-docusaurus
+---
+
+# 📦 create-docusaurus
+
+一个帮助你即刻搭建 Docusaurus 网站的工具。
+
+## 用法 {/* #usage */}
+
+```bash npm2yarn
+npx create-docusaurus@latest [名称] [模板] [根目录]
+```
+
+The `name` argument will be used as the site's path as well as the `name` field in the created app's package.json. It can be an absolute path, or a path relative to `rootDir`.
+
+The `template` argument can be one of the following:
+
+- `classic`：使用 classic 模板（推荐）
+- `facebook`：使用 Facebook/Meta 模板，包含了一些 Meta 专有的设置。
+- A git repo URL (beginning with `https://` or `git@`), which can be cloned to the destination
+- 一个相对于 CWD 的本地文件路径，该文件夹会被复制到目标路径
+
+The `rootDir` will be used to resolve the absolute path to the site directory. 默认为 CWD。
+
+:::warning
+
+此命令最好在交互式 shell 中使用，确保所有功能都可以使用。
+
+:::
+
+## 选项 {/* #options */}
+
+### `-t, --typescript` {/* #typescript */}
+
+当模板参数是可识别的名称（classic, facebook 等）时使用。 Currently, only `classic` provides a TypeScript variant.
+
+### `-g, --git-strategy` {/* #git-strategy */}
+
+当模板参数是 git 仓库时使用。 它必须是下列之一：
+
+- `deep`: preserves full git history
+- `shallow`: clones with `--depth=1`
+- `copy`: does a shallow clone, but does not create a git repo
+- `custom`: enter your custom git clone command. 我们会在命令行问询具体内容。 You can write something like `git clone --depth 10`, and we will append the repository URL and destination directory.
+
+### `-p, --package-manager` {/* #package-manager */}
+
+Value should be one of `npm`, `yarn`, `pnpm`, or `bun`. 如果没有明确提供，Docusaurus 会基于以下条件推断一个：
+
+- CWD 中已存在的 lock 文件（比如，如果你正在一个已有的项目中创建网站）
+- The command used to invoke `create-docusaurus` (e.g. `npm init`, `npx`, `yarn create`, `bunx`, etc.)
+- 如果所有线索都不存在，可以通过交互式输入提供
+
+### `-s, --skip-install` {/* #skip-install */}
+
+如果提供了这一选项，Docusaurus 将不会在创建项目后自动安装依赖项。 The `--package-manager` option is only useful when you are actually installing dependencies.

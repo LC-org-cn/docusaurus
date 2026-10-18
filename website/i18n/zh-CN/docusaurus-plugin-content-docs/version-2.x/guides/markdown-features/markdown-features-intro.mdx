@@ -1,0 +1,141 @@
+---
+id: introduction
+description: Docusaurus 使用的是 MDX。 了解更多 Docusaurus 独有的 Markdown 功能。
+slug: /markdown-features
+---
+
+# Markdown 特性
+
+import BrowserWindow from '@site/src/components/BrowserWindow';
+
+文档是你的产品向用户展示的门面之一。 文从字顺、层次清晰的文章有助于用户快速了解您的产品。 我们的一致目标是帮助用户尽快找到所需要的信息。
+
+Docusaurus 2 使用现代化工具来帮助你轻松撰写交互式文档。 你可以嵌入 React 组件，亦或是搭建用户可交互的实时代码编辑块。 就用代码呈现你的灵光一现，捕获你的受众的心吧！ 这可能是吸引潜在用户的最有效的方式。
+
+:::info
+
+本章节假定你使用 Docusaurus 官方的内容插件。
+
+:::
+
+## 标准功能 {/* #standard-features */}
+
+Markdown 是一种能让你撰写易读的格式化内容的语法。
+
+We use [MDX](https://mdxjs.com/) as the parsing engine, which can do much more than just parsing [standard Markdown syntax](https://daringfireball.net/projects/markdown/syntax), like rendering React components inside your documents as well.
+
+```md
+### 我的文档章节
+
+一些文本，包括**粗体**、_斜体_，和[链接](/)
+
+![图片 alt 文本](/img/docusaurus.png)
+```
+
+```mdx-code-block
+<BrowserWindow>
+
+<h3>My Doc Section</h3>
+
+Hello world message with some **bold** text, some _italic_ text and a [link](/)
+
+![img alt](/img/docusaurus.png)
+
+</BrowserWindow>
+```
+
+<details>
+
+<summary>Markdown is declarative</summary>
+
+Some may assume a 1-1 correlation between Markdown and HTML, e.g., `![Preview](/img/docusaurus.png)` will always become `<img src="/img/docusaurus.png" alt="Preview" />`, as-is. However, _that is not the case_.
+
+The Markdown syntax `![message](url)` only declaratively tells Docusaurus that an image needs to be inserted here, but we may do other things like transforming a [file path to URL path](./markdown-features-assets.mdx#images), so the generated markup may differ from the output of other Markdown renderers, or a naïve hand-transcription to the equivalent JSX/HTML code.
+
+In general, you should only assume the _semantics_ of the markup (` ``` ` fences become [code blocks](./markdown-features-code-blocks.mdx); `>` becomes [quotes](#quotes), etc.), but not the actual compiled output.
+
+</details>
+
+## 前言 {/* #front-matter */}
+
+你可以用前言 (front matter) 来给你的 Markdown 文件添加元数据。 All content plugins have their own front matter schema, and use the front matter to enrich the default metadata inferred from the content or other configuration.
+
+Front matter is provided at the very top of the file, enclosed by three dashes `---`. The content is parsed as [YAML](https://yaml.org/spec/1.2.2/).
+
+```md
+---
+title: 我的文档标题
+其他内容:
+  - 可以以
+  - 对象: 或者
+    数组: 的形式给出
+---
+```
+
+## 引文 {/* #quotes */}
+
+Markdown 引文有着漂亮的样式：
+
+```md
+> Easy to maintain open source documentation websites.
+>
+> — Docusaurus
+```
+
+<BrowserWindow>
+
+> Easy to maintain open source documentation websites.
+>
+> — Docusaurus
+
+</BrowserWindow>
+
+## 细节 {/* #details */}
+
+Markdown can embed HTML elements, and [`details`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) HTML elements are beautifully styled:
+
+```md
+### Details element example
+
+<details>
+  <summary>Toggle me!</summary>
+  <div>
+    <div>This is the detailed content</div>
+    <br/>
+    <details>
+      <summary>
+        Nested toggle! Some surprise inside...
+      </summary>
+      <div>😲😲😲😲😲</div>
+    </details>
+  </div>
+</details>
+```
+
+```mdx-code-block
+<BrowserWindow>
+
+<h3>Details element example</h3>
+
+<details>
+  <summary>Toggle me!</summary>
+  <div>
+    <div>This is the detailed content</div>
+    <br/>
+    <details>
+      <summary>
+        Nested toggle! Some surprise inside...
+      </summary>
+      <div>😲😲😲😲😲</div>
+    </details>
+  </div>
+</details>
+
+</BrowserWindow>
+```
+
+:::note
+
+In practice, those are not really HTML elements, but React JSX elements, which we'll cover next!
+
+:::

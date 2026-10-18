@@ -1,0 +1,116 @@
+---
+id: introduction
+sidebar_label: Docusaurus 介绍
+slug: /docs-introduction
+---
+
+# 文档介绍
+
+文档功能允许用户以层级格式组织编排 Markdown 文件。
+
+:::info
+
+查阅 [Docs 插件 API 参考文档](./../../api/plugins/plugin-content-docs.mdx) 获取完整的选项列表。
+
+:::
+
+你的网站的文档从低到高有四层组织架构：
+
+1. 独立页面。
+2. 侧边栏。
+3. 版本。
+4. 插件实例。
+
+该指南将按此顺序介绍：从[如何配置单个页面](./docs-create-doc.mdx)开始，到[如何创建一个或多个侧边栏](./sidebar/index.mdx)，再到[如何创建和管理版本](./versioning.mdx)，最后是[如何使用多个文档插件实例](./docs-multi-instance.mdx)。
+
+## 仅文档模式 {/* #docs-only-mode */}
+
+新创建的 Docusaurus 网站会有这样的结构：
+
+```
+example.com/                                -> 由 `src/pages/index.js` 生成
+
+example.com/docs/intro                      -> 由 `docs/intro.md` 生成
+example.com/docs/tutorial-basics/...        -> 由 `docs/tutorial-basics/...` 生成
+...
+
+example.com/blog/2021/08/26/welcome         -> 由 `blog/2021-08-26-welcome/index.md` 生成
+example.com/blog/2021/08/01/mdx-blog-post   -> 由 `blog/2021-08-01-mdx-blog-post.mdx` 生成
+...
+```
+
+所有文档都会放在`docs/`子路由下。 但如果**你的站点只有文档**，或者你想通过将文档放在根目录来优先展示它们呢？
+
+假设你的配置中包含以下内容：
+
+```js title="docusaurus.config.js"
+export default {
+  // ...
+  presets: [
+    [
+      '@docusaurus/preset-classic',
+      {
+        docs: {/* docs plugin options */},
+        blog: {/* blog plugin options */},
+        // ...
+      },
+    ],
+  ],
+};
+```
+
+要进入仅文档模式，可以把它改成类似这样：
+
+```js title="docusaurus.config.js"
+export default {
+  // ...
+  presets: [
+    [
+      '@docusaurus/preset-classic',
+      {
+        docs: {
+          // highlight-next-line
+          routeBasePath: '/', // 在站点根路径提供文档服务
+          /* 其他文档插件选项 */
+        },
+        // highlight-next-line
+        blog: false, // 可选：禁用博客插件
+        // ...
+      },
+    ],
+  ],
+};
+```
+
+请注意，你**不一定要放弃使用博客**或其他插件；`routeBasePath: '/'` 所做的只是将文档的访问路径从 `https://example.com/docs/some-doc` 改为站点根路径：`https://example.com/some-doc`。 如果启用了博客，仍然可以通过 `blog/` 路径访问。
+
+不要忘记通过添加前置元数据来在根目录（`https://example.com/`）下放置一些页面：
+
+```md title="docs/intro.md"
+---
+# highlight-next-line
+slug: /
+---
+
+这一页会是用户访问 https://example.com/ 时出现的主页。
+```
+
+:::warning
+
+如果你通过添加 `slug: /` 将某个文档设为主页，那么应该删除位于 `./src/pages/index.js` 的现有主页，否则会出现两个文件映射到同一路径的情况！
+
+:::
+
+现在，网站的结构会长得像这样：
+
+```
+example.com/                       -> 由 `docs/intro.md` 生成
+example.com/tutorial-basics/...    -> 由 `docs/tutorial-basics/...` 生成
+...
+```
+
+:::tip
+
+Docusaurus 也有一个“仅博客模式”供那些只想写博客的用户使用。 你可以用类似上述的方法实现。 请按照 [仅博客模式](../../blog.mdx#blog-only-mode) 中的设置说明进行操作。
+
+:::

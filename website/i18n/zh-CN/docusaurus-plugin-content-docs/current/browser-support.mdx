@@ -1,0 +1,101 @@
+---
+description: 如何保持合理的打包大小，同时确保足够的浏览器支持。
+---
+
+# 浏览器支持
+
+Docusaurus 允许通过 [browserslist 配置](https://github.com/browserslist/browserslist)来定义支持的浏览器列表。
+
+## 目的 {/* #purpose */}
+
+网站需要在向后兼容性和文件大小间做出平衡。 由于旧浏览器不支持现代 API 或语法，因此需要更多代码来实现相同的功能。
+
+例如，你可能使用[可选链语法](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining)：
+
+```js
+const value = obj?.prop?.val;
+```
+
+...不幸的是，只有 2020 年后发布的浏览器版本才能识别它。 为了兼容较早的浏览器版本，我们的 JS 加载器会在构建你的网站时，把代码转译成更啰嗦的语法：
+
+```js
+var _obj, _obj$prop;
+
+const value =
+  (_obj = obj) === null || _obj === void 0
+    ? void 0
+    : (_obj$prop = _obj.prop) === null || _obj$prop === void 0
+      ? void 0
+      : _obj$prop.val;
+```
+
+然而，这会惩罚网站的所有用户，因为网站的加载时间变长了，29 个字符现在变成 168 个字符——翻了 6 倍！ （实际的效果会比这个好一点，因为生成的名字会变短。） 作为折中，加载器只会把语法转译到浏览器列表中的所有版本都支持的范围内。
+
+默认情况下，浏览器列表是通过 `package.json` 文件中的根字段 `browserslist` 提供的。
+
+:::warning
+
+在较旧版本的浏览器中，编译后的输出将使用未支持的新 JS 语法，从而导致 React 无法初始化，并最终使得你的网站变成一个仅有 HTML/CSS，没有 JS 的静态网站。
+
+:::
+
+## 默认值 {/* #default-values */}
+
+使用默认的 classic 模板初始化的网站，会在 `package.json` 中有以下内容：
+
+```json title="package.json"
+{
+  "name": "docusaurus",
+  // ...
+  // highlight-next-line
+  "browserslist": ["baseline widely available"]
+  // ...
+}
+```
+
+Explained in natural language, the browsers supported are the versions of the core browsers (Chrome, Edge, Firefox and Safari, on desktop and mobile) that support all the [Baseline Widely available](https://web.dev/baseline) web platform features, i.e. features that have been available in all core browsers for at least 30 months.
+
+The same browser list is used in development and production, so that your site behaves the same with `docusaurus start` and `docusaurus build`.
+
+:::tip
+
+You can use a different browser list for each environment with an object keyed by environment (`production`, `development`). Refer to the [browserslist configuration documentation](https://github.com/browserslist/browserslist#configuring-for-different-environments).
+
+:::
+
+你可以用 `browserslist` CLI“解析”任意配置，从而得到真正的浏览器列表：
+
+```bash
+npx browserslist
+```
+
+The output is all browsers supported. Below is the output in September 2026:
+
+```text
+and_chr 151
+and_ff 153
+chrome 151
+chrome 150
+...
+chrome 123
+edge 151
+edge 150
+...
+edge 123
+firefox 154
+firefox 153
+...
+firefox 124
+ios_saf 26.6
+ios_saf 26.5
+...
+ios_saf 17.4
+safari 26.6
+safari 26.5
+...
+safari 17.4
+```
+
+## 了解更多 {/* #read-more */}
+
+你可以访问 [browserslist 文档](https://github.com/browserslist/browserslist/blob/main/README.md)了解更多规范，特别是关于接受的[查询值](https://github.com/browserslist/browserslist/blob/main/README.md#queries)和[最佳实践](https://github.com/browserslist/browserslist/blob/main/README.md#best-practices)的部分。

@@ -1,0 +1,104 @@
+---
+sidebar_position: 1
+slug: /api/misc/@docusaurus/eslint-plugin
+---
+
+# 📦 eslint-plugin
+
+[ESLint](https://eslint.org/) est un outil qui analyse statiquement votre code et signale les problèmes ou suggère les meilleures pratiques par le biais d'astuces pour l'éditeur et la ligne de commande. Docusaurus fournit un plugin ESLint pour appliquer les meilleures pratiques de Docusaurus.
+
+This ESLint plugin supports ESLint `>= 8.57.0`, flat configs and legacy configs.
+
+## Installation {/* #installation */}
+
+```bash npm2yarn
+npm install --save-dev @docusaurus/eslint-plugin
+```
+
+## Configurations prises en charge {/* #supported-configs */}
+
+Both built-in configs exist in flat and legacy variants:
+
+- Recommended : ensemble de règles recommandées pour la plupart des sites Docusaurus qui devraient être étendus.
+- All : **toutes** les règles sont activées. Cela changera entre les versions mineures, donc vous ne devriez pas l'utiliser si vous voulez éviter des changements de rupture inattendus.
+
+## Règles prises en charge {/* #supported-rules */}
+
+| Nom | Description |  |
+| --- | --- | --- |
+| [`@docusaurus/no-untranslated-text`](./no-untranslated-text.mdx) | Oblige les libellés de texte en JSX à être enveloppés par des appels de traduction |  |
+| [`@docusaurus/string-literal-i18n-messages`](./string-literal-i18n-messages.mdx) | Force les API de traduction à être appelées sur les libellés en texte brut | ✅ |
+| [`@docusaurus/no-html-links`](./no-html-links.mdx) | Veille à ce que @docusaurus/Link soit utilisé à la place des balises `<a>` | ✅ |
+| [`@docusaurus/prefer-docusaurus-heading`](./prefer-docusaurus-heading.mdx) | S'assure que @theme/Heading est utilisé à la place des balises `<hn>` pour les titres | ✅ |
+
+✅ = recommended
+
+## Usage - Flat {/* #usage-flat */}
+
+### Configuration recommandée {/* #recommended-config-flat */}
+
+Import `@docusaurus/eslint-plugin` and add `docusaurus.configs.flat.recommended` to your flat config array:
+
+```js title="eslint.config.js"
+import {defineConfig} from 'eslint/config';
+// highlight-next-line
+import docusaurus from '@docusaurus/eslint-plugin';
+
+export default defineConfig(
+  // highlight-next-line
+  docusaurus.configs.flat.recommended,
+  {
+    // Other config
+  },
+);
+```
+
+Ceci activera le plugin eslint `@docusaurus` et utilisera la configuration `recommended`. See [Supported rules](#supported-rules) above for a list of rules that this will enable.
+
+### Configuration manuelle {/* #manual-config-flat */}
+
+Pour un contrôle plus précis, vous pouvez également activer le plugin manuellementet configurer les règles que vous voulez utiliser directement :
+
+```js title="eslint.config.js"
+import {defineConfig} from 'eslint/config';
+// highlight-next-line
+import docusaurus from '@docusaurus/eslint-plugin';
+
+export default defineConfig({
+  // highlight-start
+  plugins: {docusaurus},
+  rules: {
+    '@docusaurus/string-literal-i18n-messages': 'error',
+    '@docusaurus/no-untranslated-text': 'warn',
+  },
+  // highlight-end
+});
+```
+
+## Usage - Legacy {/* #usage-legacy */}
+
+### Configuration recommandée {/* #recommended-config-legacy */}
+
+Ajouter `plugin:@docusaurus/recommended` à la section `extends` de votre fichier de configuration `.eslintrc` :
+
+```json title=".eslintrc"
+{
+  "extends": ["plugin:@docusaurus/recommended"]
+}
+```
+
+Ceci activera le plugin eslint `@docusaurus` et utilisera la configuration `recommended`. See [Supported rules](#supported-rules) above for a list of rules that this will enable.
+
+### Configuration manuelle {/* #manual-config-legacy */}
+
+Pour un contrôle plus précis, vous pouvez également activer le plugin manuellementet configurer les règles que vous voulez utiliser directement :
+
+```json title=".eslintrc"
+{
+  "plugins": ["@docusaurus"],
+  "rules": {
+    "@docusaurus/string-literal-i18n-messages": "error",
+    "@docusaurus/no-untranslated-text": "warn"
+  }
+}
+```

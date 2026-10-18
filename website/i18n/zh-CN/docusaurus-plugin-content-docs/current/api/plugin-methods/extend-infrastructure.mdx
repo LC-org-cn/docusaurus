@@ -1,0 +1,182 @@
+---
+sidebar_position: 2
+---
+
+# 扩展基础设施
+
+Docusaurus 有一些基础设施，比如热重载、CLI、swizzle 等，它们可以被外部插件扩展。
+
+## `getPathsToWatch()` {/* #getPathsToWatch */}
+
+指定插件和主题要监听的路径。 这些路径会被开发服务器监听，从而使得当监听路径的内容发生变化时，插件生命周期会重新运行。 Note that the plugins and themes modules are initially called with `context` and `options` from Node, which you may use to find the necessary directory information about the site.
+
+这个生命周期应该用于在服务端被读取的文件，因为主题文件会自动被 Webpack 开发服务器监听。
+
+示例：
+
+```js title="docusaurus-plugin/src/index.js"
+import path from 'path';
+
+export default function (context, options) {
+  return {
+    name: 'docusaurus-plugin',
+    // highlight-start
+    getPathsToWatch() {
+      const contentPath = path.resolve(context.siteDir, options.path);
+      return [`${contentPath}/**/*.{ts,tsx}`];
+    },
+    // highlight-end
+  };
+}
+```
+
+## `extendCli(cli)` {/* #extendCli */}
+
+为 Docusaurus 的 CLI 注册一个额外的命令。 `cli` is a [Commander 15 `Command`](https://github.com/tj/commander.js/tree/v15.0.0) object.
+
+示例：
+
+```js title="docusaurus-plugin/src/index.js"
+export default function (context, options) {
+  return {
+    name: 'docusaurus-plugin',
+    // highlight-start
+    extendCli(cli) {
+      cli
+        .command('roll')
+        .description('Roll a random number between 1 and 1000')
+        .action(() => {
+          console.log(Math.floor(Math.random() * 1000 + 1));
+        });
+    },
+    // highlight-end
+  };
+}
+```
+
+## `getThemePath()` {/* #getThemePath */}
+
+返回主题组件所在的文件夹路径。 When your users call `swizzle`, `getThemePath` is called and its returned path is used to find your theme components. 返回的相对路径会按照插件入口文件所在的文件夹被解析。
+
+For example, your `getThemePath` can be:
+
+```js title="my-theme/src/index.js"
+export default function (context, options) {
+  return {
+    name: 'my-theme',
+    // highlight-start
+    getThemePath() {
+      return './theme';
+    },
+    // highlight-end
+  };
+}
+```
+
+## `getTypeScriptThemePath()` {/* #getTypeScriptThemePath */}
+
+Similar to `getThemePath()`, it should return the path to the directory where the source code of TypeScript theme components can be found. This path is purely for swizzling TypeScript theme components, and theme components under this path will **not** be resolved by the bundler. Therefore, it is not a replacement for `getThemePath()`. Typically, you can make the path returned by `getTypeScriptThemePath()` be your source directory, and make the path returned by `getThemePath()` be the compiled JavaScript output.
+
+:::tip
+
+给用 TypeScript 编写主题的作者的提示：我们强烈建议你确保你的编译输出尽可能地可读。 Only strip type annotations and don't transpile any syntaxes, because Docusaurus transpiles them based on the targeted browser versions.
+
+你也应该用 Prettier 格式化这些文件。 要记得——JS 文件会被你的用户直接接触到。
+
+:::
+
+示例：
+
+```js title="my-theme/src/index.js"
+export default function (context, options) {
+  return {
+    name: 'my-theme',
+    // highlight-start
+    getThemePath() {
+      // Where compiled JavaScript output lives
+      return '../lib/theme';
+    },
+    getTypeScriptThemePath() {
+      // Where TypeScript source code lives
+      return '../src/theme';
+    },
+    // highlight-end
+  };
+}
+```
+
+## `getSwizzleConfig()` {/* #getSwizzleConfig */}
+
+**This is a static method, not attached to any plugin instance.** Export it from the theme module, or attach it to the plugin constructor function.
+
+Returns the swizzle config of the theme, declaring [how safe it is to swizzle](../../swizzling.mdx#what-is-safe-to-swizzle) each theme component:
+
+```ts
+type SwizzleConfig = {
+  components: {
+    [componentName: string]: {
+      actions: {
+        eject: 'safe' | 'unsafe' | 'forbidden';
+        wrap: 'safe' | 'unsafe' | 'forbidden';
+      };
+      description?: string;
+    };
+  };
+};
+```
+
+- `componentName`: the name of the theme component, relative to the theme path, such as `Footer` or `Admonition/Icon`.
+- `actions`: the safety status of each swizzle action. Actions not provided are `unsafe`.
+- `description`: a description of the component, displayed by `docusaurus swizzle --list`.
+
+Components not listed are `unsafe` to eject and to wrap.
+
+```js title="my-theme/src/index.js"
+export default function (context, options) {
+  return {
+    name: 'my-theme',
+    getThemePath() {
+      return './theme';
+    },
+  };
+}
+
+// highlight-start
+export function getSwizzleConfig() {
+  return {
+    components: {
+      Footer: {
+        actions: {
+          eject: 'safe',
+          wrap: 'safe',
+        },
+        description: "The footer component of your site's layout",
+      },
+      DocSidebar: {
+        actions: {
+          eject: 'unsafe',
+          wrap: 'safe',
+        },
+        description: 'The sidebar component on docs pages',
+      },
+      'prism-include-languages': {
+        actions: {
+          eject: 'safe',
+          wrap: 'forbidden', // Not a component!
+        },
+      },
+    },
+  };
+}
+// highlight-end
+```
+
+## `getSwizzleComponentList()` {/* #getSwizzleComponentList */}
+
+:::warning Deprecated
+
+Use [`getSwizzleConfig()`](#getSwizzleConfig) instead.
+
+:::
+
+A static method returning the list of components that are safe to eject and to wrap. It is ignored when the theme provides `getSwizzleConfig()`.

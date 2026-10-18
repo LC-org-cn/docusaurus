@@ -9,5 +9,6 @@
   ],
   "*.{json,jsonc,json5,md,mdx,html,yml,yaml,toml}": [
     "oxfmt --no-error-on-unmatched-pattern"
-  ]
+  ],
+  "!website/i18n/**": []
 }

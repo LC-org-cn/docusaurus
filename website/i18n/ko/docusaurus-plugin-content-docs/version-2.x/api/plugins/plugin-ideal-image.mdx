@@ -1,0 +1,83 @@
+---
+sidebar_position: 8
+slug: /api/plugins/@docusaurus/plugin-ideal-image
+---
+
+# 📦 plugin-ideal-image
+
+import APITable from '@site/src/components/APITable';
+
+아주 이상적인 이미지(반응형, 지연 로딩, 저화질 플레이스홀더)를 만들어주는 도큐사우루스 플러그인입니다.
+
+:::info
+
+By default, the plugin is **inactive in development** so you could always view full-scale images. If you want to debug the ideal image behavior, you could set the [`disableInDev`](#disableInDev) option to `false`.
+
+:::
+
+## 설치 {/* #installation */}
+
+```bash npm2yarn
+npm install --save @docusaurus/plugin-ideal-image
+```
+
+## 사용법 {/* #usage */}
+
+해당 플러그인은 PNG, GIF, JPG 포맷만 지원합니다.
+
+```jsx
+import Image from '@theme/IdealImage';
+import thumbnail from './path/to/img.png';
+
+// your React code
+<Image img={thumbnail} />
+
+// or
+<Image img={require('./path/to/img.png')} />
+```
+
+## 설정 {/* #configuration */}
+
+설정할 수 있는 필드
+
+```mdx-code-block
+<APITable>
+```
+
+| 옵션 | 타입 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `name` | `string` | `ideal-img/[name].[hash:hex:7].[width].[ext]` | 만들어질 파일을 위한 파일명 템플릿 |
+| `sizes` | `number[]` | _original size_ | 원하는 모든 너비값을 설정합니다. 설정한 크기가 원본 이미지 너비보다 크다면 다음에 설정한 이미지 크기를 사용합니다(이미지 크기를 크게 만들지는 않습니다). |
+| `size` | `number` | _original size_ | 원하는 너비값을 설정합니다. 설정한 크기가 원본 이미지 너비보다 크다면 다음에 설정한 이미지 크기를 사용합니다(이미지 크기를 크게 만들지는 않습니다). |
+| `min` | `number` | `undefined` | As an alternative to manually specifying `sizes`, you can specify `min`, `max` and `steps`, and the sizes will be generated for you. |
+| `max` | `number` | `undefined` | See `min` above |
+| `steps` | `number` | `4` | Configure the number of images generated between `min` and `max` (inclusive) |
+| `quality` | `number` | `85` | JPEG 압축 수준을 설정합니다. |
+| `disableInDev` | `boolean` | `true` | You can test ideal image behavior in dev mode by setting this to `false`. **Tip**: use [network throttling](https://www.browserstack.com/guide/how-to-perform-network-throttling-in-chrome) in your browser to simulate slow networks. |
+
+```mdx-code-block
+</APITable>
+```
+
+### 설정 예시 {/* #ex-config */}
+
+다음은 설정 예시입니다:
+
+```js title="docusaurus.config.js"
+module.exports = {
+  plugins: [
+    [
+      '@docusaurus/plugin-ideal-image',
+      // highlight-start
+      {
+        quality: 70,
+        max: 1030, // max resized image's size.
+        min: 640, // min resized image's size. if original is lower, use that size.
+        steps: 2, // the max number of images generated between min and max (inclusive)
+        disableInDev: false,
+      },
+      // highlight-end
+    ],
+  ],
+};
+```

@@ -1,0 +1,165 @@
+---
+description: Déployez votre application Docusaurus pour la production sur une gamme de services d'hébergement statiques.
+---
+
+# Déploiement
+
+Pour construire les fichiers statiques de votre site web pour la production, exécutez :
+
+```bash npm2yarn
+npm run build
+```
+
+Une fois terminé, les fichiers statiques seront générés dans le répertoire `build`.
+
+:::note
+
+La seule responsabilité de Docusaurus est de construire votre site et d'émettre des fichiers statiques dans `build`.
+
+C'est maintenant à vous de choisir comment héberger ces fichiers statiques.
+
+:::
+
+Vous pouvez déployer votre site sur des services d'hébergement statiques tels que [Vercel](https://vercel.com/), [GitHub Pages](https://pages.github.com/), [Netlify](https://www.netlify.com/), [Render](https://render.com/docs/static-sites) et [Surge](https://surge.sh/help/getting-started-with-surge).
+
+Un site Docusaurus est rendu de manière statique, et il peut généralement fonctionner sans JavaScript !
+
+## Configuration {/* #configuration */}
+
+Les paramètres suivants sont obligatoires dans `docusaurus.config.js` pour que Docusaurus optimise le routage et serve les fichiers à partir du bon emplacement :
+
+| Nom | Description |
+| --- | --- |
+| `url` | URL de votre site. Pour un site déployé sur https://my-org.com/my-project/`, `url` est `https://my-org.com/`. |
+| `baseUrl` | URL de base pour votre projet, avec un slash à la fin. Pour un site déployé sur `https://my-org.com/my-project/`, `baseUrl` est `/my-project/`. |
+
+## Tester votre construction en local {/* #testing-build-locally */}
+
+Il est important de tester votre construction avant de le déployer pour la production. Docusaurus provides a [`docusaurus serve`](../cli.mdx#docusaurus-serve-sitedir) command for that:
+
+```bash npm2yarn
+npm run serve
+```
+
+Par défaut, cela va charger votre site sur [`http://localhost:3000/`](http://localhost:3000/).
+
+## Configuration du slash de fin {/* #trailing-slashes */}
+
+Docusaurus has a [`trailingSlash` config](../api/docusaurus.config.js.mdx#trailingSlash) to allow customizing URLs/links and emitted filename patterns.
+
+La valeur par défaut fonctionne généralement bien. Malheureusement, chaque hébergeur statique a un **comportement différent**, et déployer exactement le même site sur différents hôtes peut conduire à des résultats différents. En fonction de votre hôte, il peut être utile de modifier cette configuration.
+
+:::tip
+
+Utilisez [slorber/trailing-slash-guide](https://github.com/slorber/trailing-slash-guide) pour mieux comprendre le comportement de votre hôte et configurer `trailingSlash` correctement.
+
+:::
+
+## Utilisation des variables d'environnement {/* #using-environment-variables */}
+
+Placer des informations potentiellement sensibles dans l'environnement est une pratique courante. However, in a typical Docusaurus website, the `docusaurus.config.js` file is the only interface to the Node.js environment (see [our architecture overview](../advanced/architecture.mdx)), while everything else (MDX pages, React components, etc.) sont côté client et n'ont pas d'accès direct à la variable global `process`. In this case, you can consider using [`customFields`](../api/docusaurus.config.js.mdx#customFields) to pass environment variables to the client side.
+
+```js title="docusaurus.config.js"
+// If you are using dotenv (https://www.npmjs.com/package/dotenv)
+import 'dotenv/config';
+
+export default {
+  title: '...',
+  url: process.env.URL, // You can use environment variables to control site specifics as well
+  // highlight-start
+  customFields: {
+    // Put your custom environment here
+    teamEmail: process.env.EMAIL,
+  },
+  // highlight-end
+};
+```
+
+```jsx title="home.jsx"
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+
+export default function Home() {
+  const {
+    siteConfig: {customFields},
+  } = useDocusaurusContext();
+  return <div>Contact us through {customFields.teamEmail}!</div>;
+}
+```
+
+## Choix d'un hébergeur {/* #choosing-a-hosting-provider */}
+
+Il existe quelques options d'hébergement courantes :
+
+- [Self-hosting](#self-hosting) with an HTTP server like Apache2 or Nginx.
+- Static hosting providers (e.g. [Netlify](./netlify.mdx) and [Vercel](./vercel.mdx)). Nous les utiliserons comme références, mais le même raisonnement peut s'appliquer à d'autres fournisseurs.
+- [GitHub Pages](./github-pages.mdx) (by definition, it is also static hosting provider, but we compare it separately).
+
+Si vous n'êtes pas certain de savoir lequel choisir, posez-vous les questions suivantes :
+
+<details>
+
+<summary>
+  How many resources (money, person-hours, etc.) suis-je prêt à investir dans ce projet ?
+</summary>
+
+- 🔴 L'auto-hébergement nécessite une expérience en matière de réseaux ainsi que d'administration de Linux et de serveurs web. C'est l'option la plus difficile à mettre en œuvre, et c'est celle qui demande le plus de temps pour être gérée avec succès. En termes de dépenses, les services du cloud ne sont presque jamais gratuits, et l'achat/déploiement d'un serveur sur site peut s'avérer encore plus coûteux.
+- 🟢 Static hosting providers can help you set up a working website in almost no time and offer features like server-side redirects that are easily configurable. De nombreux fournisseurs offrent de généreux quotas de temps de construction, même pour les plans gratuits, que vous ne dépasserez presque jamais. Cependant, les plans gratuits ont des limites, et vous devrez payer une fois que vous aurez atteint ces limites. Consultez la page tarifaire de votre fournisseur pour plus de détails.
+- 🟡 Le workflow de déploiement des pages GitHub peut être fastidieux à configurer. (Evidence: see the length of [Deploying to GitHub Pages](./github-pages.mdx)!) Cependant, ce service (y compris la construction et le déploiement) est toujours gratuit pour les dépôts publics, et nous avons des instructions détaillées pour vous aider à le faire fonctionner.
+
+</details>
+
+<details>
+
+<summary>De quel degré de personnalisation côté serveur ai-je besoin ?</summary>
+
+- 🟢 Avec l'auto-hébergement, vous avez accès à toute la configuration du serveur. Vous pouvez configurer l'hôte virtuel pour qu'il serve un contenu différent en fonction de l'URL de la requête, vous pouvez effectuer des redirections complexes côté serveur, vous pouvez mettre en œuvre l'authentification, etc. Si vous avez besoin de nombreuses fonctionnalités côté serveur, hébergez votre site web.
+- 🟡 Static hosting providers usually offers some server-side configuration (e.g. URL formatting (trailing slashes), server-side redirects, etc.).
+- 🔴 Les Pages GitHub n'exposent pas la configuration côté serveur, à part l'application du HTTPS et la définition du CNAME.
+
+</details>
+
+<details>
+
+<summary>Ai-je besoin de flux de déploiement facilitant la collaboration ?</summary>
+
+- 🟡 Les services auto-hébergés peuvent tirer parti d'une fonctionnalité de déploiement continu telle que Netlify, mais il faut alors procéder à des opérations plus lourdes. En général, vous désignez une personne spécifique pour gérer le déploiement, et le flux de travail n'est pas vraiment basé sur git, contrairement aux deux autres options.
+- 🟢 Netlify et Vercel ont des aperçus de déploiement pour chaque pull request, ce qui est utile pour une équipe pour revoir le travail avant de le mettre en production. Vous pouvez également gérer une équipe avec un accès différent au déploiement.
+- 🟡 Les pages GitHub ne peuvent pas faire des aperçus de déploiement d'une manière simple. Un dépôt ne peut être associé qu'à un seul déploiement du site. D'un autre côté, vous pouvez contrôler qui a accès en écriture au déploiement du site.
+
+</details>
+
+Il n'y a pas de solution miracle. Vous devez évaluer vos besoins et vos ressources avant de faire votre choix.
+
+## Auto-hébergement {/* #self-hosting */}
+
+Docusaurus can be self-hosted using [`docusaurus serve`](../cli.mdx#docusaurus-serve-sitedir). Changez de port en utilisant `--port` et `--host` pour changer d'hôte.
+
+```bash npm2yarn
+npm run serve -- --build --port 80 --host 0.0.0.0
+```
+
+:::warning
+
+Ce n'est pas la meilleure option, par rapport à un fournisseur d'hébergement statique / CDN.
+
+:::
+
+## Hosting provider guides {/* #hosting-provider-guides */}
+
+Here's a list of popular hosting providers and how they should be configured to deploy Docusaurus sites most efficiently. Docusaurus n'est affilié à aucun de ces services, et ces informations ne sont fournies qu'à titre de renseignement.
+
+```mdx-code-block
+import DocCardList from '@theme/DocCardList';
+
+<DocCardList />
+```
+
+:::tip Other hosting solutions
+
+We can only officially document a small subset of hosting providers.
+
+However, a Docusaurus site is just static files, and almost any hosting provider able to serve static websites can deploy it.
+
+Check our **[Deployment Platforms](https://github.com/facebook/docusaurus/discussions/categories/deployment-platforms)** GitHub Discussions category: the community shares its experience with other platforms there, and hosting providers are welcome to explain how to deploy Docusaurus on their service.
+
+:::

@@ -1,0 +1,939 @@
+{
+  "Opções de predefinição": {
+    "message": "Preset options"
+  },
+  "apiDocs.configTabs.presetOptions.description": {
+    "message": "Se você usar uma predefinição, configure este plugin através do {presetLink}:"
+  },
+  "opções de predefinição": {
+    "message": "preset options"
+  },
+  "Opções do plugin": {
+    "message": "Plugin options"
+  },
+  "Se você estiver usando um plugin independente, forneça opções diretamente para o plugin:": {
+    "message": "If you are using a standalone plugin, provide options directly to the plugin:"
+  },
+  "Atual: {canaryVersionName}": {
+    "message": "Current: {canaryVersionName}",
+    "description": "The hint text for the current canary version tag."
+  },
+  "Exemplo: 0.0.0-4922": {
+    "message": "Example: 0.0.0-4922",
+    "description": "An example canary version tag when the actual version can't be fetched."
+  },
+  "A última versão canary disponível no npm é publicada em {time}.": {
+    "message": "The latest canary version that's available on npm is published at {time}."
+  },
+  "homepage.features.powered-by-mdx.title": {
+    "message": "Powered by MDX"
+  },
+  "homepage.features.powered-by-mdx.text": {
+    "message": "Economize tempo e foco em documentos de texto. Escreva documentação e posts de blogde forma simples com MDX e o Docusaurus transformará-los em HTML estático prontos para servir. Você pode até mesmo incorporar componentes React em seu Markdown graças ao MDX."
+  },
+  "homepage.features.built-using-react.title": {
+    "message": "Construído Usando React"
+  },
+  "homepage.features.built-using-react.text": {
+    "message": "Estenda e personalize o layout do seu projeto escrevendo componentes React. Aproveite a arquitetura plugável e crie seu próprio site reutilizando os mesmos dados criados por plugins do Docusaurus."
+  },
+  "homepage.features.ready-for-translations.title": {
+    "message": "Pronto para Traduções"
+  },
+  "homepage.features.ready-for-translations.text": {
+    "message": "A localização vem out-of-the-box. Use git, Crowdin ou qualquer outro gerente de tradução para traduzir a sua documentação e implantá-la individualmente."
+  },
+  "homepage.features.document-versioning.title": {
+    "message": "Versionamento de Documentos"
+  },
+  "homepage.features.document-versioning.text": {
+    "message": "Apoie os usuários em todas as versões do seu projeto. O versionamento de documentação ajuda você a manter a documentação sincronizada com as versões do projeto."
+  },
+  "homepage.features.content-search.title": {
+    "message": "Content Pesquisar"
+  },
+  "homepage.features.content-search.text": {
+    "message": "Facilite para sua comunidade encontrar o que precisa na sua documentação. Nós orgulhosamente suportamos o sistema Algolia de pesquisa de documentação."
+  },
+  "homepage.quotes.christopher-chedeau.title": {
+    "message": "Desenvolvedor Líder do Prettier",
+    "description": "Title of quote of Christopher Chedeau on the home page"
+  },
+  "homepage.quotes.christopher-chedeau": {
+    "message": "Eu ajudei na criação de muitos projetos open fonte no Facebook e cada um deles precisava de um site. Todos tinham as mesmas restrições: a documentação deveria ser escrita em markdown e ser implementada através das páginas do GitHub. Estou muito feliz que o Docusaurus agora exista, assim eu não preciso passar uma semana fazendo isso toda vez.",
+    "description": "Quote of Christopher Chedeau on the home page"
+  },
+  "homepage.quotes.hector-ramos.title": {
+    "message": "Defensor Líder de React Native",
+    "description": "Title of quote of Hector Ramos on the home page"
+  },
+  "homepage.quotes.hector-ramos": {
+    "message": "Contribuições de código aberto para a documentação do React Native dispararam após nossa mudança para o Docusaurus. A documentação agora está hospedada em um pequeno repositório em markdown simples, sem nenhuma da bagunça que um típico gerador de site estático exigiria. Obrigado Slash!",
+    "description": "Quote of Hector Ramos on the home page"
+  },
+  "homepage.quotes.risky-vetter.title": {
+    "message": "Desenvolvedor ReasonReact",
+    "description": "Title of quote of Ricky Vetter on the home page"
+  },
+  "homepage.quotes.risky-vetter": {
+    "message": "O Docusaurus tem sido uma ótima escolha para a família ReasonML de projetos. Ele torna a nossa documentação coerente, i18n-amigável, fácil de manter e amigável para novos colaboradores.",
+    "description": "Quote of Ricky Vetter on the home page"
+  },
+  "Favorito": {
+    "message": "Favorito"
+  },
+  "showcase.tag.favorite.description": {
+    "message": "Nossos sites Docusaurus favoritos que você deve absolutamente dar uma olhada!"
+  },
+  "Codigo Aberto": {
+    "message": "Open-Source"
+  },
+  "showcase.tag.opensource.description": {
+    "message": "Os sites Docusaurus de projetos de código aberto podem ser úteis para inspiração!"
+  },
+  "Produto": {
+    "message": "Product"
+  },
+  "showcase.tag.product.description": {
+    "message": "Sites do Docusaurus associados a um produto comercial!"
+  },
+  "Design": {
+    "message": "Design"
+  },
+  "showcase.tag.design.description": {
+    "message": "Sites lindos do Docusaurus, polidos e que se destacam do modelo inicial!"
+  },
+  "I18n": {
+    "message": "I18n"
+  },
+  "showcase.tag.i18n.description": {
+    "message": "Sites Docusaurus traduzidos usando o suporte a internacionalização com mais de 1 idioma."
+  },
+  "Versionamento": {
+    "message": "Versioning"
+  },
+  "showcase.tag.versioning.description": {
+    "message": "Docusaurus sites using the versioning feature of the docs plugin to manage multiple versions."
+  },
+  "Large": {
+    "message": "Large"
+  },
+  "showcase.tag.large.description": {
+    "message": "Very large Docusaurus sites, including many more pages than the average!"
+  },
+  "Meta": {
+    "message": "Meta"
+  },
+  "showcase.tag.meta.description": {
+    "message": "Docusaurus sites of Meta (formerly Facebook) projects"
+  },
+  "Pessoal": {
+    "message": "Personal"
+  },
+  "showcase.tag.personal.description": {
+    "message": "Personal sites, blogs and digital gardens built with Docusaurus"
+  },
+  "Direção RTL": {
+    "message": "RTL Direction"
+  },
+  "showcase.tag.rtl.description": {
+    "message": "Docusaurus sites using the right-to-left reading direction support."
+  },
+  "Docusaurus com Keytar": {
+    "message": "Docusaurus with Keytar"
+  },
+  "homepage.hero.title": {
+    "message": "Crie <b>sites</b> otimizados <b>rapidamente</b>, foque no seu <b>conteúdo</b>",
+    "description": "Home page hero title, can contain simple html tags"
+  },
+  "Iniciar": {
+    "message": "Get Started"
+  },
+  "Try a Demo": {
+    "message": "Try a Demo"
+  },
+  "Amado por muitos engenheiros": {
+    "message": "Loved by many engineers"
+  },
+  "Confira no vídeo de introdução": {
+    "message": "Check it out in the intro video"
+  },
+  "homepage.banner.launch.newVersion": {
+    "message": "Docusaurus {newVersion} is out!️"
+  },
+  "versionsPage.versionEntry.link": {
+    "message": "Documentação"
+  },
+  "versionsPage.versionEntry.releaseNotes": {
+    "message": "Notas de Versão"
+  },
+  "versionsPage.title": {
+    "message": "Docusaurus documentation versions"
+  },
+  "versionsPage.current.title": {
+    "message": "Current version (Stable)"
+  },
+  "versionsPage.current.description": {
+    "message": "Here you can find the documentation for current released version."
+  },
+  "versionsPage.next.title": {
+    "message": "Próximo version (Unreleased)"
+  },
+  "versionsPage.next.description": {
+    "message": "Here you can find the documentation for work-in-process unreleased version."
+  },
+  "versionsPage.archived.title": {
+    "message": "Past versions (Not maintained anymore)"
+  },
+  "versionsPage.archived.description": {
+    "message": "Here you can find documentation for previous versions of Docusaurus."
+  },
+  "versionsPage.legacy.title": {
+    "message": "Docusaurus v1 (Legacy)"
+  },
+  "versionsPage.legacy.description": {
+    "message": "Here you can find documentation for legacy version of Docusaurus."
+  },
+  "colorGenerator.tip.body": {
+    "message": "Aim for at least {wcagLink} for the primary color to ensure readability. Use the Docusaurus site itself to preview how your color palette would look like. You can use alternative palettes in modo escuro because one color doesn't usually work in both light and dark mode."
+  },
+  "colorGenerator.tip.body.wcagLink.label": {
+    "message": "WCAG-AA contrast ratio"
+  },
+  "colorGenerator.inputs.primary.label": {
+    "message": "Primary Color:"
+  },
+  "colorGenerator.inputs.modeToggle.label": {
+    "message": "Edit {colorMode} mode"
+  },
+  "colorGenerator.inputs.modeToggle.label.colorMode.light": {
+    "message": "light"
+  },
+  "colorGenerator.inputs.modeToggle.label.colorMode.dark": {
+    "message": "dark"
+  },
+  "colorGenerator.inputs.resetButton.label": {
+    "message": "Reset"
+  },
+  "colorGenerator.inputs.background.label": {
+    "message": "Background:"
+  },
+  "colorGenerator.table.heading1": {
+    "message": "CSS Variable Name"
+  },
+  "colorGenerator.table.heading2": {
+    "message": "Hex",
+    "description": "This column is the color's representation in hex"
+  },
+  "colorGenerator.table.heading3": {
+    "message": "Adjustment",
+    "description": "This column is the adjusted shades' adjustment values relative to the primary color"
+  },
+  "colorGenerator.table.heading4": {
+    "message": "Contrast Rating",
+    "description": "This column is WCAG contrast rating: AAA, AA, Fail"
+  },
+  "colorGenerator.text": {
+    "message": "Replace the variables in {cssPath} with these new variables."
+  },
+  "playground.codesandbox.description": {
+    "message": "CodeSandbox is an online code editor and development environment that allows developers to create, share and collaborate on web development projects in a browser-based environment"
+  },
+  "playground.stackblitz.description": {
+    "message": "StackBlitz usa uma nova tecnologia {webContainersLink} para executar Docusaurus diretamente em seu navegador."
+  },
+  "playground.tryItButton": {
+    "message": "Experimente agora!"
+  },
+  "team.profile.websiteLinkLabel": {
+    "message": "website"
+  },
+  "team.profile.Sebastien Lorber.body": {
+    "message": "Amante de React desde 2014. Freelancer, ajudando o Facebook lançar a v2 do Docusaurus. Ele escreve regularmente, em seu {website} e {devto}."
+  },
+  "team.profile.Sida Chen.body": {
+    "message": "Student from Shanghai, China. Enthusiastic open-source project creator, but never actually works hard on those projects he created."
+  },
+  "team.profile.Clement Couriol.body": {
+    "message": "Student from CPE Lyon, France. Passionate web developer who tries to become an expert web developer."
+  },
+  "team.profile.Joel Marcey.body": {
+    "message": "Fundador do Docusaurus e agora eternamente grato líder de torcida do Docusaurus aos que realmente escrevem códigos para ele."
+  },
+  "team.profile.Alexey Pyltsyn.body": {
+    "message": "Entusiasta obsessivo de código aberto 👋 Eterno amador em tudo 🤷‍♂️ Mantenedor da documentação russa de PHP, React, Kubernetes e muito mais 🧐"
+  },
+  "team.profile.Yangshun Tay.body": {
+    "message": "Desenvolvedor frontend que gosta de trabalhar com Jamstack. Trabalhar no Docusaurus fez dele o Webmaster Open Source não oficial de meio período do Facebook, o que é um cargo incrível para se estar."
+  },
+  "team.profile.Endilie Yacop Sucipto.body": {
+    "message": "Mantenedor @docusaurus · 🔥🔥🔥"
+  },
+  "team.profile.Wei Gao.body": {
+    "message": "🏻├🌾Desenvolvedor React em andamento, mantém o Docusaurus, escreve documentos e spamma este mundo com muitos sites."
+  },
+  "team.profile.Anshul Goyal.body": {
+    "message": "Fullstack developer who loves to code and try new technologies. In his free time, he contributes to open source, writes blog posts on his {websiteLink} and watches Anime."
+  },
+  "team.profile.Anshul Goyal.body.websiteLink.label": {
+    "message": "website"
+  },
+  "team.profile.Drew Alexander.body": {
+    "message": "Developer and Creative, trying to gain the skills to build whatever he can think of."
+  },
+  "team.profile.Fanny Vieira.body": {
+    "message": "Fanny got started with web development in high school, building a project for the school kitchen. In her free time she loves contributing to Open Source, occasionally writing on {blogLink} about her experiences, cooking, and creating {spotifyLink}."
+  },
+  "team.profile.Fanny Vieira.body.blogLink.label": {
+    "message": "her blog"
+  },
+  "team.profile.Fanny Vieira.body.spotifyLink.label": {
+    "message": "Playlists do Spotify"
+  },
+  "team.profile.Sam Zhou.body": {
+    "message": "Sam started programming in 2011 and built his {websiteLink} in 2015. He is interested in linguagem de programaçãos, dev infra and web development, and has built his own {samLangLink} and {miniReactLink}."
+  },
+  "team.profile.Sam Zhou.body.samLangLink.label": {
+    "message": "programming language"
+  },
+  "team.profile.Sam Zhou.body.miniReactLink.label": {
+    "message": "mini React"
+  },
+  "team.profile.Tan Teik Jun.body": {
+    "message": "Open-source enthusiast who aims to become as awesome as the other humans on this page. Working on Docusaurus brought him closer to his goal. 🌱"
+  },
+  "team.profile.Nisarag Bhatt.body": {
+    "message": "Fullstack web developer who loves learning new technologies and applying them! Loves contributing to open source as well as writing content articles and tutorials."
+  },
+  "upgradeGuide.archivedVersion.notice": {
+    "message": "You are browsing an archived version and the snippet below is outdated. Please go to the {mainSiteLink} and follow the instructions there to upgrade to the versão mais recente."
+  },
+  "upgradeGuide.archivedVersion.notice.mainSiteLink.label": {
+    "message": "site principal"
+  },
+  "upgradeGuide.unreleasedVersion.notice": {
+    "message": "You are browsing the documentation of an unreleased version. If you want to use any unreleased feature, you can use the {canaryDocLink}."
+  },
+  "upgradeGuide.unreleasedVersion.notice.canaryDocLink.label": {
+    "message": "{canaryTag} release"
+  },
+  "upgradeGuide.outdatedVersion.notice": {
+    "message": "You are browsing the documentation of an outdated version. The snippet below shows how to upgrade to the latest version."
+  },
+  "theme.ErrorPageContent.title": {
+    "message": "Esta página parou.",
+    "description": "The title of the fallback page when the page crashed"
+  },
+  "Want to implement the same page? Read {guideLink} to find out!": {
+    "message": "Want to implement the same page? Read {guideLink} to find out!"
+  },
+  "the generated index page guide": {
+    "message": "the generated index page guide"
+  },
+  "theme.IdealImageMessage.loading": {
+    "message": "Loading...",
+    "description": "When the full-scale image is loading"
+  },
+  "theme.IdealImageMessage.load": {
+    "message": "Click to load{sizeMessage}",
+    "description": "To prompt users to load the full image. sizeMessage is a parenthesized size figure."
+  },
+  "theme.IdealImageMessage.offline": {
+    "message": "Your browser is offline. Image not loaded",
+    "description": "When the user is viewing an offline document"
+  },
+  "theme.IdealImageMessage.404error": {
+    "message": "404. Image not found",
+    "description": "When the image is not found"
+  },
+  "theme.IdealImageMessage.error": {
+    "message": "Error. Click to reload",
+    "description": "When the image fails to load for unknown error"
+  },
+  "theme.PesquisarBar.seeAll": {
+    "message": "See all {count} results"
+  },
+  "theme.SearchPage.documentsFound.plurals": {
+    "message": "Um documento encontrado{count} | documentos encontrados",
+    "description": "Pluralized label for \"{count} documents found\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.SearchPage.existingResultadosTitle": {
+    "message": "Search results for \"{query}\"",
+    "description": "The search page title for non-empty query"
+  },
+  "theme.SearchPage.emptyResultsTitle": {
+    "message": "Pesquisar na documentação",
+    "description": "The search page title for empty query"
+  },
+  "theme.SearchPage.inputPlaceholder": {
+    "message": "Digite o que você procura",
+    "description": "The placeholder for search page input"
+  },
+  "theme.SearchPage.inputLabel": {
+    "message": "Search",
+    "description": "The ARIA label for search page input"
+  },
+  "theme.SearchPage.algoliaLabel": {
+    "message": "Powered by Algolia",
+    "description": "The description label for Algolia mention"
+  },
+  "theme.SearchPage.noResultsText": {
+    "message": "Nenhum resultado encontrado",
+    "description": "The paragraph for empty search result"
+  },
+  "theme.SearchPage.fetchingNewResults": {
+    "message": "Buscando novos resultados...",
+    "description": "The paragraph for fetching new search results"
+  },
+  "theme.SearchBar.label": {
+    "message": "Search",
+    "description": "The ARIA label and placeholder for search button"
+  },
+  "theme.SearchModal.searchBox.resetButtonTitle": {
+    "message": "Clear the query",
+    "description": "The label and ARIA label for search box reset button"
+  },
+  "theme.SearchModal.searchBox.cancelButtonText": {
+    "message": "Cancel",
+    "description": "The label and ARIA label for search box cancel button"
+  },
+  "theme.SearchModal.searchBox.placeholderText": {
+    "message": "Search docs",
+    "description": "The placeholder text for the main search input field"
+  },
+  "theme.SearchModal.searchBox.placeholderTextAskAi": {
+    "message": "Ask another question...",
+    "description": "The placeholder text when in AI question mode"
+  },
+  "theme.SearchModal.searchBox.placeholderTextAskAiStreaming": {
+    "message": "Answering...",
+    "description": "The placeholder text for search box when AI is streaming an answer"
+  },
+  "theme.SearchModal.searchBox.enterKeyHint": {
+    "message": "search",
+    "description": "The hint for the search box enter key text"
+  },
+  "theme.SearchModal.searchBox.enterKeyHintAskAi": {
+    "message": "enter",
+    "description": "The hint for the Ask AI search box enter key text"
+  },
+  "theme.SearchModal.searchBox.searchInputLabel": {
+    "message": "Search",
+    "description": "The ARIA label for search input"
+  },
+  "theme.SearchModal.searchBox.backToKeywordSearchButtonText": {
+    "message": "Back to keyword search",
+    "description": "The text for back to keyword search button"
+  },
+  "theme.SearchModal.searchBox.backToKeywordSearchButtonAriaLabel": {
+    "message": "Back to keyword search",
+    "description": "The ARIA label for back to keyword search button"
+  },
+  "theme.SearchModal.startScreen.recentSearchesTitle": {
+    "message": "Recent",
+    "description": "The title for recent searches"
+  },
+  "theme.SearchModal.startScreen.noRecentSearchesText": {
+    "message": "No recent searches",
+    "description": "The text when there are no recent searches"
+  },
+  "theme.SearchModal.startScreen.saveRecentSearchButtonTitle": {
+    "message": "Save this search",
+    "description": "The title for save recent search button"
+  },
+  "theme.SearchModal.startScreen.removeRecentSearchButtonTitle": {
+    "message": "Remove this search from history",
+    "description": "The title for remove recent search button"
+  },
+  "theme.SearchModal.startScreen.favoriteSearchesTitle": {
+    "message": "Favorite",
+    "description": "The title for favorite searches"
+  },
+  "theme.SearchModal.startScreen.removeFavoriteSearchButtonTitle": {
+    "message": "Remove this search from favorites",
+    "description": "The title for remove favorite search button"
+  },
+  "theme.SearchModal.startScreen.recentConversationsTitle": {
+    "message": "Recent conversations",
+    "description": "The title for recent conversations"
+  },
+  "theme.SearchModal.startScreen.removeRecentConversationButtonTitle": {
+    "message": "Remove this conversation from history",
+    "description": "The title for remove recent conversation button"
+  },
+  "theme.SearchModal.errorScreen.titleText": {
+    "message": "Unable to fetch results",
+    "description": "The title for error screen"
+  },
+  "theme.SearchModal.errorScreen.helpText": {
+    "message": "You might want to check your network connection.",
+    "description": "The help text for error screen"
+  },
+  "theme.SearchModal.resultsScreen.askAiPlaceholder": {
+    "message": "Ask AI: ",
+    "description": "The placeholder text for Ask AI input"
+  },
+  "theme.SearchModal.askAiScreen.disclaimerText": {
+    "message": "Answers are generated with AI which can make mistakes. Verify responses.",
+    "description": "The disclaimer text for AI answers"
+  },
+  "theme.SearchModal.askAiScreen.relatedSourcesText": {
+    "message": "Related sources",
+    "description": "The text for related sources"
+  },
+  "theme.SearchModal.askAiScreen.thinkingText": {
+    "message": "Thinking...",
+    "description": "The text when AI is thinking"
+  },
+  "theme.SearchModal.askAiScreen.copyButtonText": {
+    "message": "Cópia",
+    "description": "The text for copy button"
+  },
+  "theme.SearchModal.askAiScreen.copyButtonCopiedText": {
+    "message": "Copied!",
+    "description": "The text for copy button when copied"
+  },
+  "theme.SearchModal.askAiScreen.copyButtonTitle": {
+    "message": "Cópia",
+    "description": "The title for copy button"
+  },
+  "theme.SearchModal.askAiScreen.likeButtonTitle": {
+    "message": "Like",
+    "description": "The title for like button"
+  },
+  "theme.SearchModal.askAiScreen.dislikeButtonTitle": {
+    "message": "Dislike",
+    "description": "The title for dislike button"
+  },
+  "theme.SearchModal.askAiScreen.thanksForFeedbackText": {
+    "message": "Thanks for your feedback!",
+    "description": "The text for thanks for feedback"
+  },
+  "theme.SearchModal.askAiScreen.preToolCallText": {
+    "message": "Searching...",
+    "description": "The text before tool call"
+  },
+  "theme.SearchModal.askAiScreen.duringToolCallText": {
+    "message": "Searching for ",
+    "description": "The text during tool call"
+  },
+  "theme.SearchModal.askAiScreen.afterToolCallText": {
+    "message": "Searched for",
+    "description": "The text after tool call"
+  },
+  "theme.SearchModal.footer.selectText": {
+    "message": "Select",
+    "description": "The select text for footer"
+  },
+  "theme.SearchModal.footer.submitQuestionText": {
+    "message": "Submit question",
+    "description": "The submit question text for footer"
+  },
+  "theme.SearchModal.footer.selectKeyAriaLabel": {
+    "message": "Enter key",
+    "description": "The ARIA label for select key in footer"
+  },
+  "theme.SearchModal.footer.navigateText": {
+    "message": "Navigate",
+    "description": "The navigate text for footer"
+  },
+  "theme.SearchModal.footer.navigateUpKeyAriaLabel": {
+    "message": "Arrow up",
+    "description": "The ARIA label for navigate up key in footer"
+  },
+  "theme.SearchModal.footer.navigateDownKeyAriaLabel": {
+    "message": "Arrow down",
+    "description": "The ARIA label for navigate down key in footer"
+  },
+  "theme.SearchModal.footer.closeText": {
+    "message": "Fechar",
+    "description": "The close text for footer"
+  },
+  "theme.SearchModal.footer.closeKeyAriaLabel": {
+    "message": "Escape key",
+    "description": "The ARIA label for close key in footer"
+  },
+  "theme.SearchModal.footer.searchByText": {
+    "message": "Powered by",
+    "description": "The 'Powered by' text for footer"
+  },
+  "theme.SearchModal.footer.backToSearchText": {
+    "message": "Back to search",
+    "description": "The back to search text for footer"
+  },
+  "theme.SearchModal.noResultsScreen.noResultsText": {
+    "message": "No results found for",
+    "description": "The text when there are no results"
+  },
+  "theme.SearchModal.noResultsScreen.suggestedQueryText": {
+    "message": "Try searching for",
+    "description": "The text for suggested query"
+  },
+  "theme.SearchModal.noResultsScreen.reportMissingResultsText": {
+    "message": "Believe this query should return results?",
+    "description": "The text for reporting missing results"
+  },
+  "theme.SearchModal.noResultsScreen.reportMissingResultsLinkText": {
+    "message": "Let us know.",
+    "description": "The link text for reporting missing results"
+  },
+  "theme.SearchModal.placeholder": {
+    "message": "Search docs",
+    "description": "The placeholder of the input of the DocSearch pop-up modal"
+  },
+  "Docusaurus Site Showcase": {
+    "message": "Docusaurus Site Showcase"
+  },
+  "List of websites people are building with Docusaurus": {
+    "message": "List of websites people are building with Docusaurus"
+  },
+  "showcase.header.button": {
+    "message": "🙏 Por favor, adicione seu site"
+  },
+  "showcase.filters.resultCount": {
+    "message": "1 site|{sitesCount} sites",
+    "description": "Pluralized label for the number of sites found on the showcase. Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.BackToTopButton.buttonAriaLabel": {
+    "message": "Scroll back to top",
+    "description": "The ARIA label for the back to top button"
+  },
+  "theme.blog.archive.title": {
+    "message": "Archive",
+    "description": "The page & hero title of the blog archive page"
+  },
+  "theme.blog.archive.description": {
+    "message": "Archive",
+    "description": "The page & hero description of the blog archive page"
+  },
+  "theme.blog.paginator.navAriaLabel": {
+    "message": "Navegação da página de lista de blogs",
+    "description": "The ARIA label for the blog pagination"
+  },
+  "theme.blog.paginator.newerEntries": {
+    "message": "Newer entries",
+    "description": "The label used to navigate to the newer blog posts page (previous page)"
+  },
+  "theme.blog.paginator.olderEntries": {
+    "message": "Older entries",
+    "description": "The label used to navigate to the older blog posts page (next page)"
+  },
+  "theme.blog.post.paginator.navAriaLabel": {
+    "message": "Navegação da página de post do blog",
+    "description": "The ARIA label for the blog posts pagination"
+  },
+  "theme.blog.post.paginator.newerPost": {
+    "message": "Newer post",
+    "description": "The blog post button label to navigate to the newer/previous post"
+  },
+  "theme.blog.post.paginator.olderPost": {
+    "message": "Older post",
+    "description": "The blog post button label to navigate to the older/next post"
+  },
+  "theme.colorToggle.ariaLabel.mode.system": {
+    "message": "system mode",
+    "description": "The name for the system color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "message": "modo claro",
+    "description": "The name for the light color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "message": "dark mode",
+    "description": "The name for the dark color mode"
+  },
+  "theme.colorToggle.ariaLabel": {
+    "message": "Switch between dark and light mode (currently {mode})",
+    "description": "The ARIA label for the color mode toggle"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "Breadcrumbs",
+    "description": "The ARIA label for the breadcrumbs"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "Docs pages",
+    "description": "The ARIA label for the docs pagination"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "Anterior",
+    "description": "The label used to navigate to the previous doc"
+  },
+  "theme.docs.paginator.next": {
+    "message": "Next",
+    "description": "The label used to navigate to the next doc"
+  },
+  "theme.docs.tagDocListPageTitle.nDocsTagged": {
+    "message": "One doc tagged|{count} docs tagged",
+    "description": "Pluralized label for \"{count} docs tagged\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.docs.tagDocListPageTitle": {
+    "message": "{nDocsTagged} with \"{tagName}\"",
+    "description": "The title of the page for a docs tag"
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "Version: {versionLabel}"
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "Essa documentação não foi lançada para a versão {siteTitle} {versionLabel}.",
+    "description": "The label used to tell the user that he's browsing an unreleased doc version"
+  },
+  "theme.docs.versions.unmaintainedVersionLabel": {
+    "message": "Esta é a documentação do {siteTitle} {versionLabel}, que não é mais ativamente mantida.",
+    "description": "The label used to tell the user that he's browsing an unmaintained doc version"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "Para documentação atualizada, veja a {latestVersionLink} ({versionLabel}).",
+    "description": "The label used to tell the user to check the latest version"
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "latest version",
+    "description": "The label used for the latest version suggestion link label"
+  },
+  "theme.common.editThisPage": {
+    "message": "Editar esta página",
+    "description": "The link label to edit the current page"
+  },
+  "theme.common.headingLinkTitle": {
+    "message": "Direct link to {heading}",
+    "description": "Title for link to heading"
+  },
+  "theme.lastUpdated.atDate": {
+    "message": " em {date}",
+    "description": "The words used to describe on which date a page has been last updated"
+  },
+  "theme.lastUpdated.byUser": {
+    "message": " por {user}",
+    "description": "The words used to describe by who the page has been last updated"
+  },
+  "theme.lastUpdated.lastUpdatedAtBy": {
+    "message": "Última atualização{atDate}{byUser}",
+    "description": "The sentence used to display when a page has been last updated, and by who"
+  },
+  "theme.NotFound.title": {
+    "message": "Página não encontrada",
+    "description": "The title of the 404 page"
+  },
+  "theme.navbar.mobileVersõesDropdown.label": {
+    "message": "Versions",
+    "description": "The label for the navbar versions dropdown on mobile view"
+  },
+  "theme.tags.tagsListLabel": {
+    "message": "Tags:",
+    "description": "The label alongside a tag list"
+  },
+  "theme.Playground.liveEditor": {
+    "message": "Editor ao vivo",
+    "description": "The live editor label of the live codeblocks"
+  },
+  "theme.Playground.result": {
+    "message": "Result",
+    "description": "The result label of the live codeblocks"
+  },
+  "theme.admonition.danger": {
+    "message": "danger",
+    "description": "The default label used for the Danger admonition (:::danger)"
+  },
+  "theme.admonition.info": {
+    "message": "info",
+    "description": "The default label used for the Info admonition (:::info)"
+  },
+  "theme.admonition.note": {
+    "message": "note",
+    "description": "The default label used for the Note admonition (:::note)"
+  },
+  "theme.admonition.tip": {
+    "message": "tip",
+    "description": "The default label used for the Tip admonition (:::tip)"
+  },
+  "theme.admonition.warning": {
+    "message": "warning",
+    "description": "The default label used for the Warning admonition (:::warning)"
+  },
+  "theme.AnnouncementBar.closeButtonAriaLabel": {
+    "message": "Close",
+    "description": "The ARIA label for close button of announcement bar"
+  },
+  "theme.blog.sidebar.navAriaLabel": {
+    "message": "Navegação nas postagens recentes do blog",
+    "description": "The ARIA label for recent posts in the blog sidebar"
+  },
+  "theme.DocSidebarItem.expandCategoryAriaLabel": {
+    "message": "Expand sidebar category '{label}'",
+    "description": "The ARIA label to expand the sidebar category"
+  },
+  "theme.DocSidebarItem.collapseCategoryAriaLabel": {
+    "message": "Minimizar barra lateral category '{label}'",
+    "description": "The ARIA label to collapse the sidebar category"
+  },
+  "theme.IconExternalLink.ariaLabel": {
+    "message": "(opens in new tab)",
+    "description": "The ARIA label for the external link icon"
+  },
+  "theme.NotFound.p1": {
+    "message": "Não conseguimos encontrar o que você estava procurando.",
+    "description": "The first paragraph of the 404 page"
+  },
+  "theme.NotFound.p2": {
+    "message": "Por favor, entre em contato com o proprietário do site que conectou você com esta URL e avise eles que o link está quebrado.",
+    "description": "The 2nd paragraph of the 404 page"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "Main",
+    "description": "The ARIA label for the main navigation"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "Languages",
+    "description": "The label for the mobile language switcher dropdown"
+  },
+  "theme.TOCCollapsible.toggleButtonLabel": {
+    "message": "Nesta página",
+    "description": "The label used by the button on the collapsible TOC component"
+  },
+  "changelog.backLink": {
+    "message": "← Back to index page"
+  },
+  "theme.changelog.post.paginator.navAriaLabel": {
+    "message": "Changelog item navigation",
+    "description": "The ARIA label for the changelog pagination"
+  },
+  "theme.changelog.post.paginator.newerRelease": {
+    "message": "Newer release",
+    "description": "The changelog button label to navigate to the newer release"
+  },
+  "theme.changelog.post.paginator.olderRelease": {
+    "message": "Older release",
+    "description": "The changelog button label to navigate to the older release"
+  },
+  "theme.Playground.buttons.reset": {
+    "message": "Reset",
+    "description": "The reset button label for live code blocks"
+  },
+  "showcase.card.sourceLink": {
+    "message": "source"
+  },
+  "showcase.filters.title": {
+    "message": "Filtros"
+  },
+  "showcase.usersList.noResult": {
+    "message": "No result"
+  },
+  "showcase.favoritesList.title": {
+    "message": "Nossos Favoritos"
+  },
+  "showcase.usersList.allUsers": {
+    "message": "Todos os sites"
+  },
+  "showcase.searchBar.placeholder": {
+    "message": "Search for site name..."
+  },
+  "theme.blog.post.readMore": {
+    "message": "Leia mais",
+    "description": "The label used in blog post item excerpts to link to full blog posts"
+  },
+  "theme.blog.post.readMoreLabel": {
+    "message": "Read more about {title}",
+    "description": "The ARIA label for the link to full blog posts from excerpts"
+  },
+  "theme.docs.breadcrumbs.home": {
+    "message": "Home page",
+    "description": "The ARIA label for the home page in the breadcrumbs"
+  },
+  "theme.blog.post.readingTime.plurals": {
+    "message": "Leitura de um minuto|Leitura de {readingTime} minutos",
+    "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.CodeBlock.copy": {
+    "message": "Copy",
+    "description": "The copy button label on code blocks"
+  },
+  "theme.CodeBlock.copied": {
+    "message": "Copiado",
+    "description": "The copied button label on code blocks"
+  },
+  "theme.CodeBlock.copyButtonAriaLabel": {
+    "message": "Cópia code to clipboard",
+    "description": "The ARIA label for copy code blocks button"
+  },
+  "theme.CodeBlock.wordWrapToggle": {
+    "message": "Toggle word wrap",
+    "description": "The title attribute for toggle word wrapping button of code block lines"
+  },
+  "theme.docs.sidebar.navAriaLabel": {
+    "message": "Docs sidebar",
+    "description": "The ARIA label for the sidebar navigation"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "Minimizar barra lateral",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.collapseButtonAriaLabel": {
+    "message": "Collapse sidebar",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.closeSidebarButtonAriaLabel": {
+    "message": "Fechar navigation bar",
+    "description": "The ARIA label for close button of mobile sidebar"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.expandAriaLabel": {
+    "message": "Expand the dropdown",
+    "description": "The ARIA label of the button to expand the mobile dropdown navbar item"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.collapseAriaLabel": {
+    "message": "Collapse the dropdown",
+    "description": "The ARIA label of the button to collapse the mobile dropdown navbar item"
+  },
+  "changelog.description.rssLink": {
+    "message": "RSS feeds"
+  },
+  "changelog.description": {
+    "message": "Subscribe through {rssLink} or follow us on {xLink} to stay up-to-date with new releases!"
+  },
+  "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
+    "message": "← Voltar para o menu principal",
+    "description": "The label of the back button to return to main menu, inside the mobile navbar sidebar secondary menu (notably used to display the docs sidebar)"
+  },
+  "theme.docs.sidebar.toggleSidebarButtonAriaLabel": {
+    "message": "Toggle navigation bar",
+    "description": "The ARIA label for hamburger menu button of mobile navigation"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "Expandir barra lateral",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "Expandir barra lateral",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.contentVisibility.unlistedBanner.title": {
+    "message": "Unlisted page",
+    "description": "The unlisted content banner title"
+  },
+  "theme.contentVisibility.unlistedBanner.message": {
+    "message": "This page is unlisted. Pesquisar engines will not index it, and only users having a direct link can access it.",
+    "description": "The unlisted content banner message"
+  },
+  "theme.contentVisibility.draftBanner.title": {
+    "message": "Draft page",
+    "description": "The draft content banner title"
+  },
+  "theme.contentVisibility.draftBanner.message": {
+    "message": "This page is a draft. It will only be visible in dev and be excluded from the production build.",
+    "description": "The draft content banner message"
+  },
+  "theme.ErrorPageContent.tryAgain": {
+    "message": "Try again",
+    "description": "The label of the button to try again rendering when the React error boundary captures an error"
+  },
+  "theme.common.skipToMainContent": {
+    "message": "Skip to main content",
+    "description": "The skip to content label used for accessibility, allowing to rapidly navigate to main content with keyboard tab/enter navigation"
+  },
+  "theme.tags.tagsPageTitle": {
+    "message": "Tags",
+    "description": "The title of the tag list page"
+  },
+  "theme.tags.tagsPageLink": {
+    "message": "View all tags",
+    "description": "The label of the link targeting the tag list page"
+  }
+}

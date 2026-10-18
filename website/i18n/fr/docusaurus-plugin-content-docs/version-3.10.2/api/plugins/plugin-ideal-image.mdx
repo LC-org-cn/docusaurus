@@ -1,0 +1,106 @@
+---
+sidebar_position: 8
+slug: /api/plugins/@docusaurus/plugin-ideal-image
+---
+
+# 📦 plugin-ideal-image
+
+import APITable from '@site/src/components/APITable';
+
+Plugin Docusaurus pour générer une image presque idéale (réactive, chargement différé et placeholder de basse qualité).
+
+:::info
+
+Par défaut, le plugin est **inactif en développement** pour que vous puissiez toujours voir des images à grande échelle. Si vous voulez déboguer le comportement d'image idéal, vous pouvez définir l'option [`disableInDev`](#disableInDev) à `false`.
+
+:::
+
+## Installation {/* #installation */}
+
+```bash npm2yarn
+npm install --save @docusaurus/plugin-ideal-image
+```
+
+## Utilisation {/* #usage */}
+
+Ce plugin ne supporte que les formats PNG et JPG.
+
+```jsx
+import Image from '@theme/IdealImage';
+import thumbnail from './path/to/img.png';
+
+// your React code
+<Image img={thumbnail} />
+
+// or
+<Image img={require('./path/to/img.png')} />
+```
+
+:::warning
+
+Ce plugin enregistre un [chargeur Webpack](https://webpack.js.org/loaders/) qui change le type des images qui sont import/require :
+
+- Avant : `string`
+- Après : `{preSrc: string, src: import("@theme/IdealImage").SrcImage}`
+
+:::
+
+:::warning For pnpm users
+
+Starting with [pnpm 10](https://github.com/pnpm/pnpm/releases/tag/v10.0.0), running `pnpm install` won't run dependency install scripts by default. You'll need additional pnpm configuration ([issue](https://github.com/lovell/sharp/issues/4343)) for our `sharp` image resizing dependency to install correctly, such as:
+
+```json title="package.json"
+{
+  "pnpm": {
+    "onlyBuiltDependencies": ["fsevents"]
+  }
+}
+```
+
+:::
+
+## Configuration {/* #configuration */}
+
+Champs acceptés :
+
+```mdx-code-block
+<APITable>
+```
+
+| Option | Type | Par défaut | Description |
+| --- | --- | --- | --- |
+| `name` | `string` | `ideal-img/[name].[hash:hex:7].[width].[ext]` | Modèle du nom de fichier pour les fichiers en sortie. |
+| `sizes` | `number[]` | _taille originale_ | Spécifiez toutes les largeurs que vous voulez utiliser. Si une taille spécifiée dépasse la largeur de l'image originale, celle-ci sera utilisée (c'est-à-dire que les images ne seront pas redimensionnées). |
+| `size` | `number` | _taille originale_ | Spécifiez une largeur que vous voulez utiliser. Si la taille spécifiée dépasse la largeur de l'image originale, celle-ci sera utilisée (c'est-à-dire que les images ne seront pas redimensionnées) |
+| `min` | `number` |  | Comme alternative à la spécification manuelle des `sizes`, vous pouvez spécifier `min`, `max` et `steps`, et les tailles seront générées pour vous. |
+| `max` | `number` |  | Voir `min` ci-dessus |
+| `steps` | `number` | `4` | Configurez le nombre d'images générées entre `min` et `max` (inclusif) |
+| `quality` | `number` | `85` | Qualité de compression JPEG |
+| `disableInDev` | `boolean` | `true` | Vous pouvez tester le comportement idéal de l'image en mode dev en mettant cette valeur à `false`. **Astuce**: utilisez la [limitation du réseau](https://www.browserstack.com/guide/how-to-perform-network-throttling-in-chrome) dans votre navigateur pour simuler des réseaux lents. |
+
+```mdx-code-block
+</APITable>
+```
+
+### Exemple de configuration {/* #ex-config */}
+
+Voici un exemple de configuration :
+
+```js title="docusaurus.config.js"
+export default {
+  plugins: [
+    [
+      '@docusaurus/plugin-ideal-image',
+      // highlight-start
+      {
+        quality: 70,
+        max: 1030, // max resized image's size.
+        min: 640, // min resized image's size. if original is lower, use that size.
+        steps: 2, // the max number of images generated between min and max (inclusive)
+        disableInDev: false,
+      },
+      // highlight-end
+    ],
+  ],
+};
+```

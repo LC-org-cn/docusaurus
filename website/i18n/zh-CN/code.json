@@ -1,0 +1,939 @@
+{
+  "预设选项": {
+    "message": "Preset options"
+  },
+  "apiDocs.configTabs.presetOptions.description": {
+    "message": "如果你使用预设，你可以通过{presetLink}配置这个插件："
+  },
+  "预设选项": {
+    "message": "preset options"
+  },
+  "插件选项": {
+    "message": "Plugin options"
+  },
+  "如果你用的是独立插件，直接向插件提供选项：": {
+    "message": "If you are using a standalone plugin, provide options directly to the plugin:"
+  },
+  "当前版本：{canaryVersionName}": {
+    "message": "Current: {canaryVersionName}",
+    "description": "The hint text for the current canary version tag."
+  },
+  "例如：0.0.0-4922": {
+    "message": "Example: 0.0.0-4922",
+    "description": "An example canary version tag when the actual version can't be fetched."
+  },
+  "npm 上最新的 Canary 版本发布于 {time}。": {
+    "message": "The latest canary version that's available on npm is published at {time}."
+  },
+  "homepage.features.powered-by-mdx.title": {
+    "message": "由 MDX 驱动"
+  },
+  "homepage.features.powered-by-mdx.text": {
+    "message": "节约时间并专注于文档本身。只需要以 Markdown/MDX 格式撰写文档/博客，Docusaurus 就能自动构建生成静态 HTML 文件。通过 MDX，甚至可以在 Markdown 中嵌入 React 组件。"
+  },
+  "homepage.features.built-using-react.title": {
+    "message": "使用 React 构建"
+  },
+  "homepage.features.built-using-react.text": {
+    "message": "通过编写 React 组件来扩展和自定义你的网页布局。利用插件架构，你可以在设计自己的网站的同时，复用 Docusaurus 插件所创建的数据。"
+  },
+  "homepage.features.ready-for-translations.title": {
+    "message": "可翻译"
+  },
+  "homepage.features.ready-for-translations.text": {
+    "message": "开箱即用的本地化。使用 git、Crowdin 或任何其他翻译管理器来翻译你的文档并单独部署。"
+  },
+  "homepage.features.document-versioning.title": {
+    "message": "文档版本化"
+  },
+  "homepage.features.document-versioning.text": {
+    "message": "为你的用户提供所有版本的项目文档。版本化文档可让你的文档发布与项目发行时间保持一致。"
+  },
+  "homepage.features.content-搜索.title": {
+    "message": "Content 搜索"
+  },
+  "homepage.features.content-search.text": {
+    "message": "让你的社区在文档中轻松找到他们需要的内容。我们支持 Algolia 文档搜索。"
+  },
+  "homepage.quotes.christopher-chedeau.title": {
+    "message": "Prettier 首席开发者",
+    "description": "Title of quote of Christopher Chedeau on the home page"
+  },
+  "homepage.quotes.christopher-chedeau": {
+    "message": "我为 Facebook 所贡献的每个开源项目都需要一个网站，且它们都有相同的限制：文档使用 Markdown 编写并部署在 GitHub Pages 上。我太感谢 Docusaurus 让我不用每周重复造轮子了。",
+    "description": "Quote of Christopher Chedeau on the home page"
+  },
+  "homepage.quotes.hector-ramos.title": {
+    "message": "React Native 大使",
+    "description": "Title of quote of Hector Ramos on the home page"
+  },
+  "homepage.quotes.hector-ramos": {
+    "message": "迁移到 Docusaurus 后，React Native 的开源贡献数量直线上升。现在的文档托管于一个小仓库上，仅包含纯 Markdown 内容，完全没有其他的静态网页生成器那么麻烦！感谢 Slash！",
+    "description": "Quote of Hector Ramos on the home page"
+  },
+  "homepage.quotes.risky-vetter.title": {
+    "message": "ReasonReact 开发者",
+    "description": "Title of quote of Ricky Vetter on the home page"
+  },
+  "homepage.quotes.risky-vetter": {
+    "message": "Docusaurus 一直都是 ReasonML 项目组的首选。它能保证我们的文档连贯一致、易于国际化与维护，且对新贡献者友好。",
+    "description": "Quote of Ricky Vetter on the home page"
+  },
+  "最爱": {
+    "message": "最爱"
+  },
+  "showcase.tag.favorite.description": {
+    "message": "我们最爱的 Docusaurus 站点，你绝对必须看看！"
+  },
+  "开源": {
+    "message": "Open-Source"
+  },
+  "showcase.tag.open源码.description": {
+    "message": "开源 Docusaurus 网站可以提供灵感！"
+  },
+  "产品": {
+    "message": "Product"
+  },
+  "showcase.tag.product.description": {
+    "message": "和商业产品相关的 Docusaurus 网站！"
+  },
+  "设计": {
+    "message": "Design"
+  },
+  "showcase.tag.design.description": {
+    "message": "漂亮的 Docusaurus 网站，与初始模版相比打磨得焕然一新！"
+  },
+  "国际化": {
+    "message": "I18n"
+  },
+  "showcase.tag.i18n.description": {
+    "message": "使用国际化支持的 Docusaurus 站点，包含超过一个语言。"
+  },
+  "分版": {
+    "message": "Versioning"
+  },
+  "showcase.tag.versioning.description": {
+    "message": "Docusaurus sites using the versioning feature of the docs plugin to manage mul提示le versions."
+  },
+  "大型": {
+    "message": "Large"
+  },
+  "showcase.tag.large.description": {
+    "message": "非常庞大的 Docusaurus 站点，包括远多于平均数的页面！"
+  },
+  "Meta": {
+    "message": "Meta"
+  },
+  "showcase.tag.meta.description": {
+    "message": "Meta（原 Facebook）项目的 Docusaurus 网站"
+  },
+  "个人": {
+    "message": "Personal"
+  },
+  "showcase.tag.personal.description": {
+    "message": "Personal 网站s, blogs and digital gardens built with Docusaurus"
+  },
+  "RTL 方向": {
+    "message": "RTL Direction"
+  },
+  "showcase.tag.rtl.description": {
+    "message": "使用从右向左阅读方向支持的 Docusaurus 站点。"
+  },
+  "Docusaurus 拿着键盘吉他": {
+    "message": "Docusaurus with Keytar"
+  },
+  "homepage.hero.title": {
+    "message": "<b>快速构建</b>以<b>内容</b>为核心的<b>最佳网站</b>",
+    "description": "主页 hero title, can contain simple html tags"
+  },
+  "入门指南": {
+    "message": "Get Started"
+  },
+  "试用一下": {
+    "message": "Try a Demo"
+  },
+  "被许多工程师追捧": {
+    "message": "Loved by many engineers"
+  },
+  "看看介绍视频": {
+    "message": "Check it out in the intro video"
+  },
+  "homepage.banner.launch.newVersion": {
+    "message": "Docusaurus {newVersion} 已发布！"
+  },
+  "versionsPage.versionEntry.link": {
+    "message": "文档"
+  },
+  "versionsPage.versionEntry.releaseNotes": {
+    "message": "发布日志"
+  },
+  "versionsPage.title": {
+    "message": "Docusaurus 文档版本"
+  },
+  "versionsPage.current.title": {
+    "message": "当前版本（稳定版）"
+  },
+  "versionsPage.current.description": {
+    "message": "在这里你可以找到当前已发布版本的文档。"
+  },
+  "versionsPage.next.title": {
+    "message": "下一篇文档 version (Unreleased)"
+  },
+  "versionsPage.next.description": {
+    "message": "在这里你可以找到未发布版本的文档。"
+  },
+  "versionsPage.archived.title": {
+    "message": "过往版本（不再维护）"
+  },
+  "versionsPage.archived.description": {
+    "message": "在这里你可以找到过往版本的 Docusaurus 文档。"
+  },
+  "versionsPage.legacy.title": {
+    "message": "Docusaurus v1（历史）"
+  },
+  "versionsPage.legacy.description": {
+    "message": "在这里你可以找到历史遗留版本的 Docusaurus 文档。"
+  },
+  "colorGenerator.tip.body": {
+    "message": "主色调最好至少有 {wcagLink}，以保证可读性。你可以用 Docusaurus 自己的网站来预览你的配色的效果。深色模式下，你可以换一套配色，因为同一种颜色一般不能在浅色和深色模式下都保持足够的可读性。"
+  },
+  "colorGenerator.tip.body.wcagLink.label": {
+    "message": "WCAG-AA 对比度"
+  },
+  "colorGenerator.inputs.primary.label": {
+    "message": "主色调："
+  },
+  "colorGenerator.inputs.modeToggle.label": {
+    "message": "编辑{colorMode}模式"
+  },
+  "colorGenerator.inputs.modeToggle.label.colorMode.浅色": {
+    "message": "light"
+  },
+  "colorGenerator.inputs.modeToggle.label.colorMode.深色": {
+    "message": "dark"
+  },
+  "colorGenerator.inputs.resetButton.label": {
+    "message": "重置"
+  },
+  "colorGenerator.inputs.background.label": {
+    "message": "背景色："
+  },
+  "colorGenerator.table.heading1": {
+    "message": "CSS 变量名称"
+  },
+  "colorGenerator.table.heading2": {
+    "message": "十六进制值",
+    "description": "This column is the color's representation in hex"
+  },
+  "colorGenerator.table.heading3": {
+    "message": "颜色调整值",
+    "description": "This column is the adjusted shades' adjustment values relative to the primary color"
+  },
+  "colorGenerator.table.heading4": {
+    "message": "对比度评分",
+    "description": "This column is WCAG contrast rating: AAA, AA, Fail"
+  },
+  "colorGenerator.text": {
+    "message": "把 {cssPath} 中的变量替换成这些新变量。"
+  },
+  "playground.codesandbox.description": {
+    "message": "CodeSandbox是一个在线代码编辑器和开发环境，让开发人员能够在基于浏览器的环境中创建、分享和协作网络开发项目"
+  },
+  "playground.stackblitz.description": {
+    "message": "StackBlitz 使用最新的 {webContainersLink} 技术，能够直接在你的浏览器中运行 Docusaurus。"
+  },
+  "playground.tryItButton": {
+    "message": "现在就试试看！"
+  },
+  "team.profile.网站LinkLabel": {
+    "message": "website"
+  },
+  "team.profile.Sebastien Lorber.body": {
+    "message": "2014 年开始的 React 热爱者。自由职业，帮助 Facebook 发布 Docusaurus v2。他定期会在他的{website}和 {devto} 上撰文。"
+  },
+  "team.profile.Sida Chen.body": {
+    "message": "来自中国上海的学生。热情的开源项目创建者，但从未在他创建的那些项目里真正努力工作过。"
+  },
+  "team.profile.Clement Couriol.body": {
+    "message": "来自法国里昂 CPE 的学生。热衷于网页开发，努力成为网页开发专家。"
+  },
+  "team.profile.Joel Marcey.body": {
+    "message": "Docusaurus 创始人，现在时时为那些真的在为它写代码的人感激喝彩。"
+  },
+  "team.profile.Alexey Pyltsyn.body": {
+    "message": "沉迷开源 👋 不断学习 🤷‍♂️ PHP、React、Kubernetes 等等的俄文文档维护者🧐"
+  },
+  "team.profile.Yangshun Tay.body": {
+    "message": "热爱在 Jamstack 上工作的前端全栈开发者。与 Docusaurus 项目组共事让他兼职 Facebook 的非官方开源站点管理员，这个角色很棒。"
+  },
+  "team.profile.Endilie Yacop Sucipto.body": {
+    "message": "@docusaurus 维护者 · 🔥🔥🔥"
+  },
+  "team.profile.Wei Gao.body": {
+    "message": "🏻‍🌾 孵化中的 React 开发者、维护 Docusaurus、撰写文档并用诸多网站刷屏这个世界。"
+  },
+  "team.profile.Anshul Goyal.body": {
+    "message": "热爱编程和尝试新技术的全栈开发者。在闲暇时间中，他会为开源做贡献，在他的{websiteLink}上写博客文章，或者看动漫。"
+  },
+  "team.profile.Anshul Goyal.body.websiteLink.label": {
+    "message": "website"
+  },
+  "team.profile.Drew Alexander.body": {
+    "message": "开发者和创造者，试图获得搭建所有他能想到的东西的能力。"
+  },
+  "team.profile.Fanny Vieira.body": {
+    "message": "Fanny 在高中时开始接触 Web 开发，为学校厨房搭建了一个项目。在闲暇时间里，她喜欢为开源做贡献，有时在{blogLink}上分享她的经历，烹饪，以及创建 {spotifyLink}。"
+  },
+  "team.profile.Fanny Vieira.body.blogLink.label": {
+    "message": "她的博客"
+  },
+  "team.profile.Fanny Vieira.body.spotifyLink.label": {
+    "message": "Spotify 歌单"
+  },
+  "team.profile.Sam Zhou.body": {
+    "message": "Sam 从 2011 年开始编程，并在 2015 年搭建了他的{websiteLink}。他对编程语言、开发者工具、和 web 开发感兴趣，并创造了自己的{samLangLink}和 {miniReactLink} 框架。"
+  },
+  "team.profile.Sam Zhou.body.samLangLink.label": {
+    "message": "编程语言"
+  },
+  "team.profile.Sam Zhou.body.miniReactLink.label": {
+    "message": "mini React"
+  },
+  "team.profile.Tan Teik Jun.body": {
+    "message": "开源爱好者，目标是变得和这页上的其他人类一样优秀。在 Docusaurus 上的工作让他更接近这个目标了 🌱"
+  },
+  "team.profile.Nisarag Bhatt.body": {
+    "message": "全栈 web 开发者，热衷于学习并应用新技术！热爱开源贡献，以及撰写文章和教程。"
+  },
+  "upgradeGuide.archivedVersion.notice": {
+    "message": "You are browsing an archived version and the snippet below is outdated. Please go to the {mainSiteLink} and follow the instructions there to upgrade to the 最新文档."
+  },
+  "upgradeGuide.archivedVersion.notice.mainSiteLink.label": {
+    "message": "主站点"
+  },
+  "upgradeGuide.unreleasedVersion.notice": {
+    "message": "你正在浏览未发布版本的文档。如果你想使用任何未发布功能，你可以使用{canaryDocLink}。"
+  },
+  "upgradeGuide.unreleasedVersion.notice.canaryDocLink.label": {
+    "message": "{canaryTag}版本"
+  },
+  "upgradeGuide.outdatedVersion.notice": {
+    "message": "你正在浏览过期版本的文档。下面的代码展示了如何升级到最新版本。"
+  },
+  "theme.ErrorPageContent.title": {
+    "message": "页面已崩溃。",
+    "description": "The title of the fallback page when the page crashed"
+  },
+  "想要实现一样的页面吗？读读{guideLink}吧！": {
+    "message": "Want to implement the same page? Read {guideLink} to find out!"
+  },
+  "自动生成索引页教程": {
+    "message": "the generated index page guide"
+  },
+  "theme.IdealImageMessage.loading": {
+    "message": "加载中……",
+    "description": "When the full-scale image is loading"
+  },
+  "theme.IdealImageMessage.load": {
+    "message": "点击加载{sizeMessage}",
+    "description": "To prompt users to load the full image. sizeMessage is a parenthesized size figure."
+  },
+  "theme.IdealImageMessage.offline": {
+    "message": "你的浏览器处于离线状态。图片未加载",
+    "description": "When the user is viewing an offline document"
+  },
+  "theme.IdealImageMessage.404error": {
+    "message": "未找到图片",
+    "description": "When the image is not found"
+  },
+  "theme.IdealImageMessage.error": {
+    "message": "出现错误，点击重试",
+    "description": "When the image fails to load for unknown error"
+  },
+  "theme.搜索Bar.seeAll": {
+    "message": "查看全部 {count} 条结果"
+  },
+  "theme.SearchPage.documentsFound.plurals": {
+    "message": "找到 {count} 篇文档",
+    "description": "Pluralized label for \"{count} documents found\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.SearchPage.existing结果sTitle": {
+    "message": "Search results for \"{query}\"",
+    "description": "The search page title for non-empty query"
+  },
+  "theme.SearchPage.emptyResultsTitle": {
+    "message": "搜索文档",
+    "description": "The search page title for empty query"
+  },
+  "theme.SearchPage.inputPlaceholder": {
+    "message": "在此处键入您的搜索内容",
+    "description": "The placeholder for search page input"
+  },
+  "theme.SearchPage.inputLabel": {
+    "message": "Search",
+    "description": "The ARIA label for search page input"
+  },
+  "theme.SearchPage.algoliaLabel": {
+    "message": "由 Algolia 支持",
+    "description": "The description label for Algolia mention"
+  },
+  "theme.SearchPage.noResultsText": {
+    "message": "未找到结果",
+    "description": "The paragraph for empty search result"
+  },
+  "theme.SearchPage.fetchingNewResults": {
+    "message": "正在搜索……",
+    "description": "The paragraph for fetching new search results"
+  },
+  "theme.SearchBar.label": {
+    "message": "Search",
+    "description": "The ARIA label and placeholder for search button"
+  },
+  "theme.SearchModal.searchBox.resetButtonTitle": {
+    "message": "清除查询",
+    "description": "The label and ARIA label for search box reset button"
+  },
+  "theme.SearchModal.searchBox.cancelButtonText": {
+    "message": "取消",
+    "description": "The label and ARIA label for search box cancel button"
+  },
+  "theme.SearchModal.searchBox.placeholderText": {
+    "message": "搜索文档",
+    "description": "The placeholder text for the main search input field"
+  },
+  "theme.SearchModal.searchBox.placeholderTextAskAi": {
+    "message": "问另一个问题……",
+    "description": "The placeholder text when in AI question mode"
+  },
+  "theme.SearchModal.searchBox.placeholderTextAskAiStreaming": {
+    "message": "正在回答……",
+    "description": "The placeholder text for search box when AI is streaming an answer"
+  },
+  "theme.SearchModal.searchBox.进入KeyHint": {
+    "message": "search",
+    "description": "The hint for the search box enter key text"
+  },
+  "theme.SearchModal.searchBox.enterKeyHintAskAi": {
+    "message": "enter",
+    "description": "The hint for the Ask AI search box enter key text"
+  },
+  "theme.SearchModal.searchBox.searchInputLabel": {
+    "message": "Search",
+    "description": "The ARIA label for search input"
+  },
+  "theme.SearchModal.searchBox.backToKeywordSearchButtonText": {
+    "message": "返回关键字搜索",
+    "description": "The text for back to keyword search button"
+  },
+  "theme.SearchModal.searchBox.backToKeywordSearchButtonAriaLabel": {
+    "message": "返回关键字搜索",
+    "description": "The ARIA label for back to keyword search button"
+  },
+  "theme.SearchModal.startScreen.recentSearchesTitle": {
+    "message": "最近搜索",
+    "description": "The title for recent searches"
+  },
+  "theme.SearchModal.startScreen.noRecentSearchesText": {
+    "message": "没有最近搜索",
+    "description": "The text when there are no recent searches"
+  },
+  "theme.SearchModal.startScreen.saveRecentSearchButtonTitle": {
+    "message": "保存这个搜索",
+    "description": "The title for save recent search button"
+  },
+  "theme.SearchModal.startScreen.removeRecentSearchButtonTitle": {
+    "message": "从历史记录中删除这个搜索",
+    "description": "The title for remove recent search button"
+  },
+  "theme.SearchModal.startScreen.favoriteSearchesTitle": {
+    "message": "Favorite",
+    "description": "The title for favorite searches"
+  },
+  "theme.SearchModal.startScreen.removeFavoriteSearchButtonTitle": {
+    "message": "从收藏列表中删除这个搜索",
+    "description": "The title for remove favorite search button"
+  },
+  "theme.SearchModal.startScreen.recentConversationsTitle": {
+    "message": "近期对话",
+    "description": "The title for recent conversations"
+  },
+  "theme.SearchModal.startScreen.removeRecentConversationButtonTitle": {
+    "message": "从历史记录中删除此对话",
+    "description": "The title for remove recent conversation button"
+  },
+  "theme.SearchModal.errorScreen.titleText": {
+    "message": "无法获取结果",
+    "description": "The title for error screen"
+  },
+  "theme.SearchModal.errorScreen.helpText": {
+    "message": "你可能需要检查网络连接。",
+    "description": "The help text for error screen"
+  },
+  "theme.SearchModal.resultsScreen.askAiPlaceholder": {
+    "message": "询问AI： ",
+    "description": "The placeholder text for Ask AI input"
+  },
+  "theme.SearchModal.askAiScreen.disclaimerText": {
+    "message": "答案由 AI 生成，可能含有错误，请验证。",
+    "description": "The disclaimer text for AI answers"
+  },
+  "theme.SearchModal.askAiScreen.relatedSourcesText": {
+    "message": "相关来源",
+    "description": "The text for related sources"
+  },
+  "theme.SearchModal.askAiScreen.thinkingText": {
+    "message": "思考中……",
+    "description": "The text when AI is thinking"
+  },
+  "theme.SearchModal.askAiScreen.copyButtonText": {
+    "message": "复制",
+    "description": "The text for copy button"
+  },
+  "theme.SearchModal.askAiScreen.copyButtonCopiedText": {
+    "message": "已复制！",
+    "description": "The text for copy button when copied"
+  },
+  "theme.SearchModal.askAiScreen.copyButtonTitle": {
+    "message": "复制",
+    "description": "The title for copy button"
+  },
+  "theme.SearchModal.askAiScreen.likeButtonTitle": {
+    "message": "赞",
+    "description": "The title for like button"
+  },
+  "theme.SearchModal.askAiScreen.dislikeButtonTitle": {
+    "message": "取消点赞",
+    "description": "The title for dislike button"
+  },
+  "theme.SearchModal.askAiScreen.thanksForFeedbackText": {
+    "message": "感谢您的反馈 ！",
+    "description": "The text for thanks for feedback"
+  },
+  "theme.SearchModal.askAiScreen.preToolCallText": {
+    "message": "正在搜索……",
+    "description": "The text before tool call"
+  },
+  "theme.SearchModal.askAiScreen.duringToolCallText": {
+    "message": "正在搜索 ",
+    "description": "The text during tool call"
+  },
+  "theme.SearchModal.askAiScreen.afterToolCallText": {
+    "message": "已搜索",
+    "description": "The text after tool call"
+  },
+  "theme.SearchModal.footer.selectText": {
+    "message": "选择",
+    "description": "The select text for footer"
+  },
+  "theme.SearchModal.footer.submitQuestionText": {
+    "message": "提交问题",
+    "description": "The submit question text for footer"
+  },
+  "theme.SearchModal.footer.selectKeyAriaLabel": {
+    "message": "Enter 键",
+    "description": "The ARIA label for select key in footer"
+  },
+  "theme.SearchModal.footer.navigateText": {
+    "message": "导航",
+    "description": "The navigate text for footer"
+  },
+  "theme.SearchModal.footer.navigateUpKeyAriaLabel": {
+    "message": "向上键",
+    "description": "The ARIA label for navigate up key in footer"
+  },
+  "theme.SearchModal.footer.navigateDownKeyAriaLabel": {
+    "message": "向下键",
+    "description": "The ARIA label for navigate down key in footer"
+  },
+  "theme.SearchModal.footer.closeText": {
+    "message": "关闭",
+    "description": "The close text for footer"
+  },
+  "theme.SearchModal.footer.closeKeyAriaLabel": {
+    "message": "Esc 键",
+    "description": "The ARIA label for close key in footer"
+  },
+  "theme.SearchModal.footer.searchByText": {
+    "message": "技术支持",
+    "description": "The 'Powered by' text for footer"
+  },
+  "theme.SearchModal.footer.backToSearchText": {
+    "message": "返回搜索",
+    "description": "The back to search text for footer"
+  },
+  "theme.SearchModal.noResultsScreen.noResultsText": {
+    "message": "无结果s found for",
+    "description": "The text when there are no results"
+  },
+  "theme.SearchModal.noResultsScreen.suggestedQueryText": {
+    "message": "试试搜索",
+    "description": "The text for suggested query"
+  },
+  "theme.SearchModal.noResultsScreen.reportMissingResultsText": {
+    "message": "认为这个查询应该有结果？",
+    "description": "The text for reporting missing results"
+  },
+  "theme.SearchModal.noResultsScreen.reportMissingResultsLinkText": {
+    "message": "请告知我们。",
+    "description": "The link text for reporting missing results"
+  },
+  "theme.SearchModal.placeholder": {
+    "message": "搜索文档",
+    "description": "The placeholder of the input of the DocSearch pop-up modal"
+  },
+  "Docusaurus 案例展示": {
+    "message": "Docusaurus Site Showcase"
+  },
+  "使用 Docusaurus 搭建的网站列表": {
+    "message": "List of websites people are building with Docusaurus"
+  },
+  "showcase.header.button": {
+    "message": "🙏 请添加你的网站"
+  },
+  "showcase.filters.resultCount": {
+    "message": "{sitesCount} 个站点",
+    "description": "Pluralized label for the number of sites found on the showcase. Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.BackToTopButton.buttonAriaLabel": {
+    "message": "回到顶部",
+    "description": "The ARIA label for the back to top button"
+  },
+  "theme.blog.archive.title": {
+    "message": "历史博文",
+    "description": "The page & hero title of the blog archive page"
+  },
+  "theme.blog.archive.description": {
+    "message": "历史博文",
+    "description": "The page & hero description of the blog archive page"
+  },
+  "theme.blog.paginator.navAriaLabel": {
+    "message": "博客列表页面导航",
+    "description": "The ARIA label for the blog pagination"
+  },
+  "theme.blog.paginator.newerEntries": {
+    "message": "新条目",
+    "description": "The label used to navigate to the newer blog posts page (previous page)"
+  },
+  "theme.blog.paginator.olderEntries": {
+    "message": "旧条目",
+    "description": "The label used to navigate to the older blog posts page (next page)"
+  },
+  "theme.blog.post.paginator.navAriaLabel": {
+    "message": "博文页面导航",
+    "description": "The ARIA label for the blog posts pagination"
+  },
+  "theme.blog.post.paginator.newerPost": {
+    "message": "较新的帖子",
+    "description": "The blog post button label to navigate to the newer/previous post"
+  },
+  "theme.blog.post.paginator.olderPost": {
+    "message": "较早的帖子",
+    "description": "The blog post button label to navigate to the older/next post"
+  },
+  "theme.colorToggle.ariaLabel.mode.system": {
+    "message": "系统模式",
+    "description": "The name for the system color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "message": "浅色模式",
+    "description": "The name for the light color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "message": "暗黑模式",
+    "description": "The name for the dark color mode"
+  },
+  "theme.colorToggle.ariaLabel": {
+    "message": "切换浅色/暗黑模式（当前为{mode}）",
+    "description": "The ARIA label for the color mode toggle"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "页面路径",
+    "description": "The ARIA label for the breadcrumbs"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "文档页面",
+    "description": "The ARIA label for the docs pagination"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "上一篇文档",
+    "description": "The label used to navigate to the previous doc"
+  },
+  "theme.docs.paginator.next": {
+    "message": "Next",
+    "description": "The label used to navigate to the next doc"
+  },
+  "theme.docs.tagDocListPageTitle.nDocsTagged": {
+    "message": "{count} 篇文档带有标签",
+    "description": "Pluralized label for \"{count} docs tagged\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.docs.tagDocListPageTitle": {
+    "message": "{nDocsTagged} with \"{tagName}\"",
+    "description": "The title of the page for a docs tag"
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "版本：{versionLabel}"
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "这是尚未发布的 {siteTitle} {versionLabel} 版本文档。",
+    "description": "The label used to tell the user that he's browsing an unreleased doc version"
+  },
+  "theme.docs.versions.unmaintainedVersionLabel": {
+    "message": "这是已不再积极维护的 {siteTitle} {versionLabel} 版本文档。",
+    "description": "The label used to tell the user that he's browsing an unmaintained doc version"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "要查看最新版本，请参阅{latestVersionLink}（{versionLabel}）。",
+    "description": "The label used to tell the user to check the latest version"
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "latest version",
+    "description": "The label used for the latest version suggestion link label"
+  },
+  "theme.common.editThisPage": {
+    "message": "编辑此页",
+    "description": "The link label to edit the current page"
+  },
+  "theme.common.headingLinkTitle": {
+    "message": "链接到 {heading}",
+    "description": "Title for link to heading"
+  },
+  "theme.lastUpdated.atDate": {
+    "message": "于 {date} ",
+    "description": "The words used to describe on which date a page has been last updated"
+  },
+  "theme.lastUpdated.byUser": {
+    "message": "由 {user} ",
+    "description": "The words used to describe by who the page has been last updated"
+  },
+  "theme.lastUpdated.lastUpdatedAtBy": {
+    "message": "最后{byUser}{atDate}更新",
+    "description": "The sentence used to display when a page has been last updated, and by who"
+  },
+  "theme.NotFound.title": {
+    "message": "未找到页面",
+    "description": "The title of the 404 page"
+  },
+  "theme.navbar.mobile版本Dropdown.label": {
+    "message": "Versions",
+    "description": "The label for the navbar versions dropdown on mobile view"
+  },
+  "theme.tags.tagsListLabel": {
+    "message": "标签：",
+    "description": "The label alongside a tag list"
+  },
+  "theme.Playground.liveEditor": {
+    "message": "实时编辑器",
+    "description": "The live editor label of the live codeblocks"
+  },
+  "theme.Playground.result": {
+    "message": "Result",
+    "description": "The result label of the live codeblocks"
+  },
+  "theme.admonition.危险": {
+    "message": "danger",
+    "description": "The default label used for the Danger admonition (:::danger)"
+  },
+  "theme.admonition.信息": {
+    "message": "info",
+    "description": "The default label used for the Info admonition (:::info)"
+  },
+  "theme.admonition.备注": {
+    "message": "note",
+    "description": "The default label used for the Note admonition (:::note)"
+  },
+  "theme.admonition.tip": {
+    "message": "tip",
+    "description": "The default label used for the Tip admonition (:::tip)"
+  },
+  "theme.admonition.警告": {
+    "message": "warning",
+    "description": "The default label used for the Warning admonition (:::warning)"
+  },
+  "theme.AnnouncementBar.closeButtonAriaLabel": {
+    "message": "Close",
+    "description": "The ARIA label for close button of announcement bar"
+  },
+  "theme.blog.sidebar.navAriaLabel": {
+    "message": "最近博文导航",
+    "description": "The ARIA label for recent posts in the blog sidebar"
+  },
+  "theme.DocSidebarItem.expandCategoryAriaLabel": {
+    "message": "展开侧边栏分类 “{label}”",
+    "description": "The ARIA label to expand the sidebar category"
+  },
+  "theme.DocSidebarItem.collapseCategoryAriaLabel": {
+    "message": "折叠侧边栏 category '{label}'",
+    "description": "The ARIA label to collapse the sidebar category"
+  },
+  "theme.IconExternalLink.ariaLabel": {
+    "message": "(在新标签中打开)",
+    "description": "The ARIA label for the external link icon"
+  },
+  "theme.NotFound.p1": {
+    "message": "我们无法找到您所寻找的页面。",
+    "description": "The first paragraph of the 404 page"
+  },
+  "theme.NotFound.p2": {
+    "message": "请联系将您引向此 URL 的网站所有者，并告诉他/她们此链接已不可用。",
+    "description": "The 2nd paragraph of the 404 page"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "主页",
+    "description": "The ARIA label for the main navigation"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "语言",
+    "description": "The label for the mobile language switcher dropdown"
+  },
+  "theme.TOCCollapsible.toggleButtonLabel": {
+    "message": "本页总览",
+    "description": "The label used by the button on the collapsible TOC component"
+  },
+  "changelog.backLink": {
+    "message": "← 回到主页"
+  },
+  "theme.changelog.post.paginator.navAriaLabel": {
+    "message": "更新日志项目导航",
+    "description": "The ARIA label for the changelog pagination"
+  },
+  "theme.changelog.post.paginator.newerRelease": {
+    "message": "较新版本",
+    "description": "The changelog button label to navigate to the newer release"
+  },
+  "theme.changelog.post.paginator.olderRelease": {
+    "message": "较早版本",
+    "description": "The changelog button label to navigate to the older release"
+  },
+  "theme.Playground.buttons.reset": {
+    "message": "重置",
+    "description": "The reset button label for live code blocks"
+  },
+  "showcase.card.sourceLink": {
+    "message": "source"
+  },
+  "showcase.filters.title": {
+    "message": "标签"
+  },
+  "showcase.usersList.noResult": {
+    "message": "No result"
+  },
+  "showcase.favoritesList.title": {
+    "message": "我们的最爱"
+  },
+  "showcase.usersList.allUsers": {
+    "message": "所有网站"
+  },
+  "showcase.searchBar.placeholder": {
+    "message": "搜索网站名称……"
+  },
+  "theme.blog.post.readMore": {
+    "message": "了解更多",
+    "description": "The label used in blog post item excerpts to link to full blog posts"
+  },
+  "theme.blog.post.readMoreLabel": {
+    "message": "了解关于 {title} 的更多信息",
+    "description": "The ARIA label for the link to full blog posts from excerpts"
+  },
+  "theme.docs.breadcrumbs.home": {
+    "message": "Home page",
+    "description": "The ARIA label for the home page in the breadcrumbs"
+  },
+  "theme.blog.post.readingTime.plurals": {
+    "message": "阅读需 {readingTime} 分钟",
+    "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.CodeBlock.copy": {
+    "message": "Copy",
+    "description": "The copy button label on code blocks"
+  },
+  "theme.CodeBlock.copied": {
+    "message": "已复制",
+    "description": "The copied button label on code blocks"
+  },
+  "theme.CodeBlock.copyButtonAriaLabel": {
+    "message": "复制 code to clipboard",
+    "description": "The ARIA label for copy code blocks button"
+  },
+  "theme.CodeBlock.wordWrapToggle": {
+    "message": "切换自动换行",
+    "description": "The title attribute for toggle word wrapping button of code block lines"
+  },
+  "theme.docs.sidebar.navAriaLabel": {
+    "message": "文档侧边栏",
+    "description": "The ARIA label for the sidebar navigation"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "折叠侧边栏",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.collapseButtonAriaLabel": {
+    "message": "Collapse sidebar",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.closeSidebarButtonAriaLabel": {
+    "message": "关闭 navigation bar",
+    "description": "The ARIA label for close button of mobile sidebar"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.expandAriaLabel": {
+    "message": "展开下拉菜单",
+    "description": "The ARIA label of the button to expand the mobile dropdown navbar item"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.collapseAriaLabel": {
+    "message": "收起下拉菜单",
+    "description": "The ARIA label of the button to collapse the mobile dropdown navbar item"
+  },
+  "changelog.description.rssLink": {
+    "message": "RSS 订阅源"
+  },
+  "changelog.description": {
+    "message": "通过 {rssLink}订阅，或在 {xLink} 上关注我们，随时获得新版本的信息！"
+  },
+  "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
+    "message": "← 回到主菜单",
+    "description": "The label of the back button to return to main menu, inside the mobile navbar sidebar secondary menu (notably used to display the docs sidebar)"
+  },
+  "theme.docs.sidebar.toggleSidebarButtonAriaLabel": {
+    "message": "切换导航栏",
+    "description": "The ARIA label for hamburger menu button of mobile navigation"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "展开侧边栏",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "展开侧边栏",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.contentVisibility.unlistedBanner.title": {
+    "message": "Unlisted page",
+    "description": "The unlisted content banner title"
+  },
+  "theme.contentVisibility.unlistedBanner.message": {
+    "message": "This page is unlisted. 搜索 engines will not index it, and only users having a direct link can access it.",
+    "description": "The unlisted content banner message"
+  },
+  "theme.contentVisibility.draftBanner.title": {
+    "message": "Draft page",
+    "description": "The draft content banner title"
+  },
+  "theme.contentVisibility.draftBanner.message": {
+    "message": "This page is a draft. It will only be visible in dev and be excluded from the production build.",
+    "description": "The draft content banner message"
+  },
+  "theme.ErrorPageContent.tryAgain": {
+    "message": "Try again",
+    "description": "The label of the button to try again rendering when the React error boundary captures an error"
+  },
+  "theme.common.skipToMainContent": {
+    "message": "Skip to main content",
+    "description": "The skip to content label used for accessibility, allowing to rapidly navigate to main content with keyboard tab/enter navigation"
+  },
+  "theme.tags.tagsPageTitle": {
+    "message": "Tags",
+    "description": "The title of the tag list page"
+  },
+  "theme.tags.tagsPageLink": {
+    "message": "View all tags",
+    "description": "The label of the link targeting the tag list page"
+  }
+}

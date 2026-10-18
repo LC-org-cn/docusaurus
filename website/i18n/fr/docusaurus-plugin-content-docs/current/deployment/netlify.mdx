@@ -1,0 +1,62 @@
+---
+sidebar_label: Netlify
+description: Deploy your Docusaurus app for production on Netlify.
+---
+
+# Déploiement sur Netlify
+
+Pour déployer vos sites Docusaurus sur [Netlify](https://www.netlify.com/), assurez-vous d'abord que les options suivantes sont correctement configurées :
+
+```js title="docusaurus.config.js"
+export default {
+  // highlight-start
+  url: 'https://docusaurus-2.netlify.app', // Url to your site with no trailing slash
+  baseUrl: '/', // Base directory of your site relative to your repo
+  // highlight-end
+  // ...
+};
+```
+
+Ensuite, [créez votre site avec Netlify](https://app.netlify.com/start).
+
+Pendant que vous configurez le site, spécifiez les commandes de compilation et les répertoires comme suit :
+
+- build command: `npm run build`
+- publish directory: `build`
+
+Si vous n'avez pas configuré ces options de compilation, vous pouvez toujours aller dans "Site settings" -> "Build deploy" après la création de votre site.
+
+Une fois correctement configuré avec les options ci-dessus, votre site devrait être déployé et redéployé automatiquement lors de la fusion de votre branche de déploiement, qui est par défaut `main`.
+
+:::warning
+
+Certains sites Docusaurus placent le dossier `docs` à l'extérieur de `website` (probablement les anciens sites Docusaurus v1) :
+
+```bash
+repo           # git root
+├── docs       # MD files
+└── website    # Docusaurus root
+```
+
+Si vous décidez d'utiliser le dossier `website` comme répertoire de base pour Netlify, Netlify ne déclenchera pas les builds lorsque vous mettrez à jour le dossier `docs`, et vous devrez configurer une [commande personnalisée `ignore`](https://docs.netlify.com/configure-builds/common-configurations/ignore-builds/) :
+
+```toml title="website/netlify.toml"
+[build]
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF . ../docs/"
+```
+
+:::
+
+:::warning
+
+Par défaut, Netlify ajoute un slash final aux URL Docusaurus.
+
+Il est recommandé de désactiver le paramètre Netlify `Post Processing > Asset Optimization > Pretty Urls` pour éviter les URL en minuscule, les redirections inutiles et les erreurs 404.
+
+**Faites très attention** : la case à cocher globale `Disable asset optimization` est défectueuse et ne désactive pas vraiment le paramètre `Pretty URLs` en pratique. Veillez à *la décocher indépendamment**.
+
+Si vous voulez garder le paramètre `Pretty Urls` de Netlify activé, ajustez la configuration `trailingSlash` de Docusaurus de manière appropriée.
+
+Pour plus d'informations, consultez [slorber/trailing-slash-guide](https://github.com/slorber/trailing-slash-guide).
+
+:::

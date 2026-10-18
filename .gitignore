@@ -43,8 +43,16 @@ CrowdinTranslations_*.zip
 website/.cpu-prof
 
 website/i18n/**/*
-#!website/i18n/fr
-#!website/i18n/fr/**/*
+# This fork commits the translations it exports (see CLOUDFLARE.md); upstream
+# keeps the directory out of git and downloads it from Crowdin at build time.
+!website/i18n/zh-CN
+!website/i18n/zh-CN/**/*
+!website/i18n/fr
+!website/i18n/fr/**/*
+!website/i18n/pt-BR
+!website/i18n/pt-BR/**/*
+!website/i18n/ko
+!website/i18n/ko/**/*
 
 .netlify
 

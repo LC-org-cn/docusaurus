@@ -1,0 +1,72 @@
+---
+sidebar_position: 1
+slug: /api/misc/@docusaurus/eslint-plugin
+---
+
+# 📦 eslint 플러그인
+
+[ESLint](https://eslint.org/) is a tool that statically analyzes your code and reports problems or suggests best practices through editor hints and command line. 도큐사우루스는 최고의 도큐사우루스 경험을 적용하기 위해 ESLint 플러그인을 지원합니다.
+
+## 설치 {/* #installation */}
+
+```bash npm2yarn
+npm install --save-dev @docusaurus/eslint-plugin
+```
+
+## 사용법 {/* #usage */}
+
+### 권장 설정 {/* #recommended-config */}
+
+Add `plugin:@docusaurus/recommended` to the `extends` section of your `.eslintrc` configuration file:
+
+```json title=".eslintrc"
+{
+  "extends": ["plugin:@docusaurus/recommended"]
+}
+```
+
+This will enable the `@docusaurus` eslint plugin and use the `recommended` config. See [Supported rules](#supported-rules) below for a list of rules that this will enable.
+
+### 수동 설정 {/* #manual-config */}
+
+보다 세분화된 제어를 위해 플러그인을 수동으로 활성화하고 직접 사용할 규칙을 설정할 수 있습니다.
+
+```json title=".eslintrc"
+{
+  "plugins": ["@docusaurus"],
+  "rules": {
+    "@docusaurus/string-literal-i18n-messages": "error",
+    "@docusaurus/no-untranslated-text": "warn"
+  }
+}
+```
+
+## 지원하는 설정 {/* #supported-configs */}
+
+- Recommended: 확장되어야 하는 대부분의 도큐사우루스 사이트에 대한 권장 규칙 집합니다.
+- All: **all** rules enabled. 이것은 마이너 버전 간에 변경될 수 있으므로 예기치 않은 주요 변경 사항을 방지하려면 해당 옵션을 사용하지 마세요.
+
+## 지원하는 규칙 {/* #supported-rules */}
+
+| 옵션명 | 설명 | `` |
+| --- | --- | --- |
+| [`@docusaurus/no-untranslated-text`](./no-untranslated-text.mdx) | JSX의 텍스트 라벨이 translate 호출로 래핑되도록 적용합니다 | `` |
+| [`@docusaurus/string-literal-i18n-messages`](./string-literal-i18n-messages.mdx) | 일반 텍스트 라벨에 대해 번역 API를 강제로 호출합니다. | ✅ |
+
+✅ = recommended
+
+## 설정 예시 {/* #example-configuration */}
+
+다음은 설정 예시입니다:
+
+```js title=".eslintrc.js"
+module.exports = {
+  extends: ['plugin:@docusaurus/recommended'],
+  rules: {
+    '@docusaurus/no-untranslated-text': [
+      'warn',
+      {ignoredStrings: ['·', '—', '×']},
+    ],
+  },
+};
+```

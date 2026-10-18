@@ -1,0 +1,146 @@
+# Versions Canary
+
+```mdx-code-block
+import {
+  VersionsProvider,
+  CanaryVersion,
+  StableVersion,
+  InsertIfCanaryVersionUnknown,
+  InsertIfCanaryVersionKnown,
+  PackageJSONDiff,
+  PublishTime,
+} from "@site/src/components/Versions";
+
+<VersionsProvider>
+```
+
+Docusaurus a un système de versions canary.
+
+It permits you to **test new unreleased features** as soon as the pull requests are merged.
+
+It is a good way to **give feedback to maintainers**, ensuring the newly implemented feature works as intended.
+
+:::note
+
+Utiliser une version canary en production peut sembler risqué, mais en pratique, ce n'est pas le cas.
+
+Une version canary passe tous les tests automatisés et est utilisée en production par le site Docusaurus lui-même.
+
+:::
+
+```mdx-code-block
+<InsertIfCanaryVersionUnknown>
+```
+
+:::warning
+
+The canary version shown below **may not be up-to-date**. Please go to the [npm page](https://www.npmjs.com/package/@docusaurus/core?activeTab=versions) to find the actual version name.
+
+:::
+
+```mdx-code-block
+</InsertIfCanaryVersionUnknown>
+<InsertIfCanaryVersionKnown>
+```
+
+:::tip
+
+The canary version shown below is directly fetched from npm and **is up-to-date**. Vous pouvez directement utiliser ces chiffres dans votre package.json.
+
+:::
+
+```mdx-code-block
+</InsertIfCanaryVersionKnown>
+```
+
+## Canary npm dist tag {/* #canary-npm-dist-tag */}
+
+For any code-related commit on `main`, the continuous integration will publish a canary release under the `@canary` npm dist tag. Cela prend généralement jusqu'à 10 minutes.
+
+You can see on [npm](https://www.npmjs.com/package/@docusaurus/core?activeTab=versions) the current dist tags:
+
+- `latest`: stable releases (Current: <StableVersion />)
+- `canary`: canary releases (<CanaryVersion />)
+
+:::tip
+
+Make sure to use the latest canary release and check the publication date (sometimes the publish process fails). <PublishTime />
+
+:::
+
+:::note
+
+Canary versions follow the naming convention `0.0.0-commitNumber`.
+
+:::
+
+## Utilisation d'une version canary {/* #using-a-canary-release */}
+
+Take the latest version published under the [canary npm dist tag](https://www.npmjs.com/package/@docusaurus/core?activeTab=versions) (<CanaryVersion />).
+
+Use it for all the `@docusaurus/*` dependencies in your `package.json`:
+
+```mdx-code-block
+<PackageJSONDiff />
+```
+
+Ensuite, réinstallez les dépendances et démarrez votre site :
+
+```bash npm2yarn
+npm install
+npm start
+```
+
+You can also upgrade the `@docusaurus/*` packages with command line:
+
+```bash npm2yarn
+npm install --save-exact @docusaurus/core@canary @docusaurus/preset-classic@canary
+```
+
+:::warning
+
+Make sure to include all the `@docusaurus/*` packages.
+
+For canary releases, prefer using an exact version instead of a semver range (avoid the `^` prefix).
+
+:::
+
+```mdx-code-block
+</VersionsProvider>
+```
+
+:::warning package manager security
+
+Some package managers have security options enabled by default to mitigate supply chain attacks, notably [requiring npm packages to reach a minimum age](https://github.com/lirantal/npm-security-best-practices#31-npm--pnpm--bun--yarn-minimumreleaseage-cooldown).
+
+To ensure the most recent canary release can install successfully, try the following options env variables:
+
+```bash
+# npm
+# if it doesn't work, try "npm_config_min_release_age=0"
+# see https://github.com/facebook/docusaurus/pull/12437
+npm_config_min_release_age_exclude='create-docusaurus,@docusaurus/*'
+
+# pnpm
+PNPM_CONFIG_MINIMUM_RELEASE_AGE_EXCLUDE='["create-docusaurus","@docusaurus/*"]'
+
+# Yarn Berry
+yarn config set --json npmPreapprovedPackages '["create-docusaurus","@docusaurus/*"]'
+```
+
+:::
+
+## Creating a new canary website
+
+Here's a full example script to initialize a new Docusaurus site with our most recent canary release:
+
+```bash
+PNPM_CONFIG_MINIMUM_RELEASE_AGE_EXCLUDE='["create-docusaurus","@docusaurus/*"]' pnpm dlx create-docusaurus@canary my-canary-website classic --typescript
+
+cd my-canary-website
+
+pnpm config set --location=project --json minimumReleaseAgeExclude '["create-docusaurus","@docusaurus/*"]'
+pnpm install
+
+pnpm build
+```

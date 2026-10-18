@@ -1,0 +1,34 @@
+{
+  "title": {
+    "message": "도큐사우루스",
+    "description": "The title in the navbar"
+  },
+  "item.label.문서": {
+    "message": "Docs",
+    "description": "Navbar item with label Docs"
+  },
+  "item.label.API": {
+    "message": "API",
+    "description": "Navbar item with label API"
+  },
+  "item.label.블로그": {
+    "message": "Blog",
+    "description": "Navbar item with label Blog"
+  },
+  "item.label.쇼케이스": {
+    "message": "Showcase",
+    "description": "Navbar item with label Showcase"
+  },
+  "item.label.커뮤니티": {
+    "message": "Community",
+    "description": "Navbar item with label Community"
+  },
+  "item.label.테스트": {
+    "message": "Tests",
+    "description": "Navbar item with label Tests"
+  },
+  "item.label.디버그": {
+    "message": "Debug",
+    "description": "Navbar item with label Debug"
+  }
+}

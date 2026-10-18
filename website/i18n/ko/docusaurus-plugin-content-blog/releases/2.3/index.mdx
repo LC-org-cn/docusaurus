@@ -1,0 +1,152 @@
+---
+title: 도큐사우루스 2.3
+authors: [slorber]
+tags: [release]
+image: "@site/blog/releases/2.3/img/social-card.png"
+date: 2023-01-27
+---
+
+We are happy to announce **Docusaurus 2.3**.
+
+업그레이드 과정은 간단합니다. 도큐사우루스는 [릴리스 프로세스 문서](/community/release-process)에 설명된 대로 [시맨틱 버전 체계](https://semver.org/)를 준수해 마이너 버전은 하위 호환성을 유지합니다.
+
+![Docusaurus 2.2 social card](@site/blog/releases/2.3/img/social-card.png)
+
+{/* truncate */}
+
+## 새로 추가된 기능 {/* #highlights */}
+
+### 구글 태그 관리자 플러그인 {/* #google-tag-manager-plugin */}
+
+구글 태그 관리자는 뛰어난 유연성을 제공하는 태그 관리 시스템입니다. 이를 통해 분석, 마케팅 팀은 다른 타사 트래커를 쉽게 설치하고 분석 태그를 동작하게 할 수 있습니다.
+
+We now have a [`@docusaurus/plugin-google-tag-manager`](/docs/api/plugins/@docusaurus/plugin-google-tag-manager/) package that you can use alongside or as an alternative to the existing [gtag.js plugin](/docs/api/plugins/@docusaurus/plugin-google-gtag/) (refer to [this doc](https://support.google.com/tagmanager/answer/7582054) to understand when to use which solution).
+
+:::warning 구글은 유니버설 애널리틱스 기능 지원을 종료합니다.
+
+[Google will sunset its Universal Analytics](https://blog.google/products/marketingplatform/analytics/prepare-for-future-with-google-analytics-4/) on **July 1, 2023**, and ask users to migrate to **Google Analytics 4**.
+
+Therefore, we are also **deprecating our existing [`@docusaurus/plugin-google-analytics`](https://github.com/facebook/docusaurus/issues/7221)** package. Docusaurus users should create a new Google Analytics 4 property, and migrate to the [gtag.js plugin](/docs/api/plugins/@docusaurus/plugin-google-gtag/), or the [Google Tag Manager plugin](/docs/api/plugins/@docusaurus/plugin-google-tag-manager/). Refer to the [dedicated Docusaurus issue](https://github.com/facebook/docusaurus/issues/7221) for details and questions.
+
+:::
+
+### 탭 쿼리 문자열 지원 {/* #tabs-query-string-support */}
+
+이제 선택한 탭을 쿼리 문자열 파라미터에 연결할 수 있습니다. When a tab is selected, it will be stored in your browser URL as a `?qs-param=tab-value` search parameter.
+
+이 기능을 사용하면 페이지 로드 시 미리 탭이 선택되는 문서에 대한 딥 링크를 사용할 수 있습니다.
+
+When used alongside the `groupId` prop, the query string tab value takes precedence over the `localStorage` value.
+
+Make sure to check the [documentation](/docs/markdown-features/tabs#query-string) and the demo below to understand how it works:
+
+import BrowserWindow from '@site/src/components/BrowserWindow';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+```tsx
+<Tabs groupId="current-os" queryString>
+  <TabItem value="android" label="Android">
+    Android
+  </TabItem>
+  <TabItem value="ios" label="iOS">
+    iOS
+  </TabItem>
+</Tabs>
+```
+
+<BrowserWindow>
+  <Tabs groupId="current-os" queryString>
+    <TabItem value="android" label="Android">
+      Android
+    </TabItem>
+    <TabItem value="ios" label="iOS">
+      iOS
+    </TabItem>
+  </Tabs>
+</BrowserWindow>
+
+### 중첩된 준수 사항 {/* #nested-admonitions */}
+
+콜론 기호를 추가해 준수 사항 내에 다른 준수 사항을 중첩해서 표현할 수 있습니다.
+
+```md
+::::tip 중첩된 준수 사항
+
+이제 준수 사항을 중첩해서 표현할 수 있습니다!
+
+:::danger
+
+꼭 필요한 경우에만 유의해서 사용하세요.
+
+:::
+
+::::
+```
+
+::::tip nested admonitions
+
+You can now nest one admonition within another!
+
+:::danger
+
+Use this sparingly when it makes sense.
+
+:::
+
+::::
+
+### Blog `createFeedItems` {/* #blog-createfeeditems */}
+
+A new blog plugin option [`feedOptions.createFeedItems`](/docs/api/plugins/@docusaurus/plugin-content-blog/#CreateFeedItemsFn) gives you more control over the RSS/Atom feed generation. 이제 새로운 콜백을 통해 피드 항목을 변환/필터링/제한할 수 있습니다.
+
+```tsx title="docusaurus.config.js"
+[
+  '@docusaurus/preset-classic',
+  {
+    blog: {
+      feedOptions: {
+        // highlight-start
+        createFeedItems: async (params) => {
+          const {blogPosts, defaultCreateFeedItems, ...rest} = params;
+          return defaultCreateFeedItems({
+            // keep only the 10 most recent blog posts in the feed
+            blogPosts: blogPosts.filter((item, index) => index < 10),
+            ...rest,
+          });
+        },
+        // highlight-end
+      },
+    },
+  },
+];
+```
+
+### 번역 {/* #translations */}
+
+여러 언어에 대한 기본 테마 번역을 완료했습니다.
+
+- 🇸🇮 [#8541](https://github.com/facebook/docusaurus/pull/8541) Slovenian
+- 🇹🇷 [#8289](https://github.com/facebook/docusaurus/pull/8289) Turkish
+- 🇮🇷 [#8406](https://github.com/facebook/docusaurus/pull/8406) Farsi
+- 🇵🇱 [#8525](https://github.com/facebook/docusaurus/pull/8525) Polish
+- 🇨🇳 [#8423](https://github.com/facebook/docusaurus/pull/8423) Chinese
+- 🇸🇪 [#8312](https://github.com/facebook/docusaurus/pull/8312) Swedish
+- 🇻🇳 [#8450](https://github.com/facebook/docusaurus/pull/8450) Vietnamese
+
+:::tip
+
+테마 번역의 완료는 [계속 관심이 필요한 요소](https://github.com/facebook/docusaurus/issues/3526)이며 도큐사우루스에 기여할 수 있는 쉬운 방법입니다. 새로운 테마 기능을 계속 추가하고 있으며 이에 따라 [새로운 번역이 필요한 경우가 많습니다](https://github.com/facebook/docusaurus/issues/3526).
+
+:::
+
+## 기타 변경 {/* #other-changes */}
+
+기타 주목할만한 변경 사항은 다음과 같습니다.
+
+- [#8463](https://github.com/facebook/docusaurus/pull/8463) and [#8328](https://github.com/facebook/docusaurus/pull/8328): fix some annoying Docusaurus layout issues
+- [#8539](https://github.com/facebook/docusaurus/pull/8539): Algolia plugin `options.searchPagePath` should be correctly applied to search modal footer
+- [#8462](https://github.com/facebook/docusaurus/pull/8462): Algolia plugin now makes it easier to transform displayed search results with custom logic
+- [#8397](https://github.com/facebook/docusaurus/pull/8397): the `deploy` CLI now understands git url `insteadOf` config
+
+Check the **[2.3.0 changelog entry](/changelog/2.3.0)** for an exhaustive list of changes.

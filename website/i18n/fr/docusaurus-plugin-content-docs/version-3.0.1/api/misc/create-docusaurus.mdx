@@ -1,0 +1,58 @@
+---
+sidebar_position: 0
+slug: /api/misc/create-docusaurus
+---
+
+# 📦 create-docusaurus
+
+Un utilitaire d'échafaudage pour vous aider à mettre en place instantanément une application Docusaurus fonctionnelle.
+
+## Utilisation {/* #usage */}
+
+```bash
+npx create-docusaurus@latest [name] [template] [rootDir]
+```
+
+L'argument `name` sera utilisé comme chemin d'accès du site ainsi que le champ `name` dans le package.json de l'application créée. Il peut être un chemin absolu, ou un chemin relatif à `rootDir`.
+
+L'argument `template` peut être l'un des suivants :
+
+- `classic` : Utilise le template classic (recommandé)
+- `facebook` : Utilise le template Facebook/Meta, qui contient des configurations spécifiques à Méta
+- Une URL de dépôt git (commençant par `https://` ou `git@`), qui peut être clonée vers la destination
+- Un chemin de fichier local relatif à CWD, qui contient les fichiers à copier vers la destination
+
+Le `rootDir` sera utilisé pour résoudre le chemin absolu vers le répertoire du site. La valeur par défaut est CWD.
+
+:::warning
+
+Cette commande devrait être utilisée de préférence dans un shell interactif afin que toutes les fonctionnalités soient disponibles.
+
+:::
+
+## Options {/* #options */}
+
+### `-t, --typescript` {/* #typescript */}
+
+Utilisé lorsque l'argument template est un nom reconnu. Actuellement, seul `classic` fournit une variante TypeScript.
+
+### `-g, --git-strategy` {/* #git-strategy */}
+
+Utilisé lorsque l'argument template est un dépôt git. Cela doit être l'un des suivants :
+
+- `deep` : conserve complétement l'historique git
+- `shallow` : clone avec `--depth=1`
+- `copy` : fait un clone shallow, mais ne crée pas un dépôt git
+- `custom` : saisissez votre commande de clone git personnalisée. On vous le demandera. Vous pouvez écrire quelque chose comme `git clone --depth 10`, et nous ajouterons l'URL du dépôt et le répertoire de destination.
+
+### `-p, --package-manager` {/* #package-manager */}
+
+La valeur doit être une des valeurs suivantes `npm`, `yarn`, `pnpm` ou `bun`. Si ce n'est pas explicitement fourni, Docusaurus en déduira un basé sur :
+
+- Le fichier de verrouillage déjà présent dans le CWD (par exemple, si vous configurez un site Web dans un projet existant)
+- La commande utilisée pour appeler create-docusaurus (par exemple `npm init`, `npx`, `yarn create`, `bunx`, etc.)
+- Demande interactive, au cas où toutes les techniques de résolution ne seraient pas présentes
+
+### `-s, --skip-install` {/* #skip-install */}
+
+Si fourni, Docusaurus n'installera pas automatiquement les dépendances après la création de l'application. L'option `--package-manager` n'est utile que lorsque vous installez des dépendances.

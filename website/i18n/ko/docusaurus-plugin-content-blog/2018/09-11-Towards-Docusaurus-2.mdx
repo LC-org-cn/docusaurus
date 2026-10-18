@@ -1,0 +1,140 @@
+---
+title: 도큐사우루스 2를 향해
+authors: endiliey
+tags: [new, adoption]
+---
+
+Docusaurus was [officially announced](https://v1.docusaurus.io/blog/2017/12/14/introducing-docusaurus) over nine months ago as a way to easily build open source documentation websites. Since then, it has amassed over 8,600 GitHub Stars, and is used by many popular open source projects such as [React Native](https://facebook.github.io/react-native/), [Babel](https://babeljs.io/), [Jest](https://jestjs.io/), [Reason](https://reasonml.github.io/) and [Prettier](https://prettier.io/).
+
+최고의 소프트웨어는 지속적으로 진화하고 최악의 소프트웨어는 그렇지 않다는 이야기가 있습니다. 눈치채고 있는 분들이 있을지 모르겠지만 우리는 새로운 버전의 도큐사우루스를 준비하고 작업을 진행하고 있습니다 🎉.
+
+{/* truncate */}
+
+## 개요 {/* #introduction */}
+
+It all started with this [RFC issue](https://github.com/facebook/docusaurus/issues/789) opened by [Yangshun](https://github.com/yangshun) towards the end of June 2018.
+
+<blockquote>
+  <h4>
+    <a href="https://github.com/facebook/docusaurus/issues/789">
+      {'[RFC] Docusaurus v2 · Issue #789 · facebook/docusaurus'}
+    </a>
+  </h4>
+  These are some of the problems I'm seeing in Docusaurus now and also how we
+  can address them in v2. A number of the ideas here were inspired by VuePress
+  and other static site generators. In the current static site generators
+  ecosystem, t...
+</blockquote>
+
+제안된 개선사항 대부분은 이슈에 언급되어 있습니다. 저는 도큐사우루스 1이 가지고 있는 몇 가지 문제와 도큐사우루스 2에서 어떻게 이 문제를 해결할 것인지 설명하려 합니다.
+
+## 구조 {/* #infrastructure */}
+
+### 콘텐츠 {/* #content */}
+
+도큐사우루스 1 웹 사이트는 사실 정적 HTML 페이지 묶음으로 만들어집니다. 리액트를 사용했음에도 불구하고 동적이고 인터랙티브한 페이지를 만들 수 있는 컴포넌트 state 객체 같은 리액트의 기능을 제대로 사용하지 못했습니다. React was only used as a templating engine for static content and interactivity has to be added through script tags and `dangerouslySetInnerHTML` 😱.
+
+또한 도큐사우루스가 콘텐츠를 로드하는 방법을 쉽게 변경할 수 없었습니다. 예를 들어 Sass나 Less같은 CSS 전처리기를 추가하는 기능을 기본 제공하지 않아 사용자가 직접 스크립트를 작성해 코드를 해킹하는 방법을 사용해야 했습니다.
+
+For Docusaurus 2, we will be using [webpack](https://webpack.js.org/) as a module bundler and we are changing the way we serve content. 웹팩 로더를 추가하는 것만큼 간단하게 CSS 전처리기를 추가할 수 있습니다. Instead of a pure static HTML, **during build time we will create a server-rendered version of the app** and render the corresponding HTML. 도큐사우루스 사이트는 본질적으로 동형/범용(isomorphic/universal) 애플리케이션이 될겁니다. This approach is heavily inspired by [Gatsby](https://github.com/gatsbyjs/gatsby).
+
+### 버전 관리 {/* #versioning */}
+
+If you have been using Docusaurus for a while, you might notice that Docusaurus creates versioned docs **if and only if** the docs content are **different**.
+
+For example, if we have `docs/hello.md`:
+
+```text
+---
+id: hello
+title: hello
+---
+Hello world !
+```
+
+And **we cut version 1.0.0,** Docusaurus will create `versioned_docs/version-1.0.0/hello.md`:
+
+```text
+---
+id: version-1.0.0-hello
+title: hello
+original_id: hello
+---
+Hello world !
+```
+
+However, if there are no changes to `hello.md` when cutting v2.0.0, Docusaurus will not create any versioned docs for that document. In other words, `versioned_docs/version-2.0.0/hello.md` will not exist.
+
+This can be very confusing for users; if they want to edit the v2.0.0 docs, they have to edit `versioned_docs/version-1.0.0/hello.md` or manually add `versioned_docs/version-2.0.0/hello.md`. 이 과정에서 의도하지 않은 버그가 만들어질 수도 있습니다. Here is a [real scenario in Jest](https://github.com/facebook/jest/pull/6758#issuecomment-408274413).
+
+또한 버전 폴백을 위한 처리가 필요해서 코드가 복잡해질 수 있습니다. 그리고 빌드 시 도큐사우루스에서 올바른 버전에 대한 링크도 처리해주어야 합니다. This is also the cause of a bug where [renaming docs breaks links in old versions](https://github.com/facebook/docusaurus/issues/845).
+
+For Docusaurus 2, **every time we cut a new version, we will instead take a snapshot of all the docs**. 문서의 내용을 변경할 필요는 없습니다. 더 나은 개발자, 사용자 경험과 저장 공간의 복합성 사이의 절충안입니다. 서로 간의 영향을 분리하고 정확성을 보장하기 위해 좀 더 많은 저장 공간을 사용하게 됩니다.
+
+### 번역 {/* #translation */}
+
+Docusaurus allows for easy translation functionality by using [Crowdin](https://crowdin.com/). 영어로 작성된 문서는 커뮤니티 기반으로 사용자가 직접 번역할 수 있는 크라우드인으로 업데이트됩니다. We always assumed that **English** is the default language, but this might not be the case for all users. 많은 비영어권 오픈 소스 프로젝트에서 도큐사우루스를 사용하는 것을 확인했습니다.
+
+For Docusaurus 2, **we will not assume English is the default language**. When a user enables internationalization, they have to set a default language in `siteConfig.js`. We will then assume that all the files in `docs` are written in that language.
+
+또한 도큐사우루스 2 MVP 개발 이후 번역 시 크라우드인을 사용하지 않을 수도 있다는 것을 깨달았습니다. 그래서 이런 상황에 맞는 시나리오를 지원하기 위해 우리는 추가적인 워크플로우가 필요합니다. 물론 좀 더 쉬운 통합을 위해 크라우드인을 사용하는 것을 권장합니다.
+
+## 사용자 맞춤 {/* #customizability */}
+
+### 레이아웃 {/* #layout */}
+
+현재 도큐사우루스는 전체 레이아웃과 스타일이 묶여 있어서 사용자가 사이트 모양을 원하는 형태로 변경하는 것이 매우 어렵게 구성되어 있습니다.
+
+For Docusaurus 2, **layout and styling should be controlled by the user**. 콘텐츠 생성, 라우팅, 번역, 버전 관리를 도큐사우루스에서 제어할 수 있습니다. Inspired by [create-react-app](https://github.com/facebook/create-react-app) and [VuePress](https://vuepress.vuejs.org/), Docusaurus will still provide a default theme, which the user can eject from, for further layout and styling customization. This means that it is very possible for the user to even change the HTML meta by using [React Helmet](https://github.com/nfl/react-helmet). 커뮤니티 기반 테마를 만들어서 공개할 수도 있고요. 사용자가 레이아웃과 스타일을 변경할 수 있는 접근 방식은 대부분 정적 사이트 생성 도구에서 사용하는 방식입니다.
+
+### 마크다운 {/* #markdown */}
+
+Our Markdown parsing is currently powered by [Remarkable](https://github.com/jonschlinkert/remarkable). What if the user wants to use [Markdown-it](https://github.com/Markdown-it/Markdown-it) or even [MDX](https://github.com/mdx-js/mdx)? And then there is an issue of which syntax highlighter to use, (e.g: [Prism](https://prismjs.com/) vs [Highlight.js](https://highlightjs.org/)). 이러한 선택을 사용자가 할 수 있도록 허용해주어야 합니다.
+
+For Docusaurus 2, **users can eject and choose their own Markdown parser**. It does not matter if they want to use another Markdown parser such as [Remark](https://github.com/remarkjs/remark), or even their own in-house Markdown parser. As a rule of thumb, the user has to provide a React component, in which we will provide a children props containing the _RAW string of Markdown_. 기본값으로 마크다운 구문 분석은 Remarkable, 구문 강조는 Highlight.js을 사용합니다. 기본 제공되는 구문 분석 도구는 아직 여러 가지 검토중이라 나중에 다른 마크다운 구문 분석 도구로 변경될 수는 있습니다.
+
+### 검색 {/* #search */}
+
+Our core search functionality is based on [Algolia](https://www.algolia.com/). There are requests by users to be able to use different search offerings, such as `lunrjs` for offline search.
+
+저는 개인적으로 알골리아를 좋아하고 그들과 같이 일하는 것은 좋은 경험입니다. They are very responsive; we can easily submit a pull request to Algolia since their `DocSearch` is open source. For example, I recently submitted [this PR that enables DocSearch to scrape alternate languages in sitemap](https://github.com/algolia/docsearch-scraper/pull/387).
+
+For Docusaurus 2, **we will allow users to customize the search box**. 기본 테마에서 기존 검색 상자 대신 검색 UI(리액트 컴포넌트로 만든)를 수정할 수 있습니다. 물론 기본 테마에서 알골리아는 계속 지원합니다.
+
+## 안정성 {/* #stability */}
+
+소프트웨어가 완벽할 수는 없지만 새로운 기능을 추가하면서 도큐사우루스에 문제가 생기지 않기를 바라고 있습니다. 도큐사우루스를 처음 공개했을 때는 엄격한 자동화 테스트를 갖추지 못했습니다. 그래서 일찍 발견하지 못한 수 많은 회귀 버그가 발생했습니다. 최근에 테스트를 계속해서 추가하고 있지만 여전히 테스트 커버리지는 상대적으로 낮습니다.
+
+For Docusaurus 2, **we are adding tests as we develop** since we are going for a fresh rewrite. 때문에 좀 더 안정적이며 도큐사우루스 1과 비교했을 때 문제가 생길 가능성이 줄어들겁니다.
+
+## 자주 묻는 질문 {/* #frequently-asked-questions */}
+
+### 변경할 것이 많은가요? {/* #will-there-be-any-breaking-changes */}
+
+관련 글을 읽었다면 어떤 부분이 변경되는지 알 수 있을 겁니다. While we will try to **minimize the number of breaking changes** and make it backward compatible as much as possible, we believe that some breaking changes are required. This is mostly due to Docusaurus 2 being a **major rewrite and re-architecting** of the codebase.
+
+정확한 변경 목록은 개발이 100% 진행된 것이 아니므로 모두 확인할 수 없습니다. However, one thing that I will highlight is that we will deprecate a lot of options in `siteConfig.js` and we plan to keep it as lean as possible. For example, the `cleanUrl` siteConfig will be deprecated as all the URL for Docusaurus 2 sites will be without the `.html` suffix.
+
+우리의 목표는 대부분 사이트가 손을 많이 대지 않고 도큐사우루스 2로 업그레이드할 수 있도록 하는 겁니다. 도큐사우루스 2를 공개하게 되면 마이그레이션 가이드도 포함될 겁니다. When the times come, feel free to ping us on [Discord](https://discord.gg/docusaurus) or [X](https://x.com/docusaurus) for questions and help.
+
+### 도큐사우루스 2는 언제 출시되나요? {/* #when-is-the-release-of-docusaurus-2 */}
+
+지금으로서는 정확한 출시 일정을 가지고 있지는 않습니다. 개인적인 생각으로는 알파 버전을 한두 달 내에 출시할 것 같지만 확실하지는 않습니다.
+
+One thing that I would like to share is that while Docusaurus is part of [Facebook Open Source](https://opensource.fb.com/) and most of the team are Facebook employees, the maintenance and development work is mostly done outside of normal working hours. I am currently a final year undergraduate student at [NTU Singapore](https://x.com/NTUsg), so I had to juggle between doing my coursework, my final year project and maintaining/developing Docusaurus. 하지만 그렇다고 해서 우리가 도큐사우루스를 더 멋지게 만드는 것을 원하지 않는다는 건 아니니다. In fact, **we want to make it as awesome as possible**.
+
+아직은 도큐사우루스 2 작업을 개인 저장소에서 관리하고 있습니다. In the near future, we will move them into the [public repository](https://github.com/facebook/docusaurus). 그때가 되면 여러분 모두 어떤 식으로든 함께 해주기를 기대하고 있습니다. 그때까지는 계속 지켜봐주세요 😉!
+
+## 글을 마치며 {/* #final-thoughts */}
+
+Docusaurus has had a large impact on the open source community as seen from the [many popular projects](https://v1.docusaurus.io/en/users) which use Docusaurus for documentation. 앞으로 더 빨리 나아가기 위해 도큐사우루스 1이 가지고 있던 몇 가지 심각한 문제를 해결하고 모든 이들에게 더 나은 도큐사우루스를 선보일 수 있도록 노력하고 있습니다. 사실 도큐사우루스 2는 더 이상 계획 뿐인 작업이 아니라고 말할 수 있습니다. 작업은 시작됐고 가능한 빨리 선보일 수 있기를 바라고 있습니다.
+
+도큐사우루스의 사명은 문서를 제공하는 웹 사이트를 쉽게 만들고 바로 사용할 수 있게 하는 겁니다. 도큐사우루스 2에서도 이 사명은 변하지 않을 겁니다.
+
+We also want to let people know that **due to work on Docusaurus 2, we will be less likely to accept new features/major changes on Docusaurus 1.**
+
+도큐사우루스를 사용하고 있다면 여러분은 우리 커뮤니티의 일원입니다. 도큐사우루스를 좀 더 좋게 만들 수 있도록 우리에게 알려주세요. If you appreciate the work we're doing, you can support [Docusaurus on Open Collective](https://opencollective.com/Docusaurus).
+
+> If you are sponsoring our work on [Open Collective](https://opencollective.com/Docusaurus), we'll personally offer you a helping hand for maintenance and upgrading of Docusaurus website.
+
+Lastly, if you haven't done so already, click the **star** and **watch** button on [GitHub](https://github.com/facebook/docusaurus), and follow us on [X](https://x.com/docusaurus).

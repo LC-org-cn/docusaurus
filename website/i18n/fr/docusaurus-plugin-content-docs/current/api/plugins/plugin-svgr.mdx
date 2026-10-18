@@ -1,0 +1,91 @@
+---
+sidebar_position: 7
+slug: /api/plugins/@docusaurus/plugin-svgr
+---
+
+# 📦 plugin-svgr
+
+import APITable from '@site/src/components/APITable';
+
+An [SVGR](https://react-svgr.com/) plugin to transform SVG files into React components automatically at build time.
+
+## Installation {/* #installation */}
+
+```bash npm2yarn
+npm install --save @docusaurus/plugin-svgr
+```
+
+:::tip
+
+Si vous utilisez le preset `@docusaurus/preset-classic`, vous n'avez pas besoin d'installer ce plugin en tant que dépendance.
+
+Vous pouvez configurer ce plugin via les [options du preset](../../using-plugins.mdx#docusauruspreset-classic).
+
+:::
+
+## Configuration {/* #configuration */}
+
+Champs acceptés :
+
+```mdx-code-block
+<APITable>
+```
+
+| Nom | Type | Par défaut | Description |
+| --- | --- | --- | --- |
+| `svgrConfig` | `object` | `{}` | The [SVGR config options](https://react-svgr.com/docs/options/), shallow-merged over the [default SVGR config](#default-config) |
+
+```mdx-code-block
+</APITable>
+```
+
+### Exemple de configuration {/* #ex-config */}
+
+Vous pouvez configurer ce plugin via les options du plugin.
+
+```js config-tabs
+// Preset Options: svgr
+// Plugin Options: @docusaurus/plugin-svgr
+
+const config = {
+  svgrConfig: {/* SVGR config */},
+};
+```
+
+## Default config {/* #default-config */}
+
+The `svgrConfig` option is shallow-merged over the following default SVGR config:
+
+```js
+const defaultSvgrConfig = {
+  prettier: false,
+  svgo: true,
+  titleProp: true,
+  svgoConfig: {
+    plugins: [
+      {
+        name: 'preset-default',
+        params: {
+          overrides: {
+            removeTitle: false,
+            removeViewBox: false,
+          },
+        },
+      },
+      {
+        name: 'prefixIds',
+        params: {
+          delim: '',
+          // Short hash of the SVG file path, relative to the site directory
+          prefix: (node, info) => `svg-${hash(info.path)}-`,
+          prefixClassNames: false,
+        },
+      },
+    ],
+  },
+};
+```
+
+The `prefixIds` plugin prefixes SVG ids (for example, `id="a"` becomes `id="svg-3f2a1c-a"`) to avoid clashes between multiple SVGs inlined in the same page. Class names are not prefixed.
+
+Providing `svgoConfig` replaces the default [SVGO](https://svgo.dev/) config entirely. Use `svgoConfig: undefined` to read your own [`svgo.config.js` file](https://svgo.dev/docs/introduction/#configuration) instead.

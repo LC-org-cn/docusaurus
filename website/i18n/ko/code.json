@@ -1,0 +1,939 @@
+{
+  "프리셋 옵션": {
+    "message": "Preset options"
+  },
+  "apiDocs.configTabs.presetOptions.description": {
+    "message": "프리셋을 사용하는 경우 {presetLink}를 통해 플러그인을 구성합니다."
+  },
+  "프리셋 옵션": {
+    "message": "preset options"
+  },
+  "플러그인 옵션": {
+    "message": "Plugin options"
+  },
+  "독립적으로 실행되는 플러그인을 사용하는 경우에는 플러그인에 대한 옵션을 직접 설정할 수 있습니다.": {
+    "message": "If you are using a standalone plugin, provide options directly to the plugin:"
+  },
+  "Current: {canaryVersionName}": {
+    "message": "Current: {canaryVersionName}",
+    "description": "The hint text for the current canary version tag."
+  },
+  "예시: 0.0.0-4922": {
+    "message": "Example: 0.0.0-4922",
+    "description": "An example canary version tag when the actual version can't be fetched."
+  },
+  "npm에서 사용할 수 있는 최신 카나리 버전은 {time}에 게시됩니다.": {
+    "message": "The latest canary version that's available on npm is published at {time}."
+  },
+  "homepage.features.powered-by-mdx.title": {
+    "message": "Powered by MDX"
+  },
+  "homepage.features.powered-by-mdx.text": {
+    "message": "시간을 절약하고 텍스트 문서에 집중하세요. MDX로 문서와 블로그 게시물을 작성하기만 하면 Docusaurus가 이를 제공할 준비가 된 정적 HTML 파일을 만들고 게시합니다. MDX 덕분에 마크다운에 React 컴포넌트를 포함할 수도 있습니다."
+  },
+  "homepage.features.built-using-react.title": {
+    "message": "리액트로 기능 확장하기"
+  },
+  "homepage.features.built-using-react.text": {
+    "message": "React 컴포넌트를 작성해 프로젝트 레이아웃을 확장하고 사용자 지정할 수 있습니다. 플러그인 형태의 아키텍처를 활용하고 Docusaurus 플러그인으로 생성된 같은 데이터를 재사용하면서 여러분의 사이트를 설계하세요."
+  },
+  "homepage.features.ready-for-translations.title": {
+    "message": "손쉽게 번역하기"
+  },
+  "homepage.features.ready-for-translations.text": {
+    "message": "현지화는 기본으로 제공됩니다. 깃, 크라우드인 또는 다른 번역 관리 도구를 사용해 문서를 번역하고 개별적으로 배포합니다."
+  },
+  "homepage.features.document-versioning.title": {
+    "message": "문서 버전 관리"
+  },
+  "homepage.features.document-versioning.text": {
+    "message": "여러분의 프로젝트 모든 버전에 대한 사용자를 지원해줄 수 있습니다. 문서 버전 관리를 통해 여러분의 문서를 프로젝트 릴리스와 동기화할 수 있습니다."
+  },
+  "homepage.features.content-search.title": {
+    "message": "Content 검색"
+  },
+  "homepage.features.content-search.text": {
+    "message": "사용자가 문서에서 필요한 것을 쉽게 찾을 수 있습니다. 알골리아 문서 검색을 지원합니다."
+  },
+  "homepage.quotes.christopher-chedeau.title": {
+    "message": "프리티어(Prettier) 리드 개발자",
+    "description": "Title of quote of Christopher Chedeau on the home page"
+  },
+  "homepage.quotes.christopher-chedeau": {
+    "message": "저는 Facebook에서 많은 프로젝트를 오픈 소스로 참여했고 모든 프로젝트에 웹사이트가 필요했습니다. 대부분 프로젝트는 비슷한 요구사항을 가지고 있었습니다. 문서는 마크다운으로 작성되어야 하고 GitHub 페이지를 통해 배포되어야 합니다. 지금은 Docusaurus 덕분에 새로운 프로젝트를 런칭할 때마다 웹사이트를 만드느라 시간을 허비할 필요가 없어졌습니다.",
+    "description": "Quote of Christopher Chedeau on the home page"
+  },
+  "homepage.quotes.hector-ramos.title": {
+    "message": "리액트 네이티브 리드 애드보케이트",
+    "description": "Title of quote of Hector Ramos on the home page"
+  },
+  "homepage.quotes.hector-ramos": {
+    "message": "Docusaurus로 문서 플랫폼을 옮긴 후 React Native 문서에 대한 오픈 소스 기여가 급증했습니다. 이제 일반적인 정적 문서 생성 시 필요로 했던 자잘한 항목 없이 마크다운 문서를 바로 작은 규모의 저장소에서 호스팅할 수 있습니다. 고마워요. 슬래시!",
+    "description": "Quote of Hector Ramos on the home page"
+  },
+  "homepage.quotes.risky-vetter.title": {
+    "message": "ReasonReact 개발자",
+    "description": "Title of quote of Ricky Vetter on the home page"
+  },
+  "homepage.quotes.risky-vetter": {
+    "message": "도큐사우루스는 ReasonML 프로젝트를 위한 훌륭한 선택이었습니다. 문서를 일관성 있고 i18n 친화적이며 유지 관리하기 쉽게 만들어주며 새로운 기여자가 문서 작업에 쉽게 접근할 수 있습니다.",
+    "description": "Quote of Ricky Vetter on the home page"
+  },
+  "즐겨찾기": {
+    "message": "즐겨찾기"
+  },
+  "showcase.tag.favorite.description": {
+    "message": "꼭 확인해야 하는 우리가 가장 좋아하는 도큐사우루스 사이트입니다!"
+  },
+  "오픈 소스": {
+    "message": "Open-Source"
+  },
+  "showcase.tag.open소스.description": {
+    "message": "오픈 소스 도큐사우루스 사이트는 여러분에게 영감을 불어넣어줄 수 있습니다!"
+  },
+  "제품": {
+    "message": "Product"
+  },
+  "showcase.tag.product.description": {
+    "message": "상용 제품과 관련된 도큐사우루스 사이트!"
+  },
+  "디자인": {
+    "message": "Design"
+  },
+  "showcase.tag.design.description": {
+    "message": "기본 템플릿만으로 세련되고 눈에 띄게 만든 아름다운 도큐사우루스 사이트!"
+  },
+  "I18n": {
+    "message": "I18n"
+  },
+  "showcase.tag.i18n.description": {
+    "message": "국제화 지원을 사용해 1개 이상의 로케일을 지원하도록 도큐사우루스 사이트를 번역했습니다."
+  },
+  "버전 관리": {
+    "message": "Versioning"
+  },
+  "showcase.tag.versioning.description": {
+    "message": "Docusaurus sites using the versioning feature of the docs plugin to manage mul팁le versions."
+  },
+  "대규모": {
+    "message": "Large"
+  },
+  "showcase.tag.large.description": {
+    "message": "일반적인 사이트보다 훨씬 더 많은 페이지를 포함하는 대규모 도큐사우루스 사이트!"
+  },
+  "메타": {
+    "message": "Meta"
+  },
+  "showcase.tag.meta.description": {
+    "message": "메타(이전 페이스북) 프로젝트의 도큐사우루스 사이트"
+  },
+  "개인적인": {
+    "message": "Personal"
+  },
+  "showcase.tag.personal.description": {
+    "message": "Personal 웹 사이트s, blogs and digital gardens built with Docusaurus"
+  },
+  "RTL 지원": {
+    "message": "RTL Direction"
+  },
+  "showcase.tag.rtl.description": {
+    "message": "오른쪽에서 왼쪽 읽기 방향을 지원하는 도큐사우루스 사이트"
+  },
+  "키타를 연주하는 Docusaurus": {
+    "message": "Docusaurus with Keytar"
+  },
+  "homepage.hero.title": {
+    "message": "여러분의 <b>콘텐츠</b>에 맞추어 <b>최적화된</b> 웹 사이트를 <b>빠르게</b> 빌드합니다.",
+    "description": "홈페이지 hero title, can contain simple html tags"
+  },
+  "시작하기": {
+    "message": "Get Started"
+  },
+  "데모를 체험해보세요": {
+    "message": "Try a Demo"
+  },
+  "많은 엔지니어들에게 사랑받는": {
+    "message": "Loved by many engineers"
+  },
+  "소개 영상을 확인하세요": {
+    "message": "Check it out in the intro video"
+  },
+  "homepage.banner.launch.newVersion": {
+    "message": "Docusaurus {newVersion} 이 나왔습니다!️"
+  },
+  "versionsPage.versionEntry.link": {
+    "message": "문서"
+  },
+  "versionsPage.versionEntry.releaseNotes": {
+    "message": "릴리스 노트"
+  },
+  "versionsPage.title": {
+    "message": "Docusaurus 문서 버전"
+  },
+  "versionsPage.current.title": {
+    "message": "현재 버전(안정화)"
+  },
+  "versionsPage.current.description": {
+    "message": "여기에서 현재 릴리스된 버전에 대한 문서를 찾을 수 있습니다."
+  },
+  "versionsPage.next.title": {
+    "message": "다음 version (Unreleased)"
+  },
+  "versionsPage.next.description": {
+    "message": "여기에서 작업중인 미공개 버전에 대한 문서를 찾을 수 있습니다."
+  },
+  "versionsPage.archived.title": {
+    "message": "지난 버전(더 이상 관리하지 않음)"
+  },
+  "versionsPage.archived.description": {
+    "message": "여기에서 이전 버전의 Docusaurus 문서를 찾을 수 있습니다."
+  },
+  "versionsPage.legacy.title": {
+    "message": "Docusaurus v1(레가시)"
+  },
+  "versionsPage.legacy.description": {
+    "message": "여기에서 오래된 버전의 Docusaurus 문서를 찾을 수 있습니다."
+  },
+  "colorGenerator.tip.body": {
+    "message": "가독성을 위한 기본 색상에 대해 최소한 {wcagLink}를 목표로 합니다. 도큐사우르스 웹사이트 자체를 사용해 색상 팔레트가 어떻게 보일지 미리 확인합니다. 일반적으로 하나의 색상이 밝은 모드와 어두운 모드에서 모두 작동하지 않기 때문에 어두운 모드에서 대체 팔레트를 사용할 수 있습니다."
+  },
+  "colorGenerator.tip.body.wcagLink.label": {
+    "message": "WCAG AA 레벨 명암비"
+  },
+  "colorGenerator.inputs.primary.label": {
+    "message": "기본 색상"
+  },
+  "colorGenerator.inputs.modeToggle.label": {
+    "message": "{colorMode} 모드 편집"
+  },
+  "colorGenerator.inputs.modeToggle.label.colorMode.밝은": {
+    "message": "light"
+  },
+  "colorGenerator.inputs.modeToggle.label.colorMode.어두운": {
+    "message": "dark"
+  },
+  "colorGenerator.inputs.resetButton.label": {
+    "message": "재설정"
+  },
+  "colorGenerator.inputs.background.label": {
+    "message": "배경:"
+  },
+  "colorGenerator.table.heading1": {
+    "message": "CSS 변수 이름"
+  },
+  "colorGenerator.table.heading2": {
+    "message": "Hex",
+    "description": "This column is the color's representation in hex"
+  },
+  "colorGenerator.table.heading3": {
+    "message": "색상 보정",
+    "description": "This column is the adjusted shades' adjustment values relative to the primary color"
+  },
+  "colorGenerator.table.heading4": {
+    "message": "색상 대비",
+    "description": "This column is WCAG contrast rating: AAA, AA, Fail"
+  },
+  "colorGenerator.text": {
+    "message": "{cssPath}의 변수를 새로운 변수로 바꿉니다."
+  },
+  "playground.codesandbox.description": {
+    "message": "CodeSandbox는 개발자가 브라우저에서 웹 개발 프로젝트를 생성, 공유, 협업할 수 있는 온라인 코드 편집, 개발 환경입니다."
+  },
+  "playground.stackblitz.description": {
+    "message": "StackBlitz는 새로운 {webContainersLink} 기술을 사용하여 브라우저에서 도큐사우루스를 직접 실행합니다."
+  },
+  "playground.tryItButton": {
+    "message": "지금 시도해보세요!"
+  },
+  "team.profile.웹 사이트LinkLabel": {
+    "message": "website"
+  },
+  "team.profile.Sebastien Lorber.body": {
+    "message": "2014년부터 리액트에 빠져있습니다. 프리랜서 개발자로 페이스북이 도큐사우루스 v2를 개발하는 것을 돕고 있습니다. 가끔 그의 {website}나 {devto}에 글을 올립니다."
+  },
+  "team.profile.Sida Chen.body": {
+    "message": "중국 상하이에서 온 학생입니다. 열성적인 오픈 소스 프로젝트 개발자이지만 자신이 만든 프로젝트에 너무 목 매이지는 않습니다."
+  },
+  "team.profile.Clement Couriol.body": {
+    "message": "프랑스 CPE 리옹 출신의 학생. 전문 웹 개발자가 되려는 열정적인 웹 개발자."
+  },
+  "team.profile.Joel Marcey.body": {
+    "message": "도큐사우루스 개발자입니다. 지금은 코드에 기여하는 이들에게 감사하며 응원하고 있습니다."
+  },
+  "team.profile.Alexey Pyltsyn.body": {
+    "message": "열정적인 오픈 소스 지지자 👋 모든 일에 끝없이 도전하는 아마추어 🤷‍♂️ PHP, 리액트, 쿠버네티스 외 여러 프로젝트의 러시아어 문서화 관리자 🧐"
+  },
+  "team.profile.Yangshun Tay.body": {
+    "message": "잼스택 작업을 즐기는 풀 프런트엔드 스택 개발자입니다. 도큐사우루스 작업을 통해 그는 페이스북 비공식 시간제 오픈소스 웹마스터로 일하고 있습니다. 물론 참여하는 것만으로도 멋진 일입니다."
+  },
+  "team.profile.Endilie Yacop Sucipto.body": {
+    "message": "유지관리자 @docusaurus · 🔥🔥🔥"
+  },
+  "team.profile.Wei Gao.body": {
+    "message": "🏻‍🌾 React 개발자이며 Docusaurus 유지보수에 참여하고 있습니다. 수많은 웹사이트에서 문서를 작성해 세상을 놀라게 합니다."
+  },
+  "team.profile.Anshul Goyal.body": {
+    "message": "코드를 사랑하고 새로운 기술을 시도하는 것을 좋아하는 풀스택 개발자. 시간이 생기면 오픈 소스에 기여하고 {websiteLink}에 블로그 게시물을 작성하고 애니메이션을 즐겨봅니다."
+  },
+  "team.profile.Anshul Goyal.body.websiteLink.label": {
+    "message": "website"
+  },
+  "team.profile.Drew Alexander.body": {
+    "message": "개발자이자 창작자입니다. 생각할 수 있는 모든 것을 현실화하기 위한 기술을 습득하려고 합니다."
+  },
+  "team.profile.Fanny Vieira.body": {
+    "message": "Fanny는 고등학교에서 웹 개발을 시작했으며 학교 급식실 프로젝트를 구축했습니다. 오픈 소스에 기여하는 것을 좋아하며 {blogLink}에 자신의 경험과 요리, {spotifyLink} 제작에 대한 글을 씁니다."
+  },
+  "team.profile.Fanny Vieira.body.blogLink.label": {
+    "message": "그녀의 블로그"
+  },
+  "team.profile.Fanny Vieira.body.spotifyLink.label": {
+    "message": "스포티파이 재생목록"
+  },
+  "team.profile.Sam Zhou.body": {
+    "message": "Sam은 2011년에 프로그래밍을 시작했으며 2015년에 {websiteLink}를 만들었습니다. 프로그래밍 언어, 개발 인프라, 웹 개발에 관심이 있으며 {samLangLink}와 {miniReactLink}를 만들었습니다."
+  },
+  "team.profile.Sam Zhou.body.samLangLink.label": {
+    "message": "프로그래밍 언어"
+  },
+  "team.profile.Sam Zhou.body.miniReactLink.label": {
+    "message": "리액트 구현체"
+  },
+  "team.profile.Tan Teik Jun.body": {
+    "message": "이 페이지의 다른 이들처럼 멋진 사람이 되는 것을 목표로 하는 오픈 소스 지지자입니다. 도큐사우루스 프로젝트를 통해 그는 목표에 좀 더 가까워졌습니다. 🌱"
+  },
+  "team.profile.Nisarag Bhatt.body": {
+    "message": "새로운 기술을 배우고 적용하는 것을 좋아하는 풀스택 웹 개발자입니다! 오픈 소스에 기여하고 기술을 공유하고 튜토리얼을 작성하는 것을 좋아합니다."
+  },
+  "upgradeGuide.archivedVersion.notice": {
+    "message": "You are browsing an archived version and the snippet below is outdated. Please go to the {mainSiteLink} and follow the instructions there to upgrade to the 최신 버전."
+  },
+  "upgradeGuide.archivedVersion.notice.mainSiteLink.label": {
+    "message": "메인 사이트"
+  },
+  "upgradeGuide.unreleasedVersion.notice": {
+    "message": "릴리스되지 않은 버전 문서를 찾고 있습니다. 릴리스되지 않은 기능을 사용하려면 {canaryDocLink}를 사용할 수 있습니다."
+  },
+  "upgradeGuide.unreleasedVersion.notice.canaryDocLink.label": {
+    "message": "{canaryTag} 릴리스"
+  },
+  "upgradeGuide.outdatedVersion.notice": {
+    "message": "오래된 버전의 문서를 탐색중입니다. 아래 스니펫은 최신 버전으로 업그레이드하는 방법을 보여줍니다."
+  },
+  "theme.ErrorPageContent.title": {
+    "message": "이 페이지에 문제가 발생했습니다.",
+    "description": "The title of the fallback page when the page crashed"
+  },
+  "같은 페이지를 만들어보고 싶나요? {guideLink} 문서를 읽고 확인하세요!": {
+    "message": "Want to implement the same page? Read {guideLink} to find out!"
+  },
+  "생성된 인덱스 페이지 가이드": {
+    "message": "the generated index page guide"
+  },
+  "theme.IdealImageMessage.loading": {
+    "message": "불러오는 중…",
+    "description": "When the full-scale image is loading"
+  },
+  "theme.IdealImageMessage.load": {
+    "message": "{sizeMessage}를 로딩하려면 클릭하세요",
+    "description": "To prompt users to load the full image. sizeMessage is a parenthesized size figure."
+  },
+  "theme.IdealImageMessage.offline": {
+    "message": "브라우저가 오프라인 상태입니다. 이미지가 로드되지 않았습니다.",
+    "description": "When the user is viewing an offline document"
+  },
+  "theme.IdealImageMessage.404error": {
+    "message": "404. 이미지를 찾을 수 없습니다",
+    "description": "When the image is not found"
+  },
+  "theme.IdealImageMessage.error": {
+    "message": "오류. 새로고침하려면 클릭하세요.",
+    "description": "When the image fails to load for unknown error"
+  },
+  "theme.검색Bar.seeAll": {
+    "message": "전체 {count}개 결과 확인"
+  },
+  "theme.SearchPage.documentsFound.plurals": {
+    "message": "{count}개의 문서를 찾았습니다.",
+    "description": "Pluralized label for \"{count} documents found\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.SearchPage.existing결과sTitle": {
+    "message": "Search results for \"{query}\"",
+    "description": "The search page title for non-empty query"
+  },
+  "theme.SearchPage.emptyResultsTitle": {
+    "message": "문서 검색하기",
+    "description": "The search page title for empty query"
+  },
+  "theme.SearchPage.inputPlaceholder": {
+    "message": "검색어를 입력하세요.",
+    "description": "The placeholder for search page input"
+  },
+  "theme.SearchPage.inputLabel": {
+    "message": "Search",
+    "description": "The ARIA label for search page input"
+  },
+  "theme.SearchPage.algoliaLabel": {
+    "message": "Powered by Algolia",
+    "description": "The description label for Algolia mention"
+  },
+  "theme.SearchPage.noResultsText": {
+    "message": "검색 결과가 없습니다",
+    "description": "The paragraph for empty search result"
+  },
+  "theme.SearchPage.fetchingNewResults": {
+    "message": "새로운 검색 결과를 불러오는 중입니다.",
+    "description": "The paragraph for fetching new search results"
+  },
+  "theme.SearchBar.label": {
+    "message": "Search",
+    "description": "The ARIA label and placeholder for search button"
+  },
+  "theme.SearchModal.searchBox.resetButtonTitle": {
+    "message": "검색어 초기화",
+    "description": "The label and ARIA label for search box reset button"
+  },
+  "theme.SearchModal.searchBox.cancelButtonText": {
+    "message": "취소",
+    "description": "The label and ARIA label for search box cancel button"
+  },
+  "theme.SearchModal.searchBox.placeholderText": {
+    "message": "문서 검색",
+    "description": "The placeholder text for the main search input field"
+  },
+  "theme.SearchModal.searchBox.placeholderTextAskAi": {
+    "message": "Ask another question...",
+    "description": "The placeholder text when in AI question mode"
+  },
+  "theme.SearchModal.searchBox.placeholderTextAskAiStreaming": {
+    "message": "Answering...",
+    "description": "The placeholder text for search box when AI is streaming an answer"
+  },
+  "theme.SearchModal.searchBox.enterKeyHint": {
+    "message": "search",
+    "description": "The hint for the search box enter key text"
+  },
+  "theme.SearchModal.searchBox.enterKeyHintAskAi": {
+    "message": "enter",
+    "description": "The hint for the Ask AI search box enter key text"
+  },
+  "theme.SearchModal.searchBox.searchInputLabel": {
+    "message": "Search",
+    "description": "The ARIA label for search input"
+  },
+  "theme.SearchModal.searchBox.backToKeywordSearchButtonText": {
+    "message": "Back to keyword search",
+    "description": "The text for back to keyword search button"
+  },
+  "theme.SearchModal.searchBox.backToKeywordSearchButtonAriaLabel": {
+    "message": "Back to keyword search",
+    "description": "The ARIA label for back to keyword search button"
+  },
+  "theme.SearchModal.startScreen.recentSearchesTitle": {
+    "message": "최근",
+    "description": "The title for recent searches"
+  },
+  "theme.SearchModal.startScreen.noRecentSearchesText": {
+    "message": "최근 검색어 없음",
+    "description": "The text when there are no recent searches"
+  },
+  "theme.SearchModal.startScreen.saveRecentSearchButtonTitle": {
+    "message": "이 검색어를 저장",
+    "description": "The title for save recent search button"
+  },
+  "theme.SearchModal.startScreen.removeRecentSearchButtonTitle": {
+    "message": "이 검색어를 최근 검색어에서 삭제",
+    "description": "The title for remove recent search button"
+  },
+  "theme.SearchModal.startScreen.favoriteSearchesTitle": {
+    "message": "Favorite",
+    "description": "The title for favorite searches"
+  },
+  "theme.SearchModal.startScreen.removeFavoriteSearchButtonTitle": {
+    "message": "이 검색어를 즐겨찾기에서 삭제",
+    "description": "The title for remove favorite search button"
+  },
+  "theme.SearchModal.startScreen.recentConversationsTitle": {
+    "message": "Recent conversations",
+    "description": "The title for recent conversations"
+  },
+  "theme.SearchModal.startScreen.removeRecentConversationButtonTitle": {
+    "message": "Remove this conversation from history",
+    "description": "The title for remove recent conversation button"
+  },
+  "theme.SearchModal.errorScreen.titleText": {
+    "message": "결과를 불러올 수 없음",
+    "description": "The title for error screen"
+  },
+  "theme.SearchModal.errorScreen.helpText": {
+    "message": "인터넷 연결을 다시 확인하시기 바랍니다.",
+    "description": "The help text for error screen"
+  },
+  "theme.SearchModal.resultsScreen.askAiPlaceholder": {
+    "message": "Ask AI: ",
+    "description": "The placeholder text for Ask AI input"
+  },
+  "theme.SearchModal.askAiScreen.disclaimerText": {
+    "message": "Answers are generated with AI which can make mistakes. Verify responses.",
+    "description": "The disclaimer text for AI answers"
+  },
+  "theme.SearchModal.askAiScreen.relatedSourcesText": {
+    "message": "Related sources",
+    "description": "The text for related sources"
+  },
+  "theme.SearchModal.askAiScreen.thinkingText": {
+    "message": "Thinking...",
+    "description": "The text when AI is thinking"
+  },
+  "theme.SearchModal.askAiScreen.copyButtonText": {
+    "message": "복사하기",
+    "description": "The text for copy button"
+  },
+  "theme.SearchModal.askAiScreen.copyButtonCopiedText": {
+    "message": "Copied!",
+    "description": "The text for copy button when copied"
+  },
+  "theme.SearchModal.askAiScreen.copyButtonTitle": {
+    "message": "복사하기",
+    "description": "The title for copy button"
+  },
+  "theme.SearchModal.askAiScreen.likeButtonTitle": {
+    "message": "Like",
+    "description": "The title for like button"
+  },
+  "theme.SearchModal.askAiScreen.dislikeButtonTitle": {
+    "message": "Dislike",
+    "description": "The title for dislike button"
+  },
+  "theme.SearchModal.askAiScreen.thanksForFeedbackText": {
+    "message": "Thanks for your feedback!",
+    "description": "The text for thanks for feedback"
+  },
+  "theme.SearchModal.askAiScreen.preToolCallText": {
+    "message": "Searching...",
+    "description": "The text before tool call"
+  },
+  "theme.SearchModal.askAiScreen.duringToolCallText": {
+    "message": "Searching for ",
+    "description": "The text during tool call"
+  },
+  "theme.SearchModal.askAiScreen.afterToolCallText": {
+    "message": "Searched for",
+    "description": "The text after tool call"
+  },
+  "theme.SearchModal.footer.selectText": {
+    "message": "Select",
+    "description": "The select text for footer"
+  },
+  "theme.SearchModal.footer.submitQuestionText": {
+    "message": "Submit question",
+    "description": "The submit question text for footer"
+  },
+  "theme.SearchModal.footer.selectKeyAriaLabel": {
+    "message": "엔터 키",
+    "description": "The ARIA label for select key in footer"
+  },
+  "theme.SearchModal.footer.navigateText": {
+    "message": "Navigate",
+    "description": "The navigate text for footer"
+  },
+  "theme.SearchModal.footer.navigateUpKeyAriaLabel": {
+    "message": "화살표 위 키",
+    "description": "The ARIA label for navigate up key in footer"
+  },
+  "theme.SearchModal.footer.navigateDownKeyAriaLabel": {
+    "message": "화살표 아래 키",
+    "description": "The ARIA label for navigate down key in footer"
+  },
+  "theme.SearchModal.footer.closeText": {
+    "message": "Close",
+    "description": "The close text for footer"
+  },
+  "theme.SearchModal.footer.closeKeyAriaLabel": {
+    "message": "Esc 키",
+    "description": "The ARIA label for close key in footer"
+  },
+  "theme.SearchModal.footer.searchByText": {
+    "message": "Powered by",
+    "description": "The 'Powered by' text for footer"
+  },
+  "theme.SearchModal.footer.backToSearchText": {
+    "message": "Back to search",
+    "description": "The back to search text for footer"
+  },
+  "theme.SearchModal.noResultsScreen.noResultsText": {
+    "message": "검색 결과 없음s found for",
+    "description": "The text when there are no results"
+  },
+  "theme.SearchModal.noResultsScreen.suggestedQueryText": {
+    "message": "다른 추천 검색어",
+    "description": "The text for suggested query"
+  },
+  "theme.SearchModal.noResultsScreen.reportMissingResultsText": {
+    "message": "검색 결과가 없는 것이 오류라고 생각되십니까?",
+    "description": "The text for reporting missing results"
+  },
+  "theme.SearchModal.noResultsScreen.reportMissingResultsLinkText": {
+    "message": "알려주시기 바랍니다.",
+    "description": "The link text for reporting missing results"
+  },
+  "theme.SearchModal.placeholder": {
+    "message": "문서 검색",
+    "description": "The placeholder of the input of the DocSearch pop-up modal"
+  },
+  "도큐사우루스 사이트 쇼케이스": {
+    "message": "Docusaurus Site Showcase"
+  },
+  "도큐사우루스로 만들고 있는 웹사이트 목록": {
+    "message": "List of websites people are building with Docusaurus"
+  },
+  "showcase.header.button": {
+    "message": "🙏 여러분의 사이트를 추가해주세요"
+  },
+  "showcase.filters.resultCount": {
+    "message": "{sitesCount}개 사이트",
+    "description": "Pluralized label for the number of sites found on the showcase. Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.BackToTopButton.buttonAriaLabel": {
+    "message": "맨위로 이동",
+    "description": "The ARIA label for the back to top button"
+  },
+  "theme.blog.archive.title": {
+    "message": "보관함",
+    "description": "The page & hero title of the blog archive page"
+  },
+  "theme.blog.archive.description": {
+    "message": "보관함",
+    "description": "The page & hero description of the blog archive page"
+  },
+  "theme.blog.paginator.navAriaLabel": {
+    "message": "블로그 목록 페이지 탐색",
+    "description": "The ARIA label for the blog pagination"
+  },
+  "theme.blog.paginator.newerEntries": {
+    "message": "최신 항목",
+    "description": "The label used to navigate to the newer blog posts page (previous page)"
+  },
+  "theme.blog.paginator.olderEntries": {
+    "message": "오래된 항목",
+    "description": "The label used to navigate to the older blog posts page (next page)"
+  },
+  "theme.blog.post.paginator.navAriaLabel": {
+    "message": "블로그 포스트 페이지 탐색",
+    "description": "The ARIA label for the blog posts pagination"
+  },
+  "theme.blog.post.paginator.newerPost": {
+    "message": "최근 게시물",
+    "description": "The blog post button label to navigate to the newer/previous post"
+  },
+  "theme.blog.post.paginator.olderPost": {
+    "message": "오래된 게시물",
+    "description": "The blog post button label to navigate to the older/next post"
+  },
+  "theme.colorToggle.ariaLabel.mode.system": {
+    "message": "system mode",
+    "description": "The name for the system color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "message": "밝은 모드",
+    "description": "The name for the light color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "message": "어두운 모드",
+    "description": "The name for the dark color mode"
+  },
+  "theme.colorToggle.ariaLabel": {
+    "message": "어두운 모드와 밝은 모드 전환하기 (현재 {mode})",
+    "description": "The ARIA label for the color mode toggle"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "이동 경로",
+    "description": "The ARIA label for the breadcrumbs"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "문서 페이지",
+    "description": "The ARIA label for the docs pagination"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "이전",
+    "description": "The label used to navigate to the previous doc"
+  },
+  "theme.docs.paginator.next": {
+    "message": "Next",
+    "description": "The label used to navigate to the next doc"
+  },
+  "theme.docs.tagDocListPageTitle.nDocsTagged": {
+    "message": "{count}개 문서 태그됨",
+    "description": "Pluralized label for \"{count} docs tagged\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.docs.tagDocListPageTitle": {
+    "message": "{nDocsTagged} with \"{tagName}\"",
+    "description": "The title of the page for a docs tag"
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "버전: {versionLabel}"
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "이 문서는 {siteTitle} {versionLabel}이며 아직 공개하지 않았습니다.",
+    "description": "The label used to tell the user that he's browsing an unreleased doc version"
+  },
+  "theme.docs.versions.unmaintainedVersionLabel": {
+    "message": "이 문서는 {siteTitle} {versionLabel}이며 더는 업데이트하지 않습니다.",
+    "description": "The label used to tell the user that he's browsing an unmaintained doc version"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "최신 문서는 {latestVersionLink} ({versionLabel})입니다.",
+    "description": "The label used to tell the user to check the latest version"
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "latest version",
+    "description": "The label used for the latest version suggestion link label"
+  },
+  "theme.common.editThisPage": {
+    "message": "이 페이지 편집하기",
+    "description": "The link label to edit the current page"
+  },
+  "theme.common.headingLinkTitle": {
+    "message": "{heading}으로 이동하기",
+    "description": "Title for link to heading"
+  },
+  "theme.lastUpdated.atDate": {
+    "message": " 작성일: {date}",
+    "description": "The words used to describe on which date a page has been last updated"
+  },
+  "theme.lastUpdated.byUser": {
+    "message": " 글쓴이: {user}",
+    "description": "The words used to describe by who the page has been last updated"
+  },
+  "theme.lastUpdated.lastUpdatedAtBy": {
+    "message": "최근 업데이트: {atDate}{byUser}",
+    "description": "The sentence used to display when a page has been last updated, and by who"
+  },
+  "theme.NotFound.title": {
+    "message": "페이지를 찾을 수 없습니다.",
+    "description": "The title of the 404 page"
+  },
+  "theme.navbar.mobile버전 관리Dropdown.label": {
+    "message": "Versions",
+    "description": "The label for the navbar versions dropdown on mobile view"
+  },
+  "theme.tags.tagsListLabel": {
+    "message": "태그:",
+    "description": "The label alongside a tag list"
+  },
+  "theme.Playground.liveEditor": {
+    "message": "라이브 에디터",
+    "description": "The live editor label of the live codeblocks"
+  },
+  "theme.Playground.result": {
+    "message": "Result",
+    "description": "The result label of the live codeblocks"
+  },
+  "theme.admonition.위험": {
+    "message": "danger",
+    "description": "The default label used for the Danger admonition (:::danger)"
+  },
+  "theme.admonition.정보": {
+    "message": "info",
+    "description": "The default label used for the Info admonition (:::info)"
+  },
+  "theme.admonition.참고": {
+    "message": "note",
+    "description": "The default label used for the Note admonition (:::note)"
+  },
+  "theme.admonition.tip": {
+    "message": "tip",
+    "description": "The default label used for the Tip admonition (:::tip)"
+  },
+  "theme.admonition.경고": {
+    "message": "warning",
+    "description": "The default label used for the Warning admonition (:::warning)"
+  },
+  "theme.AnnouncementBar.closeButtonAriaLabel": {
+    "message": "Close",
+    "description": "The ARIA label for close button of announcement bar"
+  },
+  "theme.blog.sidebar.navAriaLabel": {
+    "message": "블로그 최근 포스트 탐색",
+    "description": "The ARIA label for recent posts in the blog sidebar"
+  },
+  "theme.DocSidebarItem.expandCategoryAriaLabel": {
+    "message": "'{label}' 사이드바 카테고리 펼치기",
+    "description": "The ARIA label to expand the sidebar category"
+  },
+  "theme.DocSidebarItem.collapseCategoryAriaLabel": {
+    "message": "사이드바 접기 category '{label}'",
+    "description": "The ARIA label to collapse the sidebar category"
+  },
+  "theme.IconExternalLink.ariaLabel": {
+    "message": "(opens in new tab)",
+    "description": "The ARIA label for the external link icon"
+  },
+  "theme.NotFound.p1": {
+    "message": "요청한 페이지를 찾을 수 없습니다.",
+    "description": "The first paragraph of the 404 page"
+  },
+  "theme.NotFound.p2": {
+    "message": "이 URL을 연결시킨 사이트의 관리자에게 링크가 깨졌다는 사실을 알려주세요.",
+    "description": "The 2nd paragraph of the 404 page"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "메인",
+    "description": "The ARIA label for the main navigation"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "언어",
+    "description": "The label for the mobile language switcher dropdown"
+  },
+  "theme.TOCCollapsible.toggleButtonLabel": {
+    "message": "현재 페이지",
+    "description": "The label used by the button on the collapsible TOC component"
+  },
+  "changelog.backLink": {
+    "message": "← 인덱스 페이지로 돌아가기"
+  },
+  "theme.changelog.post.paginator.navAriaLabel": {
+    "message": "변경 로그 항목 탐색",
+    "description": "The ARIA label for the changelog pagination"
+  },
+  "theme.changelog.post.paginator.newerRelease": {
+    "message": "최신 릴리스",
+    "description": "The changelog button label to navigate to the newer release"
+  },
+  "theme.changelog.post.paginator.olderRelease": {
+    "message": "이전 릴리스",
+    "description": "The changelog button label to navigate to the older release"
+  },
+  "theme.Playground.buttons.reset": {
+    "message": "재설정",
+    "description": "The reset button label for live code blocks"
+  },
+  "showcase.card.sourceLink": {
+    "message": "source"
+  },
+  "showcase.filters.title": {
+    "message": "필터"
+  },
+  "showcase.usersList.noResult": {
+    "message": "No result"
+  },
+  "showcase.favoritesList.title": {
+    "message": "추천"
+  },
+  "showcase.usersList.allUsers": {
+    "message": "모든 사이트"
+  },
+  "showcase.searchBar.placeholder": {
+    "message": "사이트 이름으로 검색"
+  },
+  "theme.blog.post.readMore": {
+    "message": "더 알아보기",
+    "description": "The label used in blog post item excerpts to link to full blog posts"
+  },
+  "theme.blog.post.readMoreLabel": {
+    "message": "{title}에 대해 더 읽어보기",
+    "description": "The ARIA label for the link to full blog posts from excerpts"
+  },
+  "theme.docs.breadcrumbs.home": {
+    "message": "Home page",
+    "description": "The ARIA label for the home page in the breadcrumbs"
+  },
+  "theme.blog.post.readingTime.plurals": {
+    "message": "{readingTime}분 읽기 분량",
+    "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.CodeBlock.copy": {
+    "message": "Copy",
+    "description": "The copy button label on code blocks"
+  },
+  "theme.CodeBlock.copied": {
+    "message": "복사했습니다",
+    "description": "The copied button label on code blocks"
+  },
+  "theme.CodeBlock.copyButtonAriaLabel": {
+    "message": "복사하기 code to clipboard",
+    "description": "The ARIA label for copy code blocks button"
+  },
+  "theme.CodeBlock.wordWrapToggle": {
+    "message": "줄바꿈 기능 토글",
+    "description": "The title attribute for toggle word wrapping button of code block lines"
+  },
+  "theme.docs.sidebar.navAriaLabel": {
+    "message": "문서 사이드바",
+    "description": "The ARIA label for the sidebar navigation"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "사이드바 접기",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.collapseButtonAriaLabel": {
+    "message": "Collapse sidebar",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.closeSidebarButtonAriaLabel": {
+    "message": "내비게이션 바 닫기",
+    "description": "The ARIA label for close button of mobile sidebar"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.expandAriaLabel": {
+    "message": "Expand the dropdown",
+    "description": "The ARIA label of the button to expand the mobile dropdown navbar item"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.collapseAriaLabel": {
+    "message": "Collapse the dropdown",
+    "description": "The ARIA label of the button to collapse the mobile dropdown navbar item"
+  },
+  "changelog.description.rssLink": {
+    "message": "RSS 피드"
+  },
+  "changelog.description": {
+    "message": "{rssLink} 를 통해 구독하거나 {xLink} 에서 팔로우하여 최신 릴리스 소식을 확인하세요!"
+  },
+  "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
+    "message": "← 메인 메뉴로 돌아가기",
+    "description": "The label of the back button to return to main menu, inside the mobile navbar sidebar secondary menu (notably used to display the docs sidebar)"
+  },
+  "theme.docs.sidebar.toggleSidebarButtonAriaLabel": {
+    "message": "내비게이션 바 펼치기",
+    "description": "The ARIA label for hamburger menu button of mobile navigation"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "사이드바 펼치기",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "사이드바 펼치기",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.contentVisibility.unlistedBanner.title": {
+    "message": "Unlisted page",
+    "description": "The unlisted content banner title"
+  },
+  "theme.contentVisibility.unlistedBanner.message": {
+    "message": "This page is unlisted. 검색 engines will not index it, and only users having a direct link can access it.",
+    "description": "The unlisted content banner message"
+  },
+  "theme.contentVisibility.draftBanner.title": {
+    "message": "Draft page",
+    "description": "The draft content banner title"
+  },
+  "theme.contentVisibility.draftBanner.message": {
+    "message": "This page is a draft. It will only be visible in dev and be excluded from the production build.",
+    "description": "The draft content banner message"
+  },
+  "theme.ErrorPageContent.tryAgain": {
+    "message": "Try again",
+    "description": "The label of the button to try again rendering when the React error boundary captures an error"
+  },
+  "theme.common.skipToMainContent": {
+    "message": "Skip to main content",
+    "description": "The skip to content label used for accessibility, allowing to rapidly navigate to main content with keyboard tab/enter navigation"
+  },
+  "theme.tags.tagsPageTitle": {
+    "message": "Tags",
+    "description": "The title of the tag list page"
+  },
+  "theme.tags.tagsPageLink": {
+    "message": "View all tags",
+    "description": "The label of the link targeting the tag list page"
+  }
+}

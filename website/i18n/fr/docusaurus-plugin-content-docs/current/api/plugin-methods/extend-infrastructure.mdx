@@ -1,0 +1,182 @@
+---
+sidebar_position: 2
+---
+
+# Extension de l'infrastructure
+
+Docusaurus dispose de certaines infrastructures comme le rechargement à chaud, le CLI et le swizzling, qui peuvent être étendues par des plugins externes.
+
+## `getPathsToWatch()` {/* #getPathsToWatch */}
+
+Spécifie les chemins à surveiller pour les plugins et les thèmes. Les chemins sont surveillés par le serveur de développement de sorte que les cycles de vie du plugin sont rechargés lorsque le contenu des chemins surveillés change. Notez que les modules de plugins et de themes sont initialement appelés avec `context` et `options` depuis Node, que vous pouvez utiliser pour trouver les informations de répertoire nécessaires sur le site.
+
+Utilisez cette option pour les fichiers qui sont consommés côté serveur, car les fichiers de thème sont automatiquement surveillés par le serveur de développement Webpack.
+
+Exemple :
+
+```js title="docusaurus-plugin/src/index.js"
+import path from 'path';
+
+export default function (context, options) {
+  return {
+    name: 'docusaurus-plugin',
+    // highlight-start
+    getPathsToWatch() {
+      const contentPath = path.resolve(context.siteDir, options.path);
+      return [`${contentPath}/**/*.{ts,tsx}`];
+    },
+    // highlight-end
+  };
+}
+```
+
+## `extendCli(cli)` {/* #extendCli */}
+
+Enregistre une commande supplémentaire pour améliorer la CLI de Docusaurus. `cli` is a [Commander 15 `Command`](https://github.com/tj/commander.js/tree/v15.0.0) object.
+
+Exemple :
+
+```js title="docusaurus-plugin/src/index.js"
+export default function (context, options) {
+  return {
+    name: 'docusaurus-plugin',
+    // highlight-start
+    extendCli(cli) {
+      cli
+        .command('roll')
+        .description('Lance un nombre aléatoire entre 1 et 1000')
+        .action(() => {
+          console.log(Math.floor(Math.random() * 1000 + 1));
+        });
+    },
+    // highlight-end
+  };
+}
+```
+
+## `getThemePath()` {/* #getThemePath */}
+
+Retourne le chemin vers le répertoire où les composants du thème peuvent être trouvés. Lorsque vos utilisateurs appellent `swizzle`, `getThemePath` est appelé et son chemin retourné est utilisé pour trouver les composants de votre thème. Les chemins relatifs sont résolus par rapport au dossier contenant le point d'entrée.
+
+Par exemple, votre `getThemePath` peut être :
+
+```js title="my-theme/src/index.js"
+export default function (context, options) {
+  return {
+    name: 'my-theme',
+    // highlight-start
+    getThemePath() {
+      return './theme';
+    },
+    // highlight-end
+  };
+}
+```
+
+## `getTypeScriptThemePath()` {/* #getTypeScriptThemePath */}
+
+Similaire à `getThemePath()`, il devrait retourner le chemin vers le répertoire où le code source des composants du thème TypeScript peut être trouvé. This path is purely for swizzling TypeScript theme components, and theme components under this path will **not** be resolved by the bundler. Par conséquent, ce n'est pas un remplacement de `getThemePath()`. Typiquement, , vous pouvez faire en sorte que le chemin renvoyé par `getTypeScriptThemePath()` soit votre répertoire source, et que le chemin renvoyé par `getThemePath()` soit celui de la sortie JavaScript compilée.
+
+:::tip
+
+Pour les auteurs de thèmes TypeScript : il est fortement conseillé de rendre votre sortie compilée aussi lisible que possible par l'homme. Only strip type annotations and don't transpile any syntaxes, because Docusaurus transpiles them based on the targeted browser versions.
+
+Vous devriez également formater ces fichiers avec Prettier. Rappelez-vous : les fichiers JS peuvent et seront consommés directement par vos utilisateurs.
+
+:::
+
+Exemple :
+
+```js title="my-theme/src/index.js"
+export default function (context, options) {
+  return {
+    name: 'my-theme',
+    // highlight-start
+    getThemePath() {
+      // Où se trouve la sortie JavaScript compilée
+      return '../lib/theme';
+    },
+    getTypeScriptThemePath() {
+      // Où se trouve le code source de TypeScript
+      return '../src/theme';
+    },
+    // highlight-end
+  };
+}
+```
+
+## `getSwizzleConfig()` {/* #getSwizzleConfig */}
+
+**This is a static method, not attached to any plugin instance.** Export it from the theme module, or attach it to the plugin constructor function.
+
+Returns the swizzle config of the theme, declaring [how safe it is to swizzle](../../swizzling.mdx#what-is-safe-to-swizzle) each theme component:
+
+```ts
+type SwizzleConfig = {
+  components: {
+    [componentName: string]: {
+      actions: {
+        eject: 'safe' | 'unsafe' | 'forbidden';
+        wrap: 'safe' | 'unsafe' | 'forbidden';
+      };
+      description?: string;
+    };
+  };
+};
+```
+
+- `componentName`: the name of the theme component, relative to the theme path, such as `Footer` or `Admonition/Icon`.
+- `actions`: the safety status of each swizzle action. Actions not provided are `unsafe`.
+- `description`: a description of the component, displayed by `docusaurus swizzle --list`.
+
+Components not listed are `unsafe` to eject and to wrap.
+
+```js title="my-theme/src/index.js"
+export default function (context, options) {
+  return {
+    name: 'my-theme',
+    getThemePath() {
+      return './theme';
+    },
+  };
+}
+
+// highlight-start
+export function getSwizzleConfig() {
+  return {
+    components: {
+      Footer: {
+        actions: {
+          eject: 'safe',
+          wrap: 'safe',
+        },
+        description: "The footer component of your site's layout",
+      },
+      DocSidebar: {
+        actions: {
+          eject: 'unsafe',
+          wrap: 'safe',
+        },
+        description: 'The sidebar component on docs pages',
+      },
+      'prism-include-languages': {
+        actions: {
+          eject: 'safe',
+          wrap: 'forbidden', // Not a component!
+        },
+      },
+    },
+  };
+}
+// highlight-end
+```
+
+## `getSwizzleComponentList()` {/* #getSwizzleComponentList */}
+
+:::warning Deprecated
+
+Use [`getSwizzleConfig()`](#getSwizzleConfig) instead.
+
+:::
+
+A static method returning the list of components that are safe to eject and to wrap. It is ignored when the theme provides `getSwizzleConfig()`.

@@ -1,0 +1,942 @@
+---
+description: Déployez votre application Docusaurus pour la production sur une gamme de services d'hébergement statiques.
+---
+
+# Déploiement
+
+Pour construire les fichiers statiques de votre site web pour la production, exécutez :
+
+```bash npm2yarn
+npm run build
+```
+
+Une fois terminé, les fichiers statiques seront générés dans le répertoire `build`.
+
+:::note
+
+La seule responsabilité de Docusaurus est de construire votre site et d'émettre des fichiers statiques dans `build`.
+
+C'est maintenant à vous de choisir comment héberger ces fichiers statiques.
+
+:::
+
+Vous pouvez déployer votre site sur des services d'hébergement statiques tels que [Vercel](https://vercel.com/), [GitHub Pages](https://pages.github.com/), [Netlify](https://www.netlify.com/), [Render](https://render.com/docs/static-sites) et [Surge](https://surge.sh/help/getting-started-with-surge).
+
+Un site Docusaurus est rendu de manière statique, et il peut généralement fonctionner sans JavaScript !
+
+## Configuration {/* #configuration */}
+
+Les paramètres suivants sont obligatoires dans `docusaurus.config.js` pour que Docusaurus optimise le routage et serve les fichiers à partir du bon emplacement :
+
+| Nom | Description |
+| --- | --- |
+| `url` | URL de votre site. Pour un site déployé sur https://my-org.com/my-project/`, `url` est `https://my-org.com/`. |
+| `baseUrl` | URL de base pour votre projet, avec un slash à la fin. Pour un site déployé sur `https://my-org.com/my-project/`, `baseUrl` est `/my-project/`. |
+
+## Tester votre construction en local {/* #testing-build-locally */}
+
+Il est important de tester votre construction avant de le déployer pour la production. Docusaurus possède une commande [`docusaurus serve`](cli.mdx#docusaurus-serve-sitedir) pour cela :
+
+```bash npm2yarn
+npm run serve
+```
+
+Par défaut, cela va charger votre site sur [`http://localhost:3000/`](http://localhost:3000/).
+
+## Configuration du slash de fin {/* #trailing-slashes */}
+
+Docusaurus possède une [config `trailingSlash`](./api/docusaurus.config.js.mdx#trailingSlash) pour permettre de personnaliser les URL/liens et les modèles de noms de fichiers émis.
+
+La valeur par défaut fonctionne généralement bien. Malheureusement, chaque hébergeur statique a un **comportement différent**, et déployer exactement le même site sur différents hôtes peut conduire à des résultats différents. En fonction de votre hôte, il peut être utile de modifier cette configuration.
+
+:::tip
+
+Utilisez [slorber/trailing-slash-guide](https://github.com/slorber/trailing-slash-guide) pour mieux comprendre le comportement de votre hôte et configurer `trailingSlash` correctement.
+
+:::
+
+## Utilisation des variables d'environnement {/* #using-environment-variables */}
+
+Placer des informations potentiellement sensibles dans l'environnement est une pratique courante. Cependant, dans un site web typique de Docusaurus, le fichier `docusaurus.config.js` est la seule interface avec l'environnement Node.js (voir [notre aperçu de l'architecture](advanced/architecture.mdx)), alors que tout le reste (pages MDX, composants React, etc.) sont côté client et n'ont pas d'accès direct à la variable global `process`. Dans ce cas, vous pouvez envisager d'utiliser [`customFields`](api/docusaurus.config.js.mdx#customFields) pour passer des variables d'environnement côté client.
+
+```js title="docusaurus.config.js"
+// If you are using dotenv (https://www.npmjs.com/package/dotenv)
+import 'dotenv/config';
+
+export default {
+  title: '...',
+  url: process.env.URL, // You can use environment variables to control site specifics as well
+  // highlight-start
+  customFields: {
+    // Put your custom environment here
+    teamEmail: process.env.EMAIL,
+  },
+  // highlight-end
+};
+```
+
+```jsx title="home.jsx"
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+
+export default function Home() {
+  const {
+    siteConfig: {customFields},
+  } = useDocusaurusContext();
+  return <div>Contact us through {customFields.teamEmail}!</div>;
+}
+```
+
+## Choix d'un hébergeur {/* #choosing-a-hosting-provider */}
+
+Il existe quelques options d'hébergement courantes :
+
+- [L'auto-hébergement](#self-hosting) avec un serveur HTTP comme Apache2 ou Nginx.
+- Fournisseurs de Jamstack (par exemple [Netlify](#deploying-to-netlify) et [Vercel](#deploying-to-vercel)). Nous les utiliserons comme références, mais le même raisonnement peut s'appliquer à d'autres fournisseurs.
+- [GitHub Pages](#deploying-to-github-pages) (par définition, il s'agit également de Jamstack, mais nous le considérons séparément).
+
+Si vous n'êtes pas certain de savoir lequel choisir, posez-vous les questions suivantes :
+
+<details>
+
+<summary>
+  How many resources (money, person-hours, etc.) suis-je prêt à investir dans ce projet ?
+</summary>
+
+- 🔴 L'auto-hébergement nécessite une expérience en matière de réseaux ainsi que d'administration de Linux et de serveurs web. C'est l'option la plus difficile à mettre en œuvre, et c'est celle qui demande le plus de temps pour être gérée avec succès. En termes de dépenses, les services du cloud ne sont presque jamais gratuits, et l'achat/déploiement d'un serveur sur site peut s'avérer encore plus coûteux.
+- 🟢 Les fournisseurs de Jamstack peuvent vous aider à configurer un site web fonctionnel en un rien de temps et offrent des fonctionnalités comme les redirections côté serveur qui sont facilement configurables. De nombreux fournisseurs offrent de généreux quotas de temps de construction, même pour les plans gratuits, que vous ne dépasserez presque jamais. Cependant, les plans gratuits ont des limites, et vous devrez payer une fois que vous aurez atteint ces limites. Consultez la page tarifaire de votre fournisseur pour plus de détails.
+- 🟡 Le workflow de déploiement des pages GitHub peut être fastidieux à configurer. (La preuve : regardez la longueur du [Déploiement vers Github Pages](#deploying-to-github-pages) !) Cependant, ce service (y compris la construction et le déploiement) est toujours gratuit pour les dépôts publics, et nous avons des instructions détaillées pour vous aider à le faire fonctionner.
+
+</details>
+
+<details>
+
+<summary>De quel degré de personnalisation côté serveur ai-je besoin ?</summary>
+
+- 🟢 Avec l'auto-hébergement, vous avez accès à toute la configuration du serveur. Vous pouvez configurer l'hôte virtuel pour qu'il serve un contenu différent en fonction de l'URL de la requête, vous pouvez effectuer des redirections complexes côté serveur, vous pouvez mettre en œuvre l'authentification, etc. Si vous avez besoin de nombreuses fonctionnalités côté serveur, hébergez votre site web.
+- 🟡 Jamstack propose généralement une configuration côté serveur (par exemple, formatage des URL (slash de fin de chaîne), redirections côté serveur, etc.).
+- 🔴 Les Pages GitHub n'exposent pas la configuration côté serveur, à part l'application du HTTPS et la définition du CNAME.
+
+</details>
+
+<details>
+
+<summary>Ai-je besoin de flux de déploiement facilitant la collaboration ?</summary>
+
+- 🟡 Les services auto-hébergés peuvent tirer parti d'une fonctionnalité de déploiement continu telle que Netlify, mais il faut alors procéder à des opérations plus lourdes. En général, vous désignez une personne spécifique pour gérer le déploiement, et le flux de travail n'est pas vraiment basé sur git, contrairement aux deux autres options.
+- 🟢 Netlify et Vercel ont des aperçus de déploiement pour chaque pull request, ce qui est utile pour une équipe pour revoir le travail avant de le mettre en production. Vous pouvez également gérer une équipe avec un accès différent au déploiement.
+- 🟡 Les pages GitHub ne peuvent pas faire des aperçus de déploiement d'une manière simple. Un dépôt ne peut être associé qu'à un seul déploiement du site. D'un autre côté, vous pouvez contrôler qui a accès en écriture au déploiement du site.
+
+</details>
+
+Il n'y a pas de solution miracle. Vous devez évaluer vos besoins et vos ressources avant de faire votre choix.
+
+## Auto-hébergement {/* #self-hosting */}
+
+Docusaurus peut être auto-hébergé en utilisant [`docusaurus serve`](cli.mdx#docusaurus-serve-sitedir). Changez de port en utilisant `--port` et `--host` pour changer d'hôte.
+
+```bash npm2yarn
+npm run serve -- --build --port 80 --host 0.0.0.0
+```
+
+:::warning
+
+Ce n'est pas la meilleure option, par rapport à un fournisseur d'hébergement statique / CDN.
+
+:::
+
+:::warning
+
+Dans les sections suivantes, nous allons présenter quelques fournisseurs d'hébergement les plus courants et la manière dont ils doivent être configurés pour déployer les sites Docusaurus le plus efficacement possible. Docusaurus n'est affilié à aucun de ces services, et ces informations ne sont fournies qu'à titre de renseignement. Certaines de ces informations sont fournies par des tiers, et les modifications récentes de l'API peuvent ne pas être reprises de notre côté. Si vous voyez du contenu obsolète, les PR sont les bienvenues.
+
+Étant donné que nous ne pouvons fournir ce contenu que sur la bonne foi, nous avons cessé d'accepter les PR qui ajoutent de nouvelles options d'hébergement. Vous pouvez toutefois publier votre article sur un autre site (par exemple, votre blog ou le site officiel du fournisseur) et nous demander d'inclure un lien vers votre texte.
+
+:::
+
+## Déploiement sur Netlify {/* #deploying-to-netlify */}
+
+Pour déployer vos sites Docusaurus sur [Netlify](https://www.netlify.com/), assurez-vous d'abord que les options suivantes sont correctement configurées :
+
+```js title="docusaurus.config.js"
+export default {
+  // highlight-start
+  url: 'https://docusaurus-2.netlify.app', // Url to your site with no trailing slash
+  baseUrl: '/', // Base directory of your site relative to your repo
+  // highlight-end
+  // ...
+};
+```
+
+Ensuite, [créez votre site avec Netlify](https://app.netlify.com/start).
+
+Pendant que vous configurez le site, spécifiez les commandes de compilation et les répertoires comme suit :
+
+- build command: `npm run build`
+- publish directory: `build`
+
+Si vous n'avez pas configuré ces options de compilation, vous pouvez toujours aller dans "Site settings" -> "Build deploy" après la création de votre site.
+
+Une fois correctement configuré avec les options ci-dessus, votre site devrait être déployé et redéployé automatiquement lors de la fusion de votre branche de déploiement, qui est par défaut `main`.
+
+:::warning
+
+Certains sites Docusaurus placent le dossier `docs` à l'extérieur de `website` (probablement les anciens sites Docusaurus v1) :
+
+```bash
+repo           # git root
+├── docs       # MD files
+└── website    # Docusaurus root
+```
+
+Si vous décidez d'utiliser le dossier `website` comme répertoire de base pour Netlify, Netlify ne déclenchera pas les builds lorsque vous mettrez à jour le dossier `docs`, et vous devrez configurer une [commande personnalisée `ignore`](https://docs.netlify.com/configure-builds/common-configurations/ignore-builds/) :
+
+```toml title="website/netlify.toml"
+[build]
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF . ../docs/"
+```
+
+:::
+
+:::warning
+
+Par défaut, Netlify ajoute un slash final aux URL Docusaurus.
+
+Il est recommandé de désactiver le paramètre Netlify `Post Processing > Asset Optimization > Pretty Urls` pour éviter les URL en minuscule, les redirections inutiles et les erreurs 404.
+
+**Faites très attention** : la case à cocher globale `Disable asset optimization` est défectueuse et ne désactive pas vraiment le paramètre `Pretty URLs` en pratique. Veillez à *la décocher indépendamment**.
+
+Si vous voulez garder le paramètre `Pretty Urls` de Netlify activé, ajustez la configuration `trailingSlash` de Docusaurus de manière appropriée.
+
+Pour plus d'informations, consultez [slorber/trailing-slash-guide](https://github.com/slorber/trailing-slash-guide).
+
+:::
+
+## Déploiement sur Vercel {/* #deploying-to-vercel */}
+
+Déployer votre projet Docusaurus sur [Vercel](https://vercel.com/) vous fournira [différents avantages](https://vercel.com/) dans les domaines de la performance et de la facilité d'utilisation.
+
+Pour déployer votre projet Docusaurus avec un [Vercel pour l'intégration Git](https://vercel.com/docs/concepts/git), assurez-vous qu'il a été poussé dans un dépôt Git.
+
+Importez le projet dans Vercel en utilisant [Import Flow](https://vercel.com/import/git). Lors de l'importation, toutes les options pertinentes sont préconfigurées pour vous; toutefois, vous pouvez choisir de modifier n'importe laquelle de ces [options](https://vercel.com/docs/build-step#build-&-development-settings).
+
+Après l'importation de votre projet, tous les pushs ultérieurs vers les branches généreront des [Déploiements d'aperçu](https://vercel.com/docs/platform/deployments#preview), et toutes les modifications apportées à la [Branche de production](https://vercel.com/docs/git-integrations#production-branch) (communément « main » ou « master ») donneront lieu à un [Déploiement de production](https://vercel.com/docs/platform/deployments#production).
+
+## Déploiement sur les pages GitHub {/* #deploying-to-github-pages */}
+
+Docusaurus fournit un moyen facile de publier sur [GitHub Pages](https://pages.github.com/), qui est fourni gratuitement avec chaque dépôt GitHub.
+
+### Vue d'ensemble {/* #github-pages-overview */}
+
+Habituellement, il y a deux dépôts (au moins deux branches) impliqués dans un processus de publication : la branche contenant les fichiers source, et la branche contenant la sortie de construction à servir avec GitHub Pages. Dans le tutoriel suivant, ils seront appelés respectivement **"source"** et **"deployment"**.
+
+Chaque dépôt GitHub est associé à un service GitHub pages. Si le dépôt de déploiement est appelé `my-org/my-project` (où `my-org` est le nom de l'organisation ou le nom d'utilisateur), le site déployé apparaîtra à l'adresse `https://my-org.github.io/my-projet/`. Si le dépôt de déploiement s'appelle `my-org/my-org.github.io` (le dépôt des pages GitHub de l'organisation), le site apparaîtra sous `https://my-org.github.io/`.
+
+:::info
+
+Dans le cas où vous souhaitez utiliser votre domaine personnalisé pour GitHub Pages, créez un fichier `CNAME` dans le répertoire `static`. Tout ce qui se trouve dans le répertoire `static` sera copié à la racine du répertoire `build` pour le déploiement. Lorsque vous utilisez un domaine personnalisé, vous devriez pouvoir revenir de `baseUrl: '/projectName/'` à `baseUrl: '/'` et également définir votre `url` vers votre domaine personnalisé.
+
+Vous pouvez vous référer à la documentation de GitHub Pages [User, Organization, and Project Pages](https://help.github.com/fr/articles/user-organization-and-project-pages) pour plus de détails.
+
+:::
+
+Les pages GitHub récupèrent les fichiers prêts à être déployés (la sortie de `docusaurus build`) à partir de la branche par défaut (`master` / `main`, généralement) ou la branche `gh-pages`, et soit à partir de la racine, soit à partir du dossier `/docs`. Vous pouvez le configurer via `Settings > Pages` dans votre dépôt. Cette branche sera appelée "branche de déploiement".
+
+Nous fournissons une commande `docusaurus deploy` qui vous aide à déployer votre site depuis la branche source vers la branche de déploiement en une seule commande : cloner, compiler et committer.
+
+### `docusaurus.config.js` settings {/* #docusaurusconfigjs-settings */}
+
+Tout d'abord, modifiez votre `docusaurus.config.js` et ajoutez les paramètres suivants :
+
+| Nom | Description |
+| --- | --- |
+| `organizationName` | L'utilisateur ou l'organisation GitHub qui possède le dépôt de déploiement. |
+| `projectName` | Le nom du dépôt de déploiement. |
+| `deploymentBranch` | Le nom de la branche de déploiement. La valeur par défaut est `'gh-pages'` pour les pages GitHub des dépôts non organisationnels (`projectName` ne se terminant pas par `.github.io`). Sinon, il doit être explicite comme un champ de configuration ou une variable d'environnement. |
+
+Ces champs ont également leurs équivalents sous forme de variables d'environnement qui ont une priorité plus élevée : `ORGANIZATION_NAME`, `PROJECT_NAME` et `DEPLOYMENT_BRANCH`.
+
+:::warning
+
+GitHub Pages ajoute par défaut un slash final aux URL Docusaurus. Il est recommandé de définir une config `trailingSlash` (`true` ou `false`, pas `undefined`).
+
+:::
+
+Exemple :
+
+```js title="docusaurus.config.js"
+export default {
+  // ...
+  url: 'https://endiliey.github.io', // Your website URL
+  baseUrl: '/',
+  // highlight-start
+  projectName: 'endiliey.github.io',
+  organizationName: 'endiliey',
+  trailingSlash: false,
+  // highlight-end
+  // ...
+};
+```
+
+:::warning
+
+Par défaut, les pages GitHub exécutent les fichiers publiés via [Jekyll](https://jekyllrb.com/). Puisque Jekyll va se débarrasser de tous les fichiers qui commencent par `_`, il est recommandé de désactiver Jekyll en ajoutant un fichier vide nommé `.nojekyll` dans votre répertoire `static`.
+
+:::
+
+### Paramètres de l'environnement {/* #environment-settings */}
+
+| Nom | Description |
+| --- | --- |
+| `USE_SSH` | Défini à `true` pour utiliser SSH au lieu du HTTPS par défaut pour la connexion au dépôt GitHub. Si l'URL du dépôt source est une URL SSH (par exemple `git@github.com:facebook/docusaurus.git`), `USE_SSH` est déduite comme étant à `true`. |
+| `GIT_USER` | Le nom d'utilisateur pour un compte GitHub qui **a un accès push au dépôt de déploiement**. Pour vos propres dépôts, ce sera généralement votre nom d'utilisateur GitHub. Requis si vous n'utilisez pas SSH, et ignoré autrement. |
+| `GIT_PASS` | Jeton d'accès personnel de l'utilisateur git (spécifié par `GIT_USER`), pour faciliter le déploiement non interactif (par exemple le déploiement continu) |
+| `CURRENT_BRANCH` | La branche source. Habituellement, la branche sera `main` ou `master`, mais elle pourrait être n'importe quelle branche à l'exception de `gh-pages`. Si rien n'est défini pour cette variable, alors la branche courante à partir de laquelle `docusaurus deploy` est invoquée sera utilisée. |
+| `GIT_USER_NAME` | La valeur de `git config user.name` à utiliser lors de la publication dans le dépôt de déploiement |
+| `GIT_USER_EMAIL` | La valeur de `git config user.email` à utiliser lors de la publication dans le dépôt de déploiement |
+
+Les installations de GitHub Enterprise devraient fonctionner de la même manière que github.com ; il suffit de définir l'hôte GitHub Enterprise de l'organisation comme variable d'environnement :
+
+| Nom          | Description                                     |
+| ------------- | ----------------------------------------------- |
+| `GITHUB_HOST` | Le nom de domaine de votre site d'entreprise GitHub. |
+| `GITHUB_PORT` | Le port de votre site d'entreprise GitHub.        |
+
+### Déployez {/* #deploy */}
+
+Enfin, pour déployer votre site sur GitHub Pages, exécutez :
+
+```mdx-code-block
+<Tabs>
+<TabItem value="bash" label="Bash">
+```
+
+```bash
+GIT_USER=<GITHUB_USERNAME> yarn deploy
+```
+
+```mdx-code-block
+</TabItem>
+<TabItem value="windows" label="Windows">
+```
+
+```batch
+cmd /C "set "GIT_USER=<GITHUB_USERNAME>" && yarn deploy"
+```
+
+```mdx-code-block
+</TabItem>
+<TabItem value="powershell" label="PowerShell">
+```
+
+```powershell
+cmd /C 'set "GIT_USER=<GITHUB_USERNAME>" && yarn deploy'
+```
+
+```mdx-code-block
+</TabItem>
+</Tabs>
+```
+
+:::warning
+
+À partir d'août 2021, GitHub requiert que chaque connexion en ligne de commande utilise le **jeton d'accès personnel** au lieu du mot de passe. Lorsque GitHub vous demande votre mot de passe, entrez le PAT à la place. Voir la [documentation de GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) pour plus d'informations.
+
+Alternativement, vous pouvez utiliser SSH (`USE_SSH=true`) pour vous connecter.
+
+:::
+
+### Déclenchement du déploiement avec les actions GitHub {/* #triggering-deployment-with-github-actions */}
+
+Les [GitHub Actions](https://help.github.com/en/actions) vous permettent d'automatiser, de personnaliser et d'exécuter vos flux de développement logiciel directement dans votre dépôt.
+
+Les exemples de workflow ci-dessous supposent que la source de votre site web réside dans la branche `main` de votre dépôt (la _branche source_ est `main`), et que votre [source de publication](https://help.github.com/en/github/working-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) est configurée pour [publier avec un workflow d'actions GitHub personnalisé](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-with-a-custom-github-actions-workflow).
+
+Notre objectif est que :
+
+1. Quand une nouvelle pull request est faite sur `main`, il y a une action qui assure que le site se construit avec succès, sans déploiement réel. Cette tâche sera appelée `test-deploy`.
+2. Lorsqu'une pull request est fusionnée à la branche `main` ou quelqu'un pousse directement sur la branche `main`, cela construira et déploiera dans Github Pages. Cette tâche sera appelée `deploy`.
+
+Voici deux approches pour déployer votre documentation avec GitHub Actions. Based on the location of your deployment repository, choose the relevant tab below:
+
+- Le dépôt source et le dépôt de déploiement sont le **même** dépôt.
+- Le dépôt de déploiement est un dépôt **distant**, différent de la source. Les instructions pour ce scénario supposent la [source de publication](https://help.github.com/fr/github/working-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) est la branche `gh-pages`.
+
+```mdx-code-block
+<Tabs>
+<TabItem value="same" label="Same">
+```
+
+Bien que vous puissiez avoir les deux tâches définies dans le même fichier de workflow, le workflow original `deploy` sera toujours listé comme ignoré dans le statut de la suite de vérification du PR, ce qui n'est pas indicatif du statut réel et n'apporte aucune valeur au processus de révision. Nous proposons donc de les gérer en tant que workflow séparés.
+
+<details>
+<summary>GitHub action files</summary>
+
+Ajoutez ces deux fichiers de workflow :
+
+:::warning Tweak the parameters for your setup
+
+Si votre projet Docusaurus n'est pas à la racine de votre dépôt, vous devrez peut-être configurer un [répertoire de travail par défaut](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-set-the-default-shell-and-working-directory), et ajuster les chemins en conséquence.
+
+:::
+
+<Tabs>
+  <TabItem value="npm" label="npm">
+
+```yml title=".github/workflows/deploy.yml"
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    # Review gh actions docs if you want to further define triggers, paths, etc
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
+
+jobs:
+  build:
+    name: Build Docusaurus
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+      - name: Build website
+        run: npm run build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+```yml title=".github/workflows/test-deploy.yml"
+name: Test deployment
+
+on:
+  pull_request:
+    branches:
+      - main
+    # Review gh actions docs if you want to further define triggers, paths, etc
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
+
+jobs:
+  test-deploy:
+    name: Test deployment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+      - name: Test build website
+        run: npm run build
+```
+
+  </TabItem>
+  <TabItem value="yarn" label="Yarn">
+
+```yml title=".github/workflows/deploy.yml"
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    # Review gh actions docs if you want to further define triggers, paths, etc
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
+
+jobs:
+  build:
+    name: Build Docusaurus
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build website
+        run: yarn build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+```yml title=".github/workflows/test-deploy.yml"
+name: Test deployment
+
+on:
+  pull_request:
+    branches:
+      - main
+    # Review gh actions docs if you want to further define triggers, paths, etc
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
+
+jobs:
+  test-deploy:
+    name: Test deployment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Test build website
+        run: yarn build
+```
+
+  </TabItem>
+</Tabs>
+
+</details>
+
+```mdx-code-block
+</TabItem>
+<TabItem value="remote" label="Remote">
+```
+
+Une publication inter-dépôt est plus difficile à mettre en place, car vous devez pousser vers un autre référentiel avec des contrôles de permission. Nous utiliserons SSH pour l'authentification.
+
+1. Générez une nouvelle [clé SSH](https://help.github.com/fr/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent). Comme cette clé SSH sera utilisée dans le CI, assurez-vous de ne pas saisir de passphrase.
+2. Par défaut, votre clé publique devrait avoir été créée dans `~/.ssh/id_rsa.pub`; ou utilisez le nom que vous avez fourni à l'étape précédente pour ajouter votre clé à [GitHub deploy keys](https://developer.github.com/v3/guides/managing-deploy-keys/).
+3. Copiez la clé dans le presse-papiers avec `pbcopy < ~/.ssh/id_rsa.pub` et collez-la comme une [clé de déploiement](https://developer.github.com/v3/guides/managing-deploy-keys/#deploy-keys) dans votre dépôt de déploiement. Copiez le contenu du fichier si la ligne de commande ne fonctionne pas pour vous. Cochez la case `Allow write access` avant d'enregistrer votre clé de déploiement.
+4. Vous aurez besoin de votre clé privée en tant que [secret GitHub](https://help.github.com/fr/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets) pour permettre à Docusaurus d'exécuter le déploiement pour vous.
+5. Copiez votre clé privée avec `pbcopy < ~/.ssh/id_rsa` et collez un secret GitHub avec le nom `GH_PAGES_DEPLOY` sur votre dépôt de source. Copiez le contenu du fichier si la ligne de commande ne fonctionne pas pour vous. Enregistrez votre secret.
+6. Create your [documentation workflow](https://docs.github.com/en/actions/use-cases-and-examples/creating-an-example-workflow) in the `.github/workflows/` directory. In this example it's the `deploy.yml` file.
+
+À ce stade, vous devriez avoir :
+
+- le dépôt source avec le workflow GitHub défini avec la clé SSH privée comme Secret GitHub, et
+- votre dépôt de déploiement défini avec la clé SSH publique dans les clés de déploiement GitHub.
+
+<details>
+
+<summary>Fichier GitHub action</summary>
+
+:::warning
+
+Veillez à remplacer `actions@github.com` par votre email GitHub et `gh-actions` par votre nom.
+
+Ce fichier suppose que vous utilisez Yarn. Si vous utilisez npm, changez en conséquence `cache: yarn`, `yarn install --frozen-lockfile`, `yarn build` en `cache: npm`, `npm ci`, `npm run build`.
+
+:::
+
+```yml title=".github/workflows/deploy.yml"
+name: Deploy to GitHub Pages
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  test-deploy:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Test build website
+        run: yarn build
+  deploy:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+      - uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
+      - name: Deploy to GitHub Pages
+        env:
+          USE_SSH: true
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "gh-actions"
+          yarn install --frozen-lockfile
+          yarn deploy
+```
+
+</details>
+
+```mdx-code-block
+</TabItem>
+</Tabs>
+```
+
+<details>
+
+<summary>Le site n'est pas correctement déployé ?</summary>
+
+Après avoir poussé vers main, si vous ne voyez pas votre site publié à l'emplacement souhaité (par exemple, il indique « There isn't a GitHub Pages site here », ou il affiche le fichier README.md de votre dépôt), essayez ce qui suit :
+
+- Attendez environ trois minutes et rafraîchissez. Les pages GitHub peuvent prendre quelques minutes pour récupérer les nouveaux fichiers.
+- Vérifiez sur la page d'accueil de votre dépôt qu'une petite coche verte apparaît à côté du titre du dernier commit, indiquant que le CI est réussi. Si vous voyez une croix, cela signifie que la construction ou le déploiement a échoué, et vous devez vérifier le journal pour plus d'informations de débogage.
+- Cliquez sur la coche et assurez-vous que vous voyez un flux de travail « Deploy to GitHub Pages ». Des noms comme « pages build and deployment / deploy » sont des flux de travail par défaut de GitHub, ce qui indique que votre flux de travail de déploiement personnalisé qui a échoué, n'a pas du tout été déclenché. Assurez-vous que les fichiers YAML sont placés dans le dossier `.github/workflows` et que la condition de déclenchement est correctement définie (par exemple, si votre branche par défaut est "master" au lieu de "main", vous devez modifier la propriété `on.push`).
+- Dans « Settings > Pages » de votre dépôt, assurez-vous que "Source" (qui est la source pour les fichiers de déploiement, et non "source" comme dans notre terminologie) est définie à "gh-pages" + "/ (root)", puisque nous utilisons `gh-pages` comme branche de déploiement.
+
+Si vous utilisez un domaine personnalisé :
+
+- Vérifiez que vous avez correctement configuré les enregistrements DNS si vous utilisez un domaine personnalisé. Consultez la [documentation des pages GitHub sur la configuration des domaines personnalisés](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages). De plus, il faut savoir que les changements de DNS peuvent prendre jusqu'à 24 heures pour se propager sur internet.
+
+</details>
+
+### Déclenchement du déploiement avec Travis CI {/* #triggering-deployment-with-travis-ci */}
+
+Les services d'intégration continue (CI) sont généralement utilisés pour effectuer des tâches routinières lorsque de nouveaux commits sont enregistrés dans le contrôle de source. Ces tâches peuvent être une combinaison de tests unitaires et de tests d'intégration, d'automatisation de la construction, de publication de paquets sur npm et de déploiement de modifications sur votre site Web. Tout ce que vous avez à faire pour automatiser le déploiement de votre site Web est d'invoquer le script `yarn deploy` chaque fois que votre site est mis à jour. La section suivante couvre comment faire exactement cela en utilisant [Travis CI](https://travis-ci.com/), un fournisseur de services d'intégration continue populaire.
+
+1. Allez sur https://github.com/settings/tokens et générez un nouveau [jeton d'accès personnel](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/). Lors de la création du jeton, octroyez-lui la portée du `repo` afin qu'il dispose des autorisations dont il a besoin.
+2. En utilisant votre compte GitHub, [ajoutez l'application Travis CI](https://github.com/marketplace/travis-ci) au dépôt que vous souhaitez activer.
+3. Ouvrez votre tableau de bord Travis CI. L'URL ressemble à `https://travis-ci.com/USERNAME/REPO` et naviguez vers la section `More options > Setting > Environment Variables` de votre dépôt.
+4. Créez une nouvelle variable d'environnement nommée `GH_TOKEN` avec votre jeton nouvellement généré comme valeur, puis `GH_EMAIL` (votre adresse e-mail) et `GH_NAME` (votre nom d'utilisateur GitHub).
+5. Créez un `.travis.yml` à la racine de votre dépôt avec les éléments suivants :
+
+```yml title=".travis.yml"
+language: node_js
+node_js:
+  - 20
+branches:
+  only:
+    - main
+cache:
+  yarn: true
+script:
+  - git config --global user.name "${GH_NAME}"
+  - git config --global user.email "${GH_EMAIL}"
+  - echo "machine github.com login ${GH_NAME} password ${GH_TOKEN}" > ~/.netrc
+  - yarn install
+  - GIT_USER="${GH_NAME}" yarn deploy
+```
+
+Maintenant, chaque fois qu'un nouveau commit arrive dans `main`, Travis CI exécutera votre suite de tests et si tout se passe, votre site web sera déployé via le script `yarn deploy`.
+
+### Déclenchement du déploiement avec Buddy {/* #triggering-deployment-with-buddy */}
+
+[Buddy](https://buddy.works/) est un outil CI/CD facile à utiliser qui vous permet d'automatiser le déploiement de votre portail dans différents environnements, notamment les pages GitHub.
+
+Suivez ces étapes pour créer un pipeline qui déploie automatiquement une nouvelle version de votre site Web chaque fois que vous apportez des modifications à la branche sélectionnée de votre projet :
+
+1. Allez sur https://github.com/settings/tokens et générez un nouveau [jeton d'accès personnel](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/). Lors de la création du jeton, octroyez-lui la portée du `repo` afin qu'il dispose des autorisations dont il a besoin.
+2. Connectez-vous à votre compte Buddy et créez un nouveau projet.
+3. Choisissez GitHub comme hébergeur git et sélectionnez le dépôt avec le code de votre site web.
+4. À l'aide du panneau de navigation de gauche, basculez vers la vue `Pipelines`.
+5. Créez un nouveau pipeline. Définissez son nom, définissez le mode de déclenchement à `On push`, et sélectionnez la branche qui déclenche l'exécution du pipeline.
+6. Ajoutez une action `Node.js`.
+7. Ajoutez ces commandes dans le terminal de l'action :
+
+```bash
+GIT_USER=<GH_PERSONAL_ACCESS_TOKEN>
+git config --global user.email "<YOUR_GH_EMAIL>"
+git config --global user.name "<YOUR_GH_USERNAME>"
+yarn deploy
+```
+
+Après avoir créé ce pipeline simple, chaque nouveau commit poussé vers la branche que vous avez sélectionnée déploie votre site web sur GitHub Pages à l'aide de `yarn deploy`. Lisez [ce guide](https://buddy.works/guides/react-docusaurus) pour en savoir plus sur la mise en place d'un pipeline CI/CD pour Docusaurus.
+
+### Utiliser des pipelines Azure {/* #using-azure-pipelines */}
+
+1. Inscrivez-vous sur [Azure Pipelines](https://azure.microsoft.com/en-us/services/devops/pipelines/) si vous ne l'avez pas déjà fait.
+2. Créer une organisation. Au sein de l'organisation, créez un projet et connectez votre dépôt à partir de GitHub.
+3. Allez sur https://github.com/settings/tokens et générez un nouveau [jeton d'accès personnel](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) avec la portée de `repo`.
+4. Dans la page du projet (qui ressemble à `https://dev.azure.com/ORG_NAME/REPO_NAME/_build`), créez un nouveau pipeline avec le texte suivant. Aussi, cliquez sur modifier et ajoutez une nouvelle variable d'environnement nommée `GH_TOKEN` avec votre jeton nouvellement généré comme valeur, puis `GH_EMAIL` (votre adresse e-mail) et `GH_NAME` (votre nom d'utilisateur GitHub). Assurez-vous de les marquer comme secrets. Vous pouvez également ajouter un fichier nommé `azure-pipelines.yml` à la racine de votre dépôt.
+
+```yml title="azure-pipelines.yml"
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+    persistCredentials: true
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '20'
+    displayName: Install Node.js
+
+  - script: |
+      git config --global user.name "${GH_NAME}"
+      git config --global user.email "${GH_EMAIL}"
+      git checkout -b main
+      echo "machine github.com login ${GH_NAME} password ${GH_TOKEN}" > ~/.netrc
+      yarn install
+      GIT_USER="${GH_NAME}" yarn deploy
+    env:
+      GH_NAME: $(GH_NAME)
+      GH_EMAIL: $(GH_EMAIL)
+      GH_TOKEN: $(GH_TOKEN)
+    displayName: Install and build
+```
+
+### Utiliser Drone {/* #using-drone */}
+
+1. Créez une nouvelle clé SSH qui sera la [clé de déploiement](https://docs.github.com/en/free-pro-team@latest/developers/overview/managing-deploy-keys#deploy-keys) pour votre projet.
+2. Nommez vos clés privées et publiques pour qu'elles soient spécifiques et pour ne pas écraser vos autres [clés SSH](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
+3. Allez sur `https://github.com/USERNAME/REPO/settings/keys` et ajoutez une nouvelle clé de déploiement en collant la clé publique que vous venez de générer.
+4. Ouvrez votre tableau de bord Drone.io et connectez-vous. L'URL ressemble à `https://cloud.drone.io/USERNAME/REPO`.
+5. Cliquez sur le dépôt, cliquez sur activer le dépôt, et ajoutez un secret appelé `git_deploy_private_key` avec la valeur de votre clé privée que vous venez de générer.
+6. Créez un `.drone.yml` à la racine de votre dépôt avec le texte ci-dessous.
+
+```yml title=".drone.yml"
+kind: pipeline
+type: docker
+trigger:
+  event:
+    - tag
+- name: Website
+  image: node
+  commands:
+    - mkdir -p $HOME/.ssh
+    - ssh-keyscan -t rsa github.com >> $HOME/.ssh/known_hosts
+    - echo "$GITHUB_PRIVATE_KEY" > "$HOME/.ssh/id_rsa"
+    - chmod 0600 $HOME/.ssh/id_rsa
+    - cd website
+    - yarn install
+    - yarn deploy
+  environment:
+    USE_SSH: true
+    GITHUB_PRIVATE_KEY:
+      from_secret: git_deploy_private_key
+```
+
+Maintenant, chaque fois que vous poussez un nouveau tag sur Github, ce déclencheur démarrera la tâche de drone CI pour publier votre site web.
+
+## Déploiement sur Flightcontrol {/* #deploying-to-flightcontrol */}
+
+[Flightcontrol](https://www.flightcontrol.dev/?ref=docusaurus) est un service qui construit et déploie automatiquement vos applications web sur AWS Fargate directement depuis votre dépôt Git. Il vous donne un accès complet à des inspections et à des modifications d'infrastructure sans les limites d'une PaaS traditionnelle.
+
+Commencez par suivre [le guide Docusaurus étape par étape de Flightcontrole](https://www.flightcontrol.dev/docs/reference/examples/docusaurus/?ref=docusaurus).
+
+## Déploiement sur Koyeb {/* #deploying-to-koyeb */}
+
+[Koyeb](https://www.koyeb.com) est une plateforme serverless conviviale pour les développeurs afin de déployer des applications à l'échelle mondiale. La plateforme vous permet d'exécuter de manière transparente des conteneurs Docker, des applications Web et des API avec un déploiement basé sur git, une mise à l'échelle automatique native, un réseau périphérique mondial et un maillage et une découverte de services intégrés. Consultez le [guide de déploiement Docusaurus de Koyeb](https://www.koyeb.com/tutorials/deploy-docusaurus-on-koyeb) pour commencer.
+
+## Déploiement sur Render {/* #deploying-to-render */}
+
+[Render](https://render.com) propose [un hébergement de site statique gratuit](https://render.com/docs/static-sites) avec SSL entièrement géré, des domaines personnalisés, un CDN global et un déploiement automatique continu depuis votre dépôt Git. Commencez en quelques minutes seulement en suivant [le guide de Render pour le déploiement de Docusaurus](https://render.com/docs/deploy-docusaurus).
+
+## Déploiement sur Qovery {/* #deploying-to-qovery */}
+
+[Qovery](https://www.qovery.com) est une plateforme cloud entièrement gérée qui fonctionne sur votre compte AWS, Digital Ocean et Scaleway où vous pouvez héberger des sites statiques, des API backend, des bases de données, des cron jobs et toutes vos autres apps en un seul endroit.
+
+1. Créez un compte Qovery. Visitez le [tableau de bord de Qovery](https://console.qovery.com) pour créer un compte si vous n'en avez pas déjà un.
+2. Créez un projet.
+   - Cliquez sur **Create project** et donnez un nom à votre projet.
+   - Cliquez sur **Next**.
+3. Créez un nouvel environnement.
+   - Cliquez sur **Create environment** et donner un nom (par exemple, staging, production).
+4. Ajoutez une application.
+   - Cliquez sur **Create an application**, donnez un nom et sélectionnez votre dépôt GitHub ou GitLab où se trouve votre application Docusaurus.
+   - Définissez le nom de la branche principale et le chemin de l'application racine.
+   - Cliquez sur *Create**. Après la création de l'application :
+   - Accédez à **Settings** de votre application
+   - Sélectionnez **Port**
+   - Ajoutez le port utilisé par votre application Docusaurus
+5. Déployez
+   - Il ne vous reste plus qu'à naviguer dans votre application et à cliquer sur **Deploy**.
+
+![Déployer l'application](https://hub.qovery.com/img/heroku/heroku-1.png)
+
+Voilà. Regardez le statut et attendez que l'application soit déployée. Pour ouvrir l'application dans votre navigateur, cliquez sur **Action** et **Open** dans l'aperçu de votre application.
+
+## Déploiement sur Hostman {/* #deploying-to-hostman */}
+
+[Hostman](https://hostman.com/) vous permet d'héberger gratuitement des sites web statiques. Hostman automatise tout, il vous suffit de connecter votre dépôt et de suivre ces étapes simples :
+
+1. Créez un service.
+
+   - Pour déployer un site web statique Docusaurus, cliquez sur **Create** dans le coin supérieur gauche de votre [Dashboard](https://dashboard.hostman.com/) et choisissez **Front-end app or static website**.
+
+2. Sélectionnez le projet à déployer.
+
+   - Si vous êtes connecté à Hostman avec votre compte GitHub, GitLab ou Bitbucket, vous verrez le dépôt avec vos projets, y compris les projets privés.
+
+   - Choisissez le projet que vous souhaitez déployer. Il doit contenir le répertoire avec les fichiers du projet (par exemple `website`).
+
+   - Pour accéder à un autre dépôt, cliquez sur **Connect another repository**.
+
+   - Si vous n'avez pas utilisé les informations d'identification de votre compte Git pour vous connecter, vous pourrez accéder au compte nécessaire maintenant, puis sélectionner le projet.
+
+3. Configurez les paramètres de construction.
+
+   - Ensuite, la fenêtre **Website customization** apparaîtra. Choisissez l'option **Static website** dans la liste des frameworks.
+
+   - Le **Directory with app** pointe vers le répertoire qui contiendra les fichiers du projet après la construction. Si vous avez sélectionné le dépôt avec le contenu du répertoire website (ou `my_website`) lors de l'étape 2, vous pouvez le laisser vide.
+
+   - La commande standard de build pour Docusaurus est :
+
+     ```bash npm2yarn
+     npm run build
+     ```
+
+   - Vous pouvez modifier la commande de compilation si nécessaire. Vous pouvez entrer plusieurs commandes séparées par `&&`.
+
+4. Déployez.
+
+   - Cliquez sur **Deploy** pour démarrer le processus de construction.
+
+   - Une fois qu'il aura démarré, vous entrerez dans le journal de déploiement. En cas de problème avec le code, vous obtiendrez des messages d'avertissement ou d'erreur dans le journal précisant la cause du problème. Habituellement, le journal contient toutes les données de débogage dont vous aurez besoin.
+
+   - Une fois le déploiement terminé, vous recevrez une notification par mail et vous verrez également une note du journal. Terminé ! Votre projet est prêt.
+
+## Déploiement sur Surge {/* #deploying-to-surge */}
+
+Surge est une [plate-forme statique d'hébergement web](https://surge.sh/help/getting-started-with-surge), que vous pouvez utiliser pour déployer votre projet Docusaurus à partir de la ligne de commande en quelques secondes. Déployer votre projet sur Surge est facile et gratuit (y compris les domaines personnalisés et certs SSL).
+
+Déployez votre application en quelques secondes en utilisant Surge avec les étapes suivantes :
+
+1. Tout d'abord, installez Surge en utilisant npm en exécutant la commande suivante :
+   ```bash npm2yarn
+   npm install -g surge
+   ```
+2. Pour construire pour la production les fichiers statiques de votre site à la racine de votre projet, exécutez :
+   ```bash npm2yarn
+   npm run build
+   ```
+3. Ensuite, exécutez cette commande à l'intérieur du répertoire racine de votre projet :
+   ```bash
+   surge build/
+   ```
+
+La première fois, les utilisateurs de Surge seront invités à créer un compte à partir de la ligne de commande (cela ne se produit qu'une fois).
+
+Confirmez que le site que vous souhaitez publier se trouve dans le répertoire `build`. Un sous-domaine généré aléatoirement `*.surge.sh subdomain` est toujours donné (il peut être modifié).
+
+### Utiliser votre nom de domaine {/* #using-your-domain */}
+
+Si vous avez un nom de domaine, vous pouvez déployer votre site en utilisant la commande :
+
+```bash
+surge build/ your-domain.com
+```
+
+Votre site est maintenant déployé gratuitement sur `subdomain.surge.sh` ou `your-domain.com` selon la méthode que vous avez choisie.
+
+### Mise en place du fichier CNAME {/* #setting-up-cname-file */}
+
+Stockez votre domaine dans un fichier CNAME pour de futurs déploiements avec la commande suivante :
+
+```bash
+echo subdomain.surge.sh > CNAME
+```
+
+Vous pouvez déployer tout autre changement dans le futur avec la commande `surge`.
+
+## Deploying to Stormkit {/* #deploying-to-stormkit */}
+
+You can deploy your Docusaurus project to [Stormkit](https://www.stormkit.io), a deployment platform for static websites, single-page applications (SPAs), and serverless functions. For detailed instructions, refer to this [guide](https://www.stormkit.io/blog/how-to-deploy-docusarous).
+
+## Déploiement sur QuantCDN {/* #deploying-to-quantcdn */}
+
+1. Installez [Quant CLI](https://docs.quantcdn.io/docs/cli/get-started)
+2. Créez un compte QuantCDN en vous [inscrivant](https://dashboard.quantcdn.io/register)
+3. Initialisez votre projet avec `quant init` et remplissez vos informations d'identification :
+   ```bash
+   quant init
+   ```
+4. Déployez votre site.
+   ```bash
+   quant deploy
+   ```
+
+Consultez [docs](https://docs.quantcdn.io/docs/cli/continuous-integration) et [blog](https://www.quantcdn.io/blog) pour plus d'exemples et de cas d'utilisation pour le déploiement sur QuantCDN.
+
+## Deploying to Cloudflare {/* #deploying-to-cloudflare */}
+
+[Cloudflare](https://cloudflare.com/) offers two approaches for deploying your Docusaurus site: **Cloudflare Workers** and **Cloudflare Pages**.
+
+- [Cloudflare's framework guide for deploying Docusaurus with Workers](https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/docusaurus/).
+- [Cloudflare's guide to deploying Docusaurus with Pages](https://developers.cloudflare.com/pages/framework-guides/deploy-a-docusaurus-site/).
+
+## Déploiement sur Azure Static Web Apps {/* #deploying-to-azure-static-web-apps */}
+
+[Azure Static Web Apps](https://docs.microsoft.com/en-us/azure/static-web-apps/overview) est un service qui construit et déploie automatiquement des applications web complètes sur Azure directement à partir du dépôt de code, simplifiant ainsi l'expérience du développeur pour le CI/CD. Static Web Apps sépare les ressources statiques de l'application Web de ses points de terminaison dynamiques (API). Les ressources statiques sont servies par des serveurs de contenu répartis dans le monde entier, ce qui permet aux clients de récupérer plus rapidement les fichiers en utilisant des serveurs à proximité. Les API dynamiques sont mises à l'échelle avec des architectures sans serveur, en utilisant une approche basée sur des fonctions événementielles qui est plus rentable et évolue à la demande. Démarrez en quelques minutes en suivant [ce guide étape par étape](https://dev.to/azure/11-share-content-with-docusaurus-azure-static-web-apps-30hc).
+
+## Déploiement sur Kinsta {/* #deploying-to-kinsta */}
+
+[Kinsta Static Site Hosting](https://kinsta.com/static-site-hosting) vous permet de déployer jusqu'à 100 sites statiques gratuitement, domaines personnalisés avec SSL, 100 GB de bande passante mensuelle et 260+ emplacements CDN Cloudflare.
+
+Commencez en quelques clics en suivant notre article [Docusaurus sur Kinsta](https://kinsta.com/docs/docusaurus-example/).

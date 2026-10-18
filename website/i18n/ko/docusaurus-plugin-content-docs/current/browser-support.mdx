@@ -1,0 +1,101 @@
+---
+description: 충분한 브라우저 지원을 보장하면서 적절한 번들 크기를 유지하는 방법
+---
+
+# 브라우저 호환성
+
+Docusaurus allows sites to define the list of supported browsers through a [browserslist configuration](https://github.com/browserslist/browserslist).
+
+## 목적 {/* #purpose */}
+
+웹 사이트는 이전 버전과 호환성과 배포 파일의 크기 사이에 균형이 필요합니다. 구형 브라우저는 최신 API 또는 구문을 지원하지 않아 같은 기능을 구현하려면 더 많은 코드가 필요합니다.
+
+For example, you may use the [optional chaining syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining):
+
+```js
+const value = obj?.prop?.val;
+```
+
+...아쉽게도 이 구문은 2020년 이후 출시된 브라우저 버전에서만 인식됩니다. 이전 브라우저 버전과 호환되도록 사이트를 구축한다면 JS 로더는 코드를 좀 더 자세한 구문으로 변환합니다.
+
+```js
+var _obj, _obj$prop;
+
+const value =
+  (_obj = obj) === null || _obj === void 0
+    ? void 0
+    : (_obj$prop = _obj.prop) === null || _obj$prop === void 0
+      ? void 0
+      : _obj$prop.val;
+```
+
+하지만 이렇게 하면 29자로 작성한 코드가 168자(6배 늘어난!)가 되기 때문에 사이트 로드 시간이 늘어나 다른 모든 사용자에게 불이익을 줍니다. (실제 동작 시에는 변수명을 줄여주기 때문에 좀 더 줄어들긴 합니다). 절충안으로 JS 로더는 브라우저 목록에 정의된 브라우저 버전을 지원하는 정도로 구문을 변환합니다.
+
+The browser list by default is provided through the `package.json` file as a root `browserslist` field.
+
+:::warning
+
+오래된 브라우저에서 컴파일된 출력은 지원하지 않는(너무 최근이라) JS 구문으로 인식될 겁니다. 때문에 리액트 초기화는 실패하게 되고 자바스크립트 코드 없이 HTML/CSS만 가진 정적 웹 사이트로 만들어집니다.
+
+:::
+
+## 기본값 {/* #default-values */}
+
+Websites initialized with the default classic template has the following in `package.json`:
+
+```json title="package.json"
+{
+  "name": "docusaurus",
+  // ...
+  // highlight-next-line
+  "browserslist": ["baseline widely available"]
+  // ...
+}
+```
+
+Explained in natural language, the browsers supported are the versions of the core browsers (Chrome, Edge, Firefox and Safari, on desktop and mobile) that support all the [Baseline Widely available](https://web.dev/baseline) web platform features, i.e. features that have been available in all core browsers for at least 30 months.
+
+The same browser list is used in development and production, so that your site behaves the same with `docusaurus start` and `docusaurus build`.
+
+:::tip
+
+You can use a different browser list for each environment with an object keyed by environment (`production`, `development`). Refer to the [browserslist configuration documentation](https://github.com/browserslist/browserslist#configuring-for-different-environments).
+
+:::
+
+You can "evaluate" any config with the `browserslist` CLI to obtain the actual list:
+
+```bash
+npx browserslist
+```
+
+The output is all browsers supported. Below is the output in September 2026:
+
+```text
+and_chr 151
+and_ff 153
+chrome 151
+chrome 150
+...
+chrome 123
+edge 151
+edge 150
+...
+edge 123
+firefox 154
+firefox 153
+...
+firefox 124
+ios_saf 26.6
+ios_saf 26.5
+...
+ios_saf 17.4
+safari 26.6
+safari 26.5
+...
+safari 17.4
+```
+
+## 더 알아보기 {/* #read-more */}
+
+You may wish to visit the [browserslist documentation](https://github.com/browserslist/browserslist/blob/main/README.md) for more specifications, especially the accepted [query values](https://github.com/browserslist/browserslist/blob/main/README.md#queries) and [best practices](https://github.com/browserslist/browserslist/blob/main/README.md#best-practices).

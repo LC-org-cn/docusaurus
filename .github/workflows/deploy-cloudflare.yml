@@ -36,10 +36,6 @@ jobs:
       PAGES_LOCALES: pt-BR,ko
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      # Optional. Set this repository secret to download the docs translations
-      # from Crowdin (project 428890). While it is missing, the non-English
-      # locales are built from the English source content.
-      CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -60,17 +56,10 @@ jobs:
         # build depends on.
         run: pnpm install --frozen-lockfile
 
-      - name: Download translations from Crowdin
-        # Skipped until CROWDIN_PERSONAL_TOKEN is configured. The repository
-        # only contains the English sources; the translations live on Crowdin
-        # and are downloaded into website/i18n/ before the build.
-        if: env.CROWDIN_PERSONAL_TOKEN != ''
-        working-directory: website
-        run: |
-          pnpm docusaurus write-translations
-          pnpm --dir .. crowdin:download:website || \
-            echo '::warning::Crowdin download failed; building the non-English locales from the English sources'
-
+      # The translations are committed under website/i18n/**, so the build
+      # needs no Crowdin access. Refresh them with:
+      #   CROWDIN_PERSONAL_TOKEN=... node cloudflare/crowdin-export.mjs
+      # See CLOUDFLARE.md for why this is not "crowdin download".
       - name: Build website
         run: pnpm build:website
 

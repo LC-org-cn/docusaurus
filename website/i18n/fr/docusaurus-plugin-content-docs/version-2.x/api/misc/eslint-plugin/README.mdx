@@ -1,0 +1,72 @@
+---
+sidebar_position: 1
+slug: /api/misc/@docusaurus/eslint-plugin
+---
+
+# 📦 eslint-plugin
+
+[ESLint](https://eslint.org/) est un outil qui analyse statiquement votre code et signale les problèmes ou suggère les meilleures pratiques par le biais d'astuces pour l'éditeur et la ligne de commande. Docusaurus fournit un plugin ESLint pour appliquer les meilleures pratiques de Docusaurus.
+
+## Installation {/* #installation */}
+
+```bash npm2yarn
+npm install --save-dev @docusaurus/eslint-plugin
+```
+
+## Utilisation {/* #usage */}
+
+### Configuration recommandée {/* #recommended-config */}
+
+Ajouter `plugin:@docusaurus/recommended` à la section `extends` de votre fichier de configuration `.eslintrc` :
+
+```json title=".eslintrc"
+{
+  "extends": ["plugin:@docusaurus/recommended"]
+}
+```
+
+Ceci activera le plugin eslint `@docusaurus` et utilisera la configuration `recommended`. Voir les [Règles prises en charge](#supported-rules) ci-dessous pour une liste de règles que cela va activer.
+
+### Configuration manuelle {/* #manual-config */}
+
+Pour un contrôle plus précis, vous pouvez également activer le plugin manuellementet configurer les règles que vous voulez utiliser directement :
+
+```json title=".eslintrc"
+{
+  "plugins": ["@docusaurus"],
+  "rules": {
+    "@docusaurus/string-literal-i18n-messages": "error",
+    "@docusaurus/no-untranslated-text": "warn"
+  }
+}
+```
+
+## Configurations prises en charge {/* #supported-configs */}
+
+- Recommended : ensemble de règles recommandées pour la plupart des sites Docusaurus qui devraient être étendus.
+- All : **toutes** les règles sont activées. Cela changera entre les versions mineures, donc vous ne devriez pas l'utiliser si vous voulez éviter des changements de rupture inattendus.
+
+## Règles prises en charge {/* #supported-rules */}
+
+| Nom | Description | `` |
+| --- | --- | --- |
+| [`@docusaurus/no-untranslated-text`](./no-untranslated-text.mdx) | Oblige les libellés de texte en JSX à être enveloppés par des appels de traduction | `` |
+| [`@docusaurus/string-literal-i18n-messages`](./string-literal-i18n-messages.mdx) | Force les API de traduction à être appelées sur les libellés en texte brut | ✅ |
+
+✅ = recommended
+
+## Exemple de configuration {/* #example-configuration */}
+
+Voici un exemple de configuration :
+
+```js title=".eslintrc.js"
+module.exports = {
+  extends: ['plugin:@docusaurus/recommended'],
+  rules: {
+    '@docusaurus/no-untranslated-text': [
+      'warn',
+      {ignoredStrings: ['·', '—', '×']},
+    ],
+  },
+};
+```

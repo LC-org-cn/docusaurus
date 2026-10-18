@@ -48,26 +48,66 @@ pnpm docusaurus docs:version 3.11.0
 | Worker 名称 / 绑定 | `wrangler.jsonc` |
 | Pages 项目地址 | `wrangler.jsonc` 里的 `PAGES_ORIGIN` |
 | 产物拆分与限额校验 | `cloudflare/prepare-assets.mjs` |
+| 刷新各语言翻译 | `cloudflare/crowdin-export.mjs`（见下文） |
 | `/api` 接口逻辑 | `cloudflare/worker.mjs` |
 | D1 表结构 | `cloudflare/schema.sql` |
 
 注意：改了 `DOCUSAURUS_LOCALES` 之后，如果语言变多，两边都可能重新逼近 20,000 上限——`prepare-assets.mjs` 会在超限时直接让构建失败并告诉你超了多少，不会默默发一个坏站点。要突破该上限只能升级 Workers Paid（100,000/项目）。
 
-## 中文为什么"汉化不完整"
+## 翻译（中文等）从哪来
 
-不是配置问题：**这个仓库里根本没有翻译文本**。Docusaurus 上游把各语言翻译放在 Crowdin（项目 ID `428890`），构建时用 `crowdin download` 下载到 `website/i18n/<语言>/`，而该目录被 `.gitignore` 排除（`git ls-files website/i18n` 是 0 个文件）。没有 token 时，`zh-CN` 只能回退成英文正文——只有界面文案是中文，因为这些字符串随 `@docusaurus/theme-translations` 包发布。
+上游仓库里**没有任何翻译文本**：`website/i18n` 被 `.gitignore` 排除，`git ls-files website/i18n` 是 0 个文件。上游的做法是在构建时用 `crowdin download` 从 Crowdin（项目 `428890`）下载，但那需要 **manager / developer 角色**；普通账号加入开源项目只有 translator 角色，实测会报：
 
-补齐办法（一次性）：
+> You must have manager or developer role in the project to perform this action
 
-1. 注册/登录 [crowdin.com](https://crowdin.com)，加入 [docusaurus-v2 项目](https://crowdin.com/project/docusaurus-v2)（开源项目，免费加入）；
-2. 头像 → **Account Settings → API → New Token**，勾选 `Projects`（只读即可）；
-3. 把 token 加到你的 fork：`Settings → Secrets and variables → Actions → New repository secret`，名字必须是 **`CROWDIN_PERSONAL_TOKEN`**；
-4. 下次 push（或在 Actions 页面手动 `Run workflow`）就会自动下载翻译再构建。
+本 fork 因此改用另一条路：**用 translator 也能读的字符串接口，把翻译拼回原始文件**。
 
-配套效果：
+- 脚本：`cloudflare/crowdin-export.mjs`
+- 产物：`website/i18n/{zh-CN,fr,pt-BR,ko}/**`，已随仓库提交，**构建和部署完全不需要访问 Crowdin**
+- 刷新翻译：
 
-- 没配 token 时这一步自动跳过，部署照常成功；
-- token 配错或 Crowdin 临时抽风时，这一步只会打一条 warning，仍然用英文兜底完成部署，不会把整条流水线卡死。
+  ```bash
+  CROWDIN_PERSONAL_TOKEN=你的token node cloudflare/crowdin-export.mjs
+  # 只导出部分语言：CROWDIN_LOCALES=zh-CN,fr node cloudflare/crowdin-export.mjs
+  ```
+
+原理：Crowdin 为每个可翻译片段保存了原文与译文，脚本按顺序把原文替换成译文；代码块、JSX、`import` 不是可翻译片段，原样保留。**覆盖率取决于上游社区**——社区还没翻的段落会保留英文，这是正常的。
+
+导出时脚本还会做三件必要的修补（不做这些，构建会直接失败）：
+
+| 问题 | 处理 |
+| --- | --- |
+| 译文里的相对图片路径（`./demo.png`）在 `i18n/` 下解析不到 | 改写成 `@site/docs/...` 绝对路径，所有语言共用同一张图；front matter 里的值会自动加引号（YAML 不允许 `@` 开头的裸标量） |
+| 译者漏写反引号，`` `<Redirect>` `` 变成裸的 `<Redirect>`，被 MDX 当成未闭合 JSX | 用 MDX 编译器逐文件检查，按报错的行列号精确补回反引号 |
+| 个别译文把标记写得无法修复 | **删掉该文件**，Docusaurus 自动回退该页面的英文源文，保证构建通过 |
+
+想确认导出的文件都能编译，可以在 `packages/docusaurus-mdx-loader` 目录下跑一个即时检查（不需要完整构建）：
+
+```bash
+node -e "import('@mdx-js/mdx').then(async ({compile}) => {
+  const fs = await import('node:fs/promises');
+  const path = await import('node:path');
+  const root = 'F:/Github/docusaurus/website/i18n/zh-CN';
+  let bad = 0, n = 0;
+  for await (const f of (async function* walk(d) {
+    for (const e of await fs.readdir(d, {withFileTypes: true})) {
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) yield* walk(p); else if (/\.mdx?$/.test(p)) yield p;
+    }
+  })(root)) {
+    n++;
+    const src = (await fs.readFile(f, 'utf8')).replace(/^---[\s\S]*?---\n/, '');
+    try { await compile(src, {format: 'mdx'}); } catch { bad++; console.log('FAIL', f); }
+  }
+  console.log(n, 'checked,', bad, 'failed');
+})"
+
+如果你的 Crowdin 账号以后拿到了 manager / developer 角色，也可以换回官方通道（把上面脚本换成）：
+
+```bash
+pnpm docusaurus write-translations   # 在 website/ 下执行
+pnpm crowdin:download:website
+```
 
 ## Cloudflare 资源
 

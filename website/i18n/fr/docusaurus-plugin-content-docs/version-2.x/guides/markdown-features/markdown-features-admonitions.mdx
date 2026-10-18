@@ -1,0 +1,258 @@
+---
+id: admonitions
+description: Gestion des avertissements et des signalements dans le format Markdown pour Docusaurus
+slug: /markdown-features/admonitions
+---
+
+# Admonitions
+
+import BrowserWindow from '@site/src/components/BrowserWindow';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Admonition from '@theme/Admonition';
+
+En plus de la syntaxe Markdown de base, nous disposons d'une syntaxe spéciale pour les admonitions, qui consiste à entourer le texte d'un ensemble de 3 deux-points, suivi d'une étiquette indiquant son type.
+
+Exemple :
+
+```md
+:::note
+
+Un peu de **contenu** avec la `syntaxe` _Markdown_. Consultez [cette `api`](#).
+
+:::
+
+:::tip
+
+Un peu de **contenu** avec la `syntaxe` _Markdown_. Consultez [cette `api`](#).
+
+:::
+
+:::info
+
+Un peu de **contenu** avec la `syntaxe` _Markdown_. Consultez [cette `api`](#).
+
+:::
+
+:::caution
+
+Un peu de **contenu** avec la `syntaxe` _Markdown_. Consultez [cette `api`](#).
+
+:::
+
+:::danger
+
+Un peu de **contenu** avec la `syntaxe` _Markdown_. Consultez [cette `api`](#).
+
+:::
+```
+
+```mdx-code-block
+<BrowserWindow>
+
+:::note
+
+Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
+
+:::
+
+:::tip
+
+Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
+
+:::
+
+:::info
+
+Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
+
+:::
+
+:::warning[caution]
+
+Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
+
+:::
+
+:::danger
+
+Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
+
+:::
+
+</BrowserWindow>
+```
+
+## Utilisation avec Prettier {/* #usage-with-prettier */}
+
+Si vous utilisez [Prettier](https://prettier.io) pour formater vos fichiers Markdown, Prettier risque d'auto-formater votre code en syntaxe d'admonition invalide. Pour éviter ce problème, ajoutez des lignes vides autour des directives de début et de fin. C'est également la raison pour laquelle les exemples que nous présentons ici comportent tous des lignes vides autour du contenu.
+
+{/* prettier-ignore */}
+```md
+<!-- Prettier ne change pas ceci -->
+:::note
+
+Hello world
+
+:::
+
+<!-- Prettier change ceci -->
+:::note
+Hello world
+:::
+
+<!--en cela -->
+::: note Hello world:::
+```
+
+## Spécifier un titre {/* #specifying-title */}
+
+Vous pouvez également spécifier un titre facultatif.
+
+```md
+:::note Votre titre
+
+Un peu de **contenu** avec la `syntaxe` _Markdown_.
+
+:::
+```
+
+```mdx-code-block
+<BrowserWindow>
+
+:::note Your Title
+
+Some **content** with _Markdown_ `syntax`.
+
+:::
+
+</BrowserWindow>
+```
+
+## Admonitions avec MDX {/* #admonitions-with-mdx */}
+
+Vous pouvez également utiliser MDX dans les admonitions !
+
+```jsx
+import Tabs from '@theme/Tabs';
+
+import TabItem from '@theme/TabItem';
+
+:::tip
+
+Utiliser les onglets dans les admonitions
+
+<Tabs>
+  <TabItem value="apple" label="Apple">Ceci est une pomme 🍎</TabItem>
+  <TabItem value="orange" label="Orange">Ceci est une orange 🍊</TabItem>
+  <TabItem value="banana" label="Banana">Ceci est une banane 🍌</TabItem>
+</Tabs>
+
+:::
+```
+
+```mdx-code-block
+<BrowserWindow>
+
+:::tip
+
+Utilisez les onglets dans les admonitions
+
+<Tabs>
+  <TabItem value="apple" label="Apple">Ceci est une pomme 🍎</TabItem>
+  <TabItem value="orange" label="Orange">Ceci est une orange 🍊</TabItem>
+  <TabItem value="banana" label="Banana">Ceci est une banane 🍌</TabItem>
+</Tabs>
+
+:::
+
+</BrowserWindow>
+```
+
+## Utilisation dans JSX {/* #usage-in-jsx */}
+
+En dehors de Markdown, vous pouvez utiliser le composant `@theme/Admonition` pour obtenir le même résultat.
+
+```jsx title="MyReactPage.jsx"
+import Admonition from '@theme/Admonition';
+
+export default function MyReactPage() {
+  return (
+    <div>
+      <Admonition type="info">
+        <p>Quelques informations</p>
+      </Admonition>
+    </div>
+  );
+}
+```
+
+Les types qui sont acceptés sont les mêmes que ci-dessus : `note`, `tip`, `danger`, `info`, `caution`. Optionnellement, vous pouvez spécifier une icône en passant un élément JSX ou une chaîne, ou un titre :
+
+```jsx title="MyReactPage.jsx"
+<Admonition type="tip" icon="💡" title="Did you know...">
+  <p>
+    Utilisez des plugins pour introduire une syntaxe plus courte pour les éléments JSX les plus couramment utilisés
+    dans votre projet.
+  </p>
+</Admonition>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Admonition type="tip" icon="💡" title="Did you know...">
+    Utilisez des plugins pour introduire une syntaxe plus courte pour les éléments JSX les plus couramment utilisés
+    dans votre projet.
+  </Admonition>
+</BrowserWindow>
+```
+
+## Personnalisation des admonitions {/* #customizing-admonitions */}
+
+Il y a deux types de personnalisations possibles avec les admonitions : **l'analyse et le rendu**.
+
+### Personnalisation du comportement du rendu {/* #customizing-rendering-behavior */}
+
+Vous pouvez personnaliser la façon dont chaque type d'admonition individuel est affiché via le [swizzling](../../swizzling.mdx). Vous pouvez souvent atteindre votre objectif grâce à un emballage simple. Par exemple, dans l'exemple suivant, nous permutons seulement l'icône pour les admonitions de type `info`.
+
+```jsx title="src/theme/Admonition.js"
+import React from 'react';
+import Admonition from '@theme-original/Admonition';
+import MyIcon from '@site/static/img/info.svg';
+
+export default function AdmonitionWrapper(props) {
+  if (props.type !== 'info') {
+    return <Admonition {...props} />;
+  }
+  return <Admonition icon={<MyIcon />} {...props} />;
+}
+```
+
+### Personnalisation du comportement d'analyse {/* #customizing-parsing-behavior */}
+
+Les Admonitions sont implémentées avec un [plugin Remark](./markdown-features-plugins.mdx). Le plugin est conçu pour être configurable. Pour personnaliser le plugin Remark pour un plugin de contenu spécifique (docs, blog, pages), passez les options à travers la clé `admonitions`.
+
+```js title="docusaurus.config.js"
+module.exports = {
+  presets: [
+    [
+      '@docusaurus/preset-classic',
+      {
+        docs: {
+          admonitions: {
+            tag: ':::',
+            keywords: ['note', 'tip', 'info', 'caution', 'danger'],
+          },
+        },
+      },
+    ],
+  ],
+};
+```
+
+Le plugin accepte deux options :
+
+- `tag` : La balise qui entoure l'admonition. Par défaut, `:::`.
+- `keywords` : Un tableau de mots-clés qui peut être utilisé comme type pour l'admonition. Notez que si vous remplacez ceci, les valeurs par défaut ne seront pas appliquées.
+
+Le `keyword` sera passé comme prop de `type` du composant `Admonition`. Si vous enregistrez d'autres types que ceux proposés par défaut, vous devez également fournir leur implémentation, notamment le style du conteneur, son icône, le texte du titre par défaut, etc. Vous devrez généralement [éjecter](../../swizzling.mdx#ejecting) le composant `@theme/Admonition`, afin de pouvoir réutiliser la même infrastructure que les autres types.

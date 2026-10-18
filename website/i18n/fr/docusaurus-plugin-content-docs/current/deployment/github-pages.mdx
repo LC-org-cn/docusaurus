@@ -1,0 +1,451 @@
+---
+sidebar_label: GitHub Pages
+description: Deploy your Docusaurus app for production on GitHub Pages.
+---
+
+# Déploiement sur les pages GitHub
+
+```mdx-code-block
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+```
+
+Docusaurus fournit un moyen facile de publier sur [GitHub Pages](https://pages.github.com/), qui est fourni gratuitement avec chaque dépôt GitHub.
+
+## Vue d'ensemble {/* #github-pages-overview */}
+
+Habituellement, il y a deux dépôts (au moins deux branches) impliqués dans un processus de publication : la branche contenant les fichiers source, et la branche contenant la sortie de construction à servir avec GitHub Pages. Dans le tutoriel suivant, ils seront appelés respectivement **"source"** et **"deployment"**.
+
+Chaque dépôt GitHub est associé à un service GitHub pages. Si le dépôt de déploiement est appelé `my-org/my-project` (où `my-org` est le nom de l'organisation ou le nom d'utilisateur), le site déployé apparaîtra à l'adresse `https://my-org.github.io/my-projet/`. Si le dépôt de déploiement s'appelle `my-org/my-org.github.io` (le dépôt des pages GitHub de l'organisation), le site apparaîtra sous `https://my-org.github.io/`.
+
+:::info
+
+Dans le cas où vous souhaitez utiliser votre domaine personnalisé pour GitHub Pages, créez un fichier `CNAME` dans le répertoire `static`. Tout ce qui se trouve dans le répertoire `static` sera copié à la racine du répertoire `build` pour le déploiement. Lorsque vous utilisez un domaine personnalisé, vous devriez pouvoir revenir de `baseUrl: '/projectName/'` à `baseUrl: '/'` et également définir votre `url` vers votre domaine personnalisé.
+
+Vous pouvez vous référer à la documentation de GitHub Pages [User, Organization, and Project Pages](https://help.github.com/fr/articles/user-organization-and-project-pages) pour plus de détails.
+
+:::
+
+Les pages GitHub récupèrent les fichiers prêts à être déployés (la sortie de `docusaurus build`) à partir de la branche par défaut (`master` / `main`, généralement) ou la branche `gh-pages`, et soit à partir de la racine, soit à partir du dossier `/docs`. Vous pouvez le configurer via `Settings > Pages` dans votre dépôt. Cette branche sera appelée "branche de déploiement".
+
+Nous fournissons une commande `docusaurus deploy` qui vous aide à déployer votre site depuis la branche source vers la branche de déploiement en une seule commande : cloner, compiler et committer.
+
+## `docusaurus.config.js` settings {/* #docusaurusconfigjs-settings */}
+
+Tout d'abord, modifiez votre `docusaurus.config.js` et ajoutez les paramètres suivants :
+
+| Nom | Description |
+| --- | --- |
+| `organizationName` | L'utilisateur ou l'organisation GitHub qui possède le dépôt de déploiement. |
+| `projectName` | Le nom du dépôt de déploiement. |
+| `deploymentBranch` | Le nom de la branche de déploiement. La valeur par défaut est `'gh-pages'` pour les pages GitHub des dépôts non organisationnels (`projectName` ne se terminant pas par `.github.io`). Sinon, il doit être explicite comme un champ de configuration ou une variable d'environnement. |
+
+Ces champs ont également leurs équivalents sous forme de variables d'environnement qui ont une priorité plus élevée : `ORGANIZATION_NAME`, `PROJECT_NAME` et `DEPLOYMENT_BRANCH`.
+
+:::warning
+
+GitHub Pages ajoute par défaut un slash final aux URL Docusaurus. Il est recommandé de définir une config `trailingSlash` (`true` ou `false`, pas `undefined`).
+
+:::
+
+Exemple :
+
+```js title="docusaurus.config.js"
+export default {
+  // ...
+  url: 'https://endiliey.github.io', // Your website URL
+  baseUrl: '/',
+  // highlight-start
+  projectName: 'endiliey.github.io',
+  organizationName: 'endiliey',
+  trailingSlash: false,
+  // highlight-end
+  // ...
+};
+```
+
+:::warning
+
+Par défaut, les pages GitHub exécutent les fichiers publiés via [Jekyll](https://jekyllrb.com/). Puisque Jekyll va se débarrasser de tous les fichiers qui commencent par `_`, il est recommandé de désactiver Jekyll en ajoutant un fichier vide nommé `.nojekyll` dans votre répertoire `static`.
+
+:::
+
+## Paramètres de l'environnement {/* #environment-settings */}
+
+| Nom | Description |
+| --- | --- |
+| `USE_SSH` | Défini à `true` pour utiliser SSH au lieu du HTTPS par défaut pour la connexion au dépôt GitHub. Si l'URL du dépôt source est une URL SSH (par exemple `git@github.com:facebook/docusaurus.git`), `USE_SSH` est déduite comme étant à `true`. |
+| `GIT_USER` | Le nom d'utilisateur pour un compte GitHub qui **a un accès push au dépôt de déploiement**. Pour vos propres dépôts, ce sera généralement votre nom d'utilisateur GitHub. Requis si vous n'utilisez pas SSH, et ignoré autrement. |
+| `GIT_PASS` | Jeton d'accès personnel de l'utilisateur git (spécifié par `GIT_USER`), pour faciliter le déploiement non interactif (par exemple le déploiement continu) |
+| `CURRENT_BRANCH` | La branche source. Habituellement, la branche sera `main` ou `master`, mais elle pourrait être n'importe quelle branche à l'exception de `gh-pages`. Si rien n'est défini pour cette variable, alors la branche courante à partir de laquelle `docusaurus deploy` est invoquée sera utilisée. |
+| `GIT_USER_NAME` | La valeur de `git config user.name` à utiliser lors de la publication dans le dépôt de déploiement |
+| `GIT_USER_EMAIL` | La valeur de `git config user.email` à utiliser lors de la publication dans le dépôt de déploiement |
+
+Les installations de GitHub Enterprise devraient fonctionner de la même manière que github.com ; il suffit de définir l'hôte GitHub Enterprise de l'organisation comme variable d'environnement :
+
+| Nom          | Description                                     |
+| ------------- | ----------------------------------------------- |
+| `GITHUB_HOST` | Le nom de domaine de votre site d'entreprise GitHub. |
+| `GITHUB_PORT` | Le port de votre site d'entreprise GitHub.        |
+
+## Déployez {/* #deploy */}
+
+Enfin, pour déployer votre site sur GitHub Pages, exécutez :
+
+```mdx-code-block
+<Tabs>
+<TabItem value="bash" label="Bash">
+```
+
+```bash
+GIT_USER=<GITHUB_USERNAME> yarn deploy
+```
+
+```mdx-code-block
+</TabItem>
+<TabItem value="windows" label="Windows">
+```
+
+```batch
+cmd /C "set "GIT_USER=<GITHUB_USERNAME>" && yarn deploy"
+```
+
+```mdx-code-block
+</TabItem>
+<TabItem value="powershell" label="PowerShell">
+```
+
+```powershell
+cmd /C 'set "GIT_USER=<GITHUB_USERNAME>" && yarn deploy'
+```
+
+```mdx-code-block
+</TabItem>
+</Tabs>
+```
+
+:::warning
+
+À partir d'août 2021, GitHub requiert que chaque connexion en ligne de commande utilise le **jeton d'accès personnel** au lieu du mot de passe. Lorsque GitHub vous demande votre mot de passe, entrez le PAT à la place. Voir la [documentation de GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) pour plus d'informations.
+
+Alternativement, vous pouvez utiliser SSH (`USE_SSH=true`) pour vous connecter.
+
+:::
+
+## Déclenchement du déploiement avec les actions GitHub {/* #triggering-deployment-with-github-actions */}
+
+Les [GitHub Actions](https://help.github.com/en/actions) vous permettent d'automatiser, de personnaliser et d'exécuter vos flux de développement logiciel directement dans votre dépôt.
+
+Les exemples de workflow ci-dessous supposent que la source de votre site web réside dans la branche `main` de votre dépôt (la _branche source_ est `main`), et que votre [source de publication](https://help.github.com/en/github/working-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) est configurée pour [publier avec un workflow d'actions GitHub personnalisé](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-with-a-custom-github-actions-workflow).
+
+Notre objectif est que :
+
+1. Quand une nouvelle pull request est faite sur `main`, il y a une action qui assure que le site se construit avec succès, sans déploiement réel. Cette tâche sera appelée `test-deploy`.
+2. Lorsqu'une pull request est fusionnée à la branche `main` ou quelqu'un pousse directement sur la branche `main`, cela construira et déploiera dans Github Pages. Cette tâche sera appelée `deploy`.
+
+Voici deux approches pour déployer votre documentation avec GitHub Actions. Based on the location of your deployment repository, choose the relevant tab below:
+
+- Le dépôt source et le dépôt de déploiement sont le **même** dépôt.
+- Le dépôt de déploiement est un dépôt **distant**, différent de la source. Les instructions pour ce scénario supposent la [source de publication](https://help.github.com/fr/github/working-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) est la branche `gh-pages`.
+
+```mdx-code-block
+<Tabs>
+<TabItem value="same" label="Same">
+```
+
+Bien que vous puissiez avoir les deux tâches définies dans le même fichier de workflow, le workflow original `deploy` sera toujours listé comme ignoré dans le statut de la suite de vérification du PR, ce qui n'est pas indicatif du statut réel et n'apporte aucune valeur au processus de révision. Nous proposons donc de les gérer en tant que workflow séparés.
+
+<details>
+<summary>GitHub action files</summary>
+
+Ajoutez ces deux fichiers de workflow :
+
+:::warning Tweak the parameters for your setup
+
+Si votre projet Docusaurus n'est pas à la racine de votre dépôt, vous devrez peut-être configurer un [répertoire de travail par défaut](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-set-the-default-shell-and-working-directory), et ajuster les chemins en conséquence.
+
+:::
+
+<Tabs>
+  <TabItem value="npm" label="npm">
+
+```yml title=".github/workflows/deploy.yml"
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    # Review gh actions docs if you want to further define triggers, paths, etc
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
+
+jobs:
+  build:
+    name: Build Docusaurus
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+      - name: Build website
+        run: npm run build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+```yml title=".github/workflows/test-deploy.yml"
+name: Test deployment
+
+on:
+  pull_request:
+    branches:
+      - main
+    # Review gh actions docs if you want to further define triggers, paths, etc
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
+
+jobs:
+  test-deploy:
+    name: Test deployment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+      - name: Test build website
+        run: npm run build
+```
+
+  </TabItem>
+  <TabItem value="yarn" label="Yarn">
+
+```yml title=".github/workflows/deploy.yml"
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    # Review gh actions docs if you want to further define triggers, paths, etc
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
+
+jobs:
+  build:
+    name: Build Docusaurus
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build website
+        run: yarn build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+```yml title=".github/workflows/test-deploy.yml"
+name: Test deployment
+
+on:
+  pull_request:
+    branches:
+      - main
+    # Review gh actions docs if you want to further define triggers, paths, etc
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
+
+jobs:
+  test-deploy:
+    name: Test deployment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Test build website
+        run: yarn build
+```
+
+  </TabItem>
+</Tabs>
+
+</details>
+
+```mdx-code-block
+</TabItem>
+<TabItem value="remote" label="Remote">
+```
+
+Une publication inter-dépôt est plus difficile à mettre en place, car vous devez pousser vers un autre référentiel avec des contrôles de permission. Nous utiliserons SSH pour l'authentification.
+
+1. Générez une nouvelle [clé SSH](https://help.github.com/fr/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent). Comme cette clé SSH sera utilisée dans le CI, assurez-vous de ne pas saisir de passphrase.
+2. Par défaut, votre clé publique devrait avoir été créée dans `~/.ssh/id_rsa.pub`; ou utilisez le nom que vous avez fourni à l'étape précédente pour ajouter votre clé à [GitHub deploy keys](https://developer.github.com/v3/guides/managing-deploy-keys/).
+3. Copiez la clé dans le presse-papiers avec `pbcopy < ~/.ssh/id_rsa.pub` et collez-la comme une [clé de déploiement](https://developer.github.com/v3/guides/managing-deploy-keys/#deploy-keys) dans votre dépôt de déploiement. Copiez le contenu du fichier si la ligne de commande ne fonctionne pas pour vous. Cochez la case `Allow write access` avant d'enregistrer votre clé de déploiement.
+4. Vous aurez besoin de votre clé privée en tant que [secret GitHub](https://help.github.com/fr/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets) pour permettre à Docusaurus d'exécuter le déploiement pour vous.
+5. Copiez votre clé privée avec `pbcopy < ~/.ssh/id_rsa` et collez un secret GitHub avec le nom `GH_PAGES_DEPLOY` sur votre dépôt de source. Copiez le contenu du fichier si la ligne de commande ne fonctionne pas pour vous. Enregistrez votre secret.
+6. Create your [documentation workflow](https://docs.github.com/en/actions/use-cases-and-examples/creating-an-example-workflow) in the `.github/workflows/` directory. In this example it's the `deploy.yml` file.
+
+À ce stade, vous devriez avoir :
+
+- le dépôt source avec le workflow GitHub défini avec la clé SSH privée comme Secret GitHub, et
+- votre dépôt de déploiement défini avec la clé SSH publique dans les clés de déploiement GitHub.
+
+<details>
+
+<summary>Fichier GitHub action</summary>
+
+:::warning
+
+Veillez à remplacer `actions@github.com` par votre email GitHub et `gh-actions` par votre nom.
+
+Ce fichier suppose que vous utilisez Yarn. Si vous utilisez npm, changez en conséquence `cache: yarn`, `yarn install --frozen-lockfile`, `yarn build` en `cache: npm`, `npm ci`, `npm run build`.
+
+:::
+
+```yml title=".github/workflows/deploy.yml"
+name: Deploy to GitHub Pages
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  test-deploy:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Test build website
+        run: yarn build
+  deploy:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+      - uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
+      - name: Deploy to GitHub Pages
+        env:
+          USE_SSH: true
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "gh-actions"
+          yarn install --frozen-lockfile
+          yarn deploy
+```
+
+</details>
+
+```mdx-code-block
+</TabItem>
+</Tabs>
+```
+
+<details>
+
+<summary>Le site n'est pas correctement déployé ?</summary>
+
+Après avoir poussé vers main, si vous ne voyez pas votre site publié à l'emplacement souhaité (par exemple, il indique « There isn't a GitHub Pages site here », ou il affiche le fichier README.md de votre dépôt), essayez ce qui suit :
+
+- Attendez environ trois minutes et rafraîchissez. Les pages GitHub peuvent prendre quelques minutes pour récupérer les nouveaux fichiers.
+- Vérifiez sur la page d'accueil de votre dépôt qu'une petite coche verte apparaît à côté du titre du dernier commit, indiquant que le CI est réussi. Si vous voyez une croix, cela signifie que la construction ou le déploiement a échoué, et vous devez vérifier le journal pour plus d'informations de débogage.
+- Cliquez sur la coche et assurez-vous que vous voyez un flux de travail « Deploy to GitHub Pages ». Des noms comme « pages build and deployment / deploy » sont des flux de travail par défaut de GitHub, ce qui indique que votre flux de travail de déploiement personnalisé qui a échoué, n'a pas du tout été déclenché. Assurez-vous que les fichiers YAML sont placés dans le dossier `.github/workflows` et que la condition de déclenchement est correctement définie (par exemple, si votre branche par défaut est "master" au lieu de "main", vous devez modifier la propriété `on.push`).
+- Dans « Settings > Pages » de votre dépôt, assurez-vous que "Source" (qui est la source pour les fichiers de déploiement, et non "source" comme dans notre terminologie) est définie à "gh-pages" + "/ (root)", puisque nous utilisons `gh-pages` comme branche de déploiement.
+
+Si vous utilisez un domaine personnalisé :
+
+- Vérifiez que vous avez correctement configuré les enregistrements DNS si vous utilisez un domaine personnalisé. Consultez la [documentation des pages GitHub sur la configuration des domaines personnalisés](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages). De plus, il faut savoir que les changements de DNS peuvent prendre jusqu'à 24 heures pour se propager sur internet.
+
+</details>

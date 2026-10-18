@@ -1,0 +1,77 @@
+---
+sidebar_position: 6
+slug: /api/plugins/@docusaurus/plugin-google-analytics
+---
+
+# 📦 plugin-google-analytics
+
+import APITable from '@site/src/components/APITable';
+
+Le plugin par défaut [Google Analytics](https://developers.google.com/analytics/devguides/collection/analyticsjs/). Il s'agit d'une bibliothèque JavaScript permettant de mesurer la façon dont les utilisateurs interagissent avec votre site web **dans la version de production**. Si vous utilisez Google Analytics 4, vous devrez peut-être envisager d'utiliser [plugin-google-gtag](./plugin-google-gtag.mdx) à la place.
+
+:::danger Deprecated
+
+This plugin is **deprecated** and became useless on July 1, 2023.
+
+Google [s'éloigne de Universal Analytics](https://blog.google/products/marketingplatform/analytics/prepare-for-future-with-google-analytics-4/).
+
+Si vous utilisez toujours ce plugin avec un identifiant de suivi `UA-*`, vous devriez créer un compte Google Analytics 4 dès que possible, et utilisez [`@docusaurus/plugin-google-gtag`](./plugin-google-gtag.mdx) au lieu de ce plugin. Plus de détails [ici](https://github.com/facebook/docusaurus/issues/7221).
+
+:::
+
+:::warning production only
+
+Ce plugin est toujours inactif en développement et **uniquement actif en production** pour éviter de polluer les statistiques d'analyse.
+
+:::
+
+## Installation {/* #installation */}
+
+```bash npm2yarn
+npm install --save @docusaurus/plugin-google-analytics
+```
+
+:::tip
+
+Si vous utilisez le preset `@docusaurus/preset-classic`, vous n'avez pas besoin d'installer ce plugin en tant que dépendance.
+
+Vous pouvez configurer ce plugin via les [options du preset](../../using-plugins.mdx#docusauruspreset-classic).
+
+:::
+
+## Configuration {/* #configuration */}
+
+Champs acceptés :
+
+```mdx-code-block
+<APITable>
+```
+
+| Nom | Type | Par défaut | Description |
+| --- | --- | --- | --- |
+| `trackingID` | `string` | **Obligatoire** | L'ID de suivi de votre service d'analyse. |
+| `anonymizeIP` | `boolean` | `false` | Si l'adresse IP doit être anonymisée lors de l'envoi de requêtes. |
+
+```mdx-code-block
+</APITable>
+```
+
+### Exemple de configuration {/* #ex-config */}
+
+Vous pouvez configurer ce plugin via les options du preset ou du plugin.
+
+:::tip
+
+La plupart des utilisateurs de Docusaurus configurent ce plugin via les options du preset.
+
+:::
+
+```js config-tabs
+// Preset Options: googleAnalytics
+// Plugin Options: @docusaurus/plugin-google-analytics
+
+const config = {
+  trackingID: 'UA-141789564-1',
+  anonymizeIP: true,
+};
+```

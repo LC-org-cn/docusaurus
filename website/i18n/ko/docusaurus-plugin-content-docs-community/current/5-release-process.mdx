@@ -1,0 +1,190 @@
+# 릴리스 프로세스
+
+Let's see how Docusaurus handles **versioning, releases and breaking changes**.
+
+:::info
+
+이번 주제는 고도로 사용자 정의된 사이트의 업그레이드가 어려운 상황에서 특히 중요한 내용을 담고 있습니다.
+
+:::
+
+## 유의적 버전 관리 {/* #semantic-versioning */}
+
+Docusaurus versioning is based on the `major.minor.patch` scheme and respects [Semantic Versioning](https://semver.org/).
+
+유의적 버전 관리를 따르는 것은 여러 가지 이유로 중요합니다.
+
+- It **guarantees simple minor version upgrades**, as long as you only use the [public API](/community/release-process#public-api-surface)
+- 프론트엔드 생태계 규칙을 따릅니다.
+- 새로운 메이저 버전은 주요 변경 사항을 완벽하게 문서화할 수 있는 기회입니다.
+- 새로운 메이저/마이너 버전은 블로그 게시물을 통해 새로운 기능을 전달할 수 있는 기회입니다.
+
+### 메이저 버전 {/* #major-versions */}
+
+The `major` version number is incremented on **every breaking change**.
+
+Whenever a new major version is released, we publish:
+
+- a blog post with feature highlights, major bug fixes, **breaking changes, and upgrade instructions**.
+- 빠짐 없이 정리한 변경 기록
+
+:::tip
+
+Read our [public API surface](#public-api-surface) section to clearly understand what we consider as a breaking change.
+
+:::
+
+### 마이너 버전 {/* #minor-versions */}
+
+The `minor` version number is incremented on every significant retro-compatible change.
+
+Whenever a new minor version is released, we publish:
+
+- 새로운 기능, 수정된 버그 목록을 담은 블로그 게시물
+- 빠짐 없이 정리한 변경 기록
+
+:::tip
+
+If you only use our [public API surface](#public-api-surface), you should be able to upgrade in no time!
+
+:::
+
+:::warning About End-of-Life Node.js versions
+
+We may drop support for End-of-Life Node.js versions in minor Docusaurus versions. Check the [Node.js support policy](#nodejs-support) section for more details.
+
+:::
+
+### 패치 버전 {/* #patch-versions */}
+
+The `patch` version number is incremented on bugfixes releases.
+
+Whenever a new patch version is released, we publish:
+
+- 빠짐 없이 정리한 변경 기록
+
+## Node.js support policy {/* #nodejs-support */}
+
+Each major version of Docusaurus supports a minimum Node.js version. This retro-compatibility will be preserved all along that release line. This runtime backward compatibility will be preserved throughout all the minor versions of the release line, except for End-of-Life Node.js versions.
+
+:::warning Support for End-of-Life versions
+
+On minor releases, we reserve the right to drop support for Node.js versions that reached End-of-Life ([Node.js release process and schedule](https://nodejs.org/en/about/previous-releases). **We do not consider it a Docusaurus breaking change**. We highly recommend using a maintained Node.js version. Beware that [End-of-Life Node.js versions do not receive security updates anymore](https://nodejs.org/en/blog/announcements/node-18-eol-support).
+
+:::
+
+## 버전 관리 {/* #versions */}
+
+```mdx-code-block
+import {
+  CurrentMajorVersionNumber,
+  StableMajorBranchLink,
+  MainBranchLink,
+} from "@site/src/components/Versions";
+```
+
+The Docusaurus team uses a simple development process and only works on a single major version and a single Git branch at a same time:
+
+- **Docusaurus {CurrentMajorVersionNumber}**: the **stable** version, on the <MainBranchLink/> branch.
+
+:::note How we will ship the next version
+
+Once we are ready ship **Docusaurus {CurrentMajorVersionNumber + 1}**, we will:
+
+- create a <StableMajorBranchLink/> branch
+- merge breaking changes on the <MainBranchLink/> branch
+- release that new version directly from the <MainBranchLink/> branch
+
+:::
+
+:::warning Security fixes policy
+
+After a new stable version has been released, the former stable version will continue to receive support for **major security issues** for **3 months**.
+
+In practice, we will backport security fixes to the <StableMajorBranchLink/> branch. Otherwise, all features will be frozen and non-critical bugs will not be fixed.
+
+It is recommended to upgrade within that time frame to the new stable version.
+
+:::
+
+## 드러난 Public API {/* #public-api-surface */}
+
+Docusaurus commits to respecting Semantic Versioning. This means that whenever changes occur in Docusaurus public APIs and break backward compatibility, we will increment the `major` version number.
+
+:::tip
+
+Docusaurus guarantees public API retro-compatibility across `minor` versions. Unless you use internal APIs, `minor` version upgrades should be easy.
+
+:::
+
+We will outline what accounts as the public API surface.
+
+### Core public API {/* #core-public-api */}
+
+✅ Our public API includes:
+
+- 도큐사우루스 config
+- 도큐사우루스 클라이언트 API
+- 도큐사우루스 CLI
+- 프리셋 옵션
+- 플러그인 옵션
+- 플러그인 수명주기 API
+- 테마 config
+- 코어 플러그인 라우트 컴포넌트 속성
+- `@docusaurus/types` TypeScript types
+  - 우리는 여전히 타입을 더 엄격하게 만들 자유를 유지합니다(타입 체크가 중단될 수 있습니다).
+
+❌ Our public API **excludes**:
+
+- Docusaurus config `future`
+- All features prefixed by `experimental_` or `unstable_`
+- All features prefixed by `v<MajorVersion>_` (`v6_` `v7_`, etc.)
+
+:::tip
+
+For non-theme APIs, any documented API is considered public (and will be stable); any undocumented API is considered internal.
+
+:::
+
+An API being "stable" means if you increment the patch or minor version of your Docusaurus installation without any other change, running `docusaurus start` or `docusaurus build` should not throw an error.
+
+### Theming public API {/* #theming-public-api */}
+
+Docusaurus has a very flexible theming system:
+
+- 사용자 지정 CSS를 사용할 수 있습니다.
+- You can [swizzle](/docs/swizzling) any React theme component
+
+This system also implicitly creates a very large API surface. To be able to move fast and improve Docusaurus, we can't guarantee retro-compatibility.
+
+✅ Our public theming API includes:
+
+- [Theme class names](/docs/styling-layout#theme-class-names)
+- [Infima](/docs/styling-layout#styling-your-site-with-infima) class names and CSS variables
+- React components that are [safe to swizzle](/docs/swizzling#what-is-safe-to-swizzle)
+- 테마 사용자 경험
+- 브라우저 호환성
+
+:::tip
+
+You may not be able to achieve your site customization through this public API.
+
+In this case, please [report your customization use case](https://github.com/facebook/docusaurus/discussions/5468) and we will figure out how to expand our public API.
+
+:::
+
+❌ Our public theming API **excludes**:
+
+- DOM 구조
+- CSS module class names with a hash suffix (usually targeted with `[class*='myClassName']` selectors)
+- React components that are [unsafe or forbidden to swizzle](/docs/swizzling#what-is-safe-to-swizzle)
+- React components that import from `@docusaurus/theme-common/internal`
+- 테마에서 시각적 요소를 담당하는 부분
+
+:::note
+
+When [swizzling](/docs/swizzling) safe components, you might encounter components that import undocumented APIs from `@docusaurus/theme-common` (without the `/internal` subpath).
+
+We still maintain retro-compatibility on those APIs (hence they are marked as "safe"), but we don't encourage a direct usage.
+
+:::

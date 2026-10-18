@@ -1,0 +1,101 @@
+---
+description: How to keep a reasonable bundle size while ensuring sufficient browser support.
+---
+
+# Suporte ao navegador
+
+Docusaurus allows sites to define the list of supported browsers through a [browserslist configuration](https://github.com/browserslist/browserslist).
+
+## Propósito {/* #purpose */}
+
+Os sites precisam se equilibrar entre compatibilidade com versões anteriores e tamanho do pacote. As old browsers do not support modern APIs or syntax, more code is needed to implement the same functionality.
+
+For example, you may use the [optional chaining syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining):
+
+```js
+const value = obj?.prop?.val;
+```
+
+...which unfortunately is only recognized by browser versions released after 2020. To be compatible with earlier browser versions, when building your site for production, our JS loader will transpile your code to a more verbose syntax:
+
+```js
+var _obj, _obj$prop;
+
+const value =
+  (_obj = obj) === null || _obj === void 0
+    ? void 0
+    : (_obj$prop = _obj.prop) === null || _obj$prop === void 0
+      ? void 0
+      : _obj$prop.val;
+```
+
+However, this penalizes all other users with increased site load time because the 29-character line now becomes 168 characters—a 6-fold increase! (In practice, it will be better because the names used will be shorter.) As a tradeoff, the JS loader only transpiles the syntax to the degree that's supported by all browser versions defined in the browser list.
+
+The browser list by default is provided through the `package.json` file as a root `browserslist` field.
+
+:::warning
+
+On old browsers, the compiled output will use unsupported (too recent) JS syntax, causing React to fail to initialize and end up with a static website with only HTML/CSS and no JS.
+
+:::
+
+## Valores padrão {/* #default-values */}
+
+Websites initialized with the default classic template has the following in `package.json`:
+
+```json title="package.json"
+{
+  "name": "docusaurus",
+  // ...
+  // highlight-next-line
+  "browserslist": ["baseline widely available"]
+  // ...
+}
+```
+
+Explained in natural language, the browsers supported are the versions of the core browsers (Chrome, Edge, Firefox and Safari, on desktop and mobile) that support all the [Baseline Widely available](https://web.dev/baseline) web platform features, i.e. features that have been available in all core browsers for at least 30 months.
+
+The same browser list is used in development and production, so that your site behaves the same with `docusaurus start` and `docusaurus build`.
+
+:::tip
+
+You can use a different browser list for each environment with an object keyed by environment (`production`, `development`). Refer to the [browserslist configuration documentation](https://github.com/browserslist/browserslist#configuring-for-different-environments).
+
+:::
+
+You can "evaluate" any config with the `browserslist` CLI to obtain the actual list:
+
+```bash
+npx browserslist
+```
+
+The output is all browsers supported. Below is the output in September 2026:
+
+```text
+and_chr 151
+and_ff 153
+chrome 151
+chrome 150
+...
+chrome 123
+edge 151
+edge 150
+...
+edge 123
+firefox 154
+firefox 153
+...
+firefox 124
+ios_saf 26.6
+ios_saf 26.5
+...
+ios_saf 17.4
+safari 26.6
+safari 26.5
+...
+safari 17.4
+```
+
+## Leia mais {/* #read-more */}
+
+You may wish to visit the [browserslist documentation](https://github.com/browserslist/browserslist/blob/main/README.md) for more specifications, especially the accepted [query values](https://github.com/browserslist/browserslist/blob/main/README.md#queries) and [best practices](https://github.com/browserslist/browserslist/blob/main/README.md#best-practices).

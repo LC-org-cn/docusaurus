@@ -1,0 +1,71 @@
+---
+sidebar_position: 7
+slug: /api/plugins/@docusaurus/plugin-google-gtag
+---
+
+# 📦 plugin-google-gtag
+
+import APITable from '@site/src/components/APITable';
+
+The default [Global Site Tag (gtag.js)](https://developers.google.com/tag-platform/gtagjs) plugin. 它是一个 JavaScript 标签框架和 API，允许你将事件数据发送到 Google Analytics, Google Ads 和 Google Marketing Platform。 本章节会介绍如何配置 Docusaurus 站点以为 Google Analytics 启用全局网站标签。
+
+:::tip
+
+You can use [Google's Tag Assistant](https://tagassistant.google.com/) tool to check if your gtag is set up correctly!
+
+:::
+
+:::warning production only
+
+This plugin is always inactive in development and **only active in production** to avoid polluting the analytics statistics.
+
+:::
+
+## 安装流程 {/* #installation */}
+
+```bash npm2yarn
+npm install --save @docusaurus/plugin-google-gtag
+```
+
+:::tip
+
+If you use the preset `@docusaurus/preset-classic`, you don't need to install this plugin as a dependency.
+
+You can configure this plugin through the [preset options](../../using-plugins.mdx#docusauruspreset-classic).
+
+:::
+
+## 配置 {/* #configuration */}
+
+接受的字段：
+
+```mdx-code-block
+<APITable>
+```
+
+| 参数 | 类型 | 默认值 | 描述 |
+| --- | --- | --- | --- |
+| `trackingID` | <code>string \| string[]</code> | **Required** | 你的 gtag 服务的 tracking ID。 It is possible to provide multiple ids. |
+
+```mdx-code-block
+</APITable>
+```
+
+### 示例配置 {/* #ex-config */}
+
+你可以通过预设选项或插件选项来配置这个插件。
+
+:::tip
+
+大多数 Docusaurus 用户通过预设选项配置此插件。
+
+:::
+
+```js config-tabs
+// Preset Options: gtag
+// Plugin Options: @docusaurus/plugin-google-gtag
+
+const config = {
+  trackingID: 'G-999X9XX9XX',
+};
+```

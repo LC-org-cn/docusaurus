@@ -1,0 +1,307 @@
+---
+sidebar_position: 2
+slug: /api/plugins/@docusaurus/plugin-content-blog
+---
+
+# 📦 plugin-content-blog
+
+import APITable from '@site/src/components/APITable';
+
+Fournit la fonctionnalité [Blog](blog.mdx) et c'est le plugin par défaut du blog de Docusaurus.
+
+:::warning certaines fonctionnalités uniquement en production
+
+La [fonctionnalité flux](../../blog.mdx#feed) fonctionne en extrayant la sortie de compilation, et **n'est active qu'en production**.
+
+:::
+
+## Installation {/* #installation */}
+
+```bash npm2yarn
+npm install --save @docusaurus/plugin-content-blog
+```
+
+:::tip
+
+Si vous utilisez le preset `@docusaurus/preset-classic`, vous n'avez pas besoin d'installer ce plugin en tant que dépendance.
+
+Vous pouvez configurer ce plugin via les [options du preset](../../using-plugins.mdx#docusauruspreset-classic).
+
+:::
+
+## Configuration {/* #configuration */}
+
+Champs acceptés :
+
+```mdx-code-block
+<APITable>
+```
+
+| Nom | Type | Par défaut | Description |
+| --- | --- | --- | --- |
+| `path` | `string` | `'blog'` | Chemin vers le répertoire de contenu du blog sur le système de fichiers, relatif au répertoire du site. |
+| `editUrl` | <code>string \| [EditUrlFn](#EditUrlFn)</code> | `undefined` | URL de base pour modifier votre site. L'URL finale est calculée par `editUrl + relativePostPath`. L'utilisation d'une fonction permet un contrôle plus nuancé pour chaque fichier. Omettre cette variable désactivera entièrement les liens de modification. |
+| `editLocalizedFiles` | `boolean` | `false` | L'URL de modification ciblera le fichier localisé, au lieu du fichier original non localisé. Ignoré lorsque `editUrl` est une fonction. |
+| `blogTitle` | `string` | `'Blog'` | Titre de la page du blog pour un meilleur référencement. |
+| `blogDescription` | `string` | `'Blog'` | Description de la page du blog pour un meilleur référencement. |
+| `blogSidebarCount` | <code>number \| 'ALL'</code> | `5` | Nombre d'articles du blog à afficher dans la barre latérale du blog. `'ALL'` pour montrer tous les articles du blog; `0` pour désactiver. |
+| `blogSidebarTitle` | `string` | `'Recent posts'` | Titre de la barre latérale du blog. |
+| `routeBasePath` | `string` | `'blog'` | Route URL pour la section blog de votre site. **NE PAS** inclure un slash de fin. Utilisez `/` pour mettre le blog à la racine du chemin. |
+| `tagsBasePath` | `string` | `'tags'` | Route URL pour la section des tags de votre blog. Sera ajouté à `routeBasePath`. |
+| `pageBasePath` | `string` | `'page'` | Route URL pour la section des pages de votre blog. Sera ajouté à `routeBasePath`. |
+| `archiveBasePath` | <code>string \| null</code> | `'archive'` | Route d'URL pour la section archive de votre blog. Sera ajouté à `routeBasePath`. **NE PAS** inclure un slash de fin. Utilisez `null` pour désactiver la génération d'archives. |
+| `include` | `string[]` | `['**/*.{md,mdx}']` | Tableau de patterns de glob correspondant aux fichiers Markdown à construire, relatif au chemin de contenu. |
+| `exclude` | `string[]` | _Voir l'exemple de configuration_ | Tableau de patterns de glob correspondant aux fichiers Markdown à exclure. Sert d'affinement basé sur l'option `include`. |
+| `postsPerPage` | <code>number \| 'ALL'</code> | `10` | Nombre d'articles à afficher par page dans la liste. Utilisez `'ALL'` pour afficher tous les articles sur une page de liste. |
+| `blogListComponent` | `string` | `'@theme/BlogListPage'` | Composant racine de la page de liste du blog. |
+| `blogPostComponent` | `string` | `'@theme/BlogPostPage'` | Composant racine de chaque page d'article du blog. |
+| `blogTagsListComponent` | `string` | `'@theme/BlogTagsListPage'` | Composant racine de la page de la liste des tags. |
+| `blogTagsPostsComponent` | `string` | `'@theme/BlogTagsPostsPage'` | Composant racine de la page « articles contenant le tag ». |
+| `blogArchiveComponent` | `string` | `'@theme/BlogArchivePage'` | Composant racine de la page d'archive du blog. |
+| `remarkPlugins` | `any[]` | `[]` | Plugins Remark passés à MDX. |
+| `rehypePlugins` | `any[]` | `[]` | Plugins Rehype passés à MDX. |
+| `beforeDefaultRemarkPlugins` | `any[]` | `[]` | Les plugins Remark personnalisés sont transmis à MDX avant les plugins Remark par défaut de Docusaurus. |
+| `beforeDefaultRehypePlugins` | `any[]` | `[]` | Les plugins Rehype personnalisés sont transmis à MDX avant les plugins Rehype par défaut de Docusaurus. |
+| `truncateMarker` | `RegExp` | `/<!--\s*truncate\s*-->/` \| `\{\/\*\s*truncate\s*\*\/\}/` | Marqueur de troncature marquant la fin du résumé. |
+| `showReadingTime` | `boolean` | `true` | Affiche le temps de lecture estimé pour l'article du blog. |
+| `readingTime` | `ReadingTimeFn` | Le temps de lecture par défaut | Un callback pour personnaliser le nombre du temps de lecture affiché. |
+| `authorsMapPath` | `string` | `'authors.yml'` | Chemin vers le fichier map des auteurs, relatif au répertoire de contenu du blog. |
+| `feedOptions` | _Voir ci-dessous_ | `{type: ['rss', 'atom']}` | Flux du blog. |
+| `feedOptions.type` | <code>[FeedType](#FeedType) \| [FeedType](#FeedType)[] \| 'all' \| null</code> | **Obligatoire** | Type de flux à générer. Utilisez `null` pour désactiver la génération. |
+| `feedOptions.createFeedItems` | <code>[CreateFeedItemsFn](#CreateFeedItemsFn) \| undefined</code> | `undefined` | Une fonction optionnelle qui peut être utilisée pour transformer et / ou filtrer les éléments du flux. |
+| `feedOptions.limit` | `number \| null \| false` | `20` | Limite le flux au nombre spécifié d'articles, `false` ou `null` pour avoir toutes les entrées. Par défaut, `20`. |
+| `feedOptions.title` | `string` | `siteConfig.title` | Titre du flux. |
+| `feedOptions.description` | `string` | <code>\`$\{siteConfig.title} Blog\`</code> | Description du flux. |
+| `feedOptions.copyright` | `string` | `undefined` | Message de copyright. |
+| `feedOptions.language` | `string` (Voir [documentation](http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes) pour les valeurs possibles) | `undefined` | Métadonnées de langue du flux. |
+| `sortPosts` | <code>'descending' \| 'ascending' </code> | `'descending'` | Détermine l'orientation du tri des articles du blog. |
+| `processBlogPosts` | <code>[ProcessBlogPostsFn](#ProcessBlogPostsFn)</code> | `undefined` | Une fonction facultative qui peut être utilisée pour transformer les articles de blog (filtre, modification, suppression, etc...). |
+| `showLastUpdateAuthor` | `boolean` | `false` | Affichage ou non de l'auteur de la dernière mise à jour de l'article du blog. |
+| `showLastUpdateTime` | `boolean` | `false` | Affichage ou non de la dernière date de mise à jour de l'article du blog. Cela nécessite l'accès à l'historique git pendant la construction, et ne fonctionnera donc pas correctement avec des clones superficiels (un défaut courant pour les systèmes de CI). With GitHub `actions/checkout`, use`fetch-depth: 0`. |
+
+```mdx-code-block
+</APITable>
+```
+
+### Types {/* #types */}
+
+#### `EditUrlFn` {/* #EditUrlFn */}
+
+```ts
+type EditUrlFunction = (params: {
+  blogDirPath: string;
+  blogPath: string;
+  permalink: string;
+  locale: string;
+}) => string | undefined;
+```
+
+#### `ReadingTimeFn` {/* #ReadingTimeFn */}
+
+```ts
+type ReadingTimeOptions = {
+  wordsPerMinute: number;
+  wordBound: (char: string) => boolean;
+};
+
+type ReadingTimeCalculator = (params: {
+  content: string;
+  frontMatter?: BlogPostFrontMatter & Record<string, unknown>;
+  options?: ReadingTimeOptions;
+}) => number;
+
+type ReadingTimeFn = (params: {
+  content: string;
+  frontMatter: BlogPostFrontMatter & Record<string, unknown>;
+  defaultReadingTime: ReadingTimeCalculator;
+}) => number | undefined;
+```
+
+#### `FeedType` {/* #FeedType */}
+
+```ts
+type FeedType = 'rss' | 'atom' | 'json';
+```
+
+#### `CreateFeedItemsFn` {/* #CreateFeedItemsFn */}
+
+```ts
+type CreateFeedItemsFn = (params: {
+  blogPosts: BlogPost[];
+  siteConfig: DocusaurusConfig;
+  outDir: string;
+  defaultCreateFeedItemsFn: CreateFeedItemsFn;
+}) => Promise<BlogFeedItem[]>;
+```
+
+#### `ProcessBlogPostsFn` {/* #ProcessBlogPostsFn */}
+
+```ts
+type ProcessBlogPostsFn = (params: {
+  blogPosts: BlogPost[];
+}) => Promise<void | BlogPost[]>;
+```
+
+### Exemple de configuration {/* #ex-config */}
+
+Vous pouvez configurer ce plugin via les options du preset ou du plugin.
+
+:::tip
+
+La plupart des utilisateurs de Docusaurus configurent ce plugin via les options du preset.
+
+:::
+
+```js config-tabs
+// Options du preset : blog
+// Options du plugin : @docusaurus/plugin-content-blog
+
+const config = {
+  path: 'blog',
+  // Cas d'utilisation simple : chaîne editUrl
+  // editUrl: 'https://github.com/facebook/docusaurus/edit/main/website/',
+  // Cas d'utilisation avancé : fonction editUrl
+  editUrl: ({locale, blogDirPath, blogPath, permalink}) =>
+    `https://github.com/facebook/docusaurus/edit/main/website/${blogDirPath}/${blogPath}`,
+  editLocalizedFiles: false,
+  blogTitle: 'Blog title',
+  blogDescription: 'Blog',
+  blogSidebarCount: 5,
+  blogSidebarTitle: 'Tous nos articles',
+  routeBasePath: 'blog',
+  include: ['**/*.{md,mdx}'],
+  exclude: [
+    '**/_*.{js,jsx,ts,tsx,md,mdx}',
+    '**/_*/**',
+    '**/*.test.{js,jsx,ts,tsx}',
+    '**/__tests__/**',
+  ],
+  postsPerPage: 10,
+  blogListComponent: '@theme/BlogListPage',
+  blogPostComponent: '@theme/BlogPostPage',
+  blogTagsListComponent: '@theme/BlogTagsListPage',
+  blogTagsPostsComponent: '@theme/BlogTagsPostsPage',
+  remarkPlugins: [require('./my-remark-plugin')],
+  rehypePlugins: [],
+  beforeDefaultRemarkPlugins: [],
+  beforeDefaultRehypePlugins: [],
+  truncateMarker: /<!--\s*(truncate)\s*-->/,
+  showReadingTime: true,
+  feedOptions: {
+    type: '',
+    title: '',
+    description: '',
+    copyright: '',
+    language: undefined,
+    createFeedItems: async (params) => {
+      const {blogPosts, defaultCreateFeedItems, ...rest} = params;
+      return defaultCreateFeedItems({
+        // ne conserve que les 10 articles du blog les plus récents dans le fil d'actualité
+        blogPosts: blogPosts.filter((item, index) => index < 10),
+        ...rest,
+      });
+    },
+  },
+};
+```
+
+## Markdown frontmatter {/* #markdown-front-matter */}
+
+Les documents Markdown peuvent utiliser les champs de métadonnées Markdown du [front matter](../../guides/markdown-features/markdown-features-intro.mdx#front-matter) suivants, entourés d'une ligne `---` de part et d'autre.
+
+Champs acceptés :
+
+```mdx-code-block
+<APITable>
+```
+
+| Nom | Type | Par défaut | Description |
+| --- | --- | --- | --- |
+| `authors` | `Authors` | `undefined` | Liste des auteurs de l'article du blog (ou auteur unique). Lisez le [guide `authors`](../../blog.mdx#blog-post-authors) pour plus d'explications. Préférez `authors` aux champs frontMatter `author_*`, même pour les articles du blog avec un seul auteur. |
+| `author` | `string` | `undefined` | ⚠️ Préférez l'utilisation de `authors`. Le nom de l'auteur de l'article du blog. |
+| `author_url` | `string` | `undefined` | ⚠️ Préférez l'utilisation de `authors`. L'URL à laquelle le nom de l'auteur sera lié. This could be a GitHub, X, Facebook profile URL, etc. |
+| `author_image_url` | `string` | `undefined` | ⚠️ Préférez l'utilisation de `authors`. L'URL de l'image miniature de l'auteur. |
+| `author_title` | `string` | `undefined` | ⚠️ Préférez l'utilisation de `authors`. Une description de l'auteur. |
+| `title` | `string` | Titre du Markdown | Le titre de l'article du blog. |
+| `date` | `string` | Nom du fichier ou heure de création du fichier | La date de création de l'article du blog. Si non spécifié, ceci peut être extrait du nom du fichier ou du dossier, par exemple `2021-04-15-blog-post.mdx`, `2021-04-15-blog-post/index.mdx`, `2021/04/15/blog-post.mdx`. Sinon, c'est l'heure de création du fichier Markdown. |
+| `tags` | `Tag[]` | `undefined` | Une liste de chaînes ou d'objets de deux champs de chaîne `label` et `permalink` pour taguer vos articles. |
+| `draft` | `boolean` | `false` | Les brouillons d'articles du blog seront disponibles uniquement lors du développement. |
+| `unlisted` | `boolean` | `false` | Les articles de blog non listés seront disponibles à la fois en développement et en production. Ils seront « cachés » en production, non indexés, exclus des sitemaps, et ne peuvent être consultés que par les utilisateurs ayant un lien direct. |
+| `hide_table_of_contents` | `boolean` | `false` | S'il faut cacher la table des matières à droite. |
+| `toc_min_heading_level` | `number` | `2` | Le niveau de titre minimum affiché dans la table des matières. Doit être compris entre 2 et 6 et inférieur ou égal à la valeur maximale. |
+| `toc_max_heading_level` | `number` | `3` | Le niveau de titre maximum affiché dans la table des matières. Doit être compris entre 2 et 6. |
+| `keywords` | `string[]` | `undefined` | Méta-tag de mots-clés, qui deviendront les `<meta name="keywords" content="keyword1,keyword2,..."/>` dans `<head>`, utilisés par les moteurs de recherche. |
+| `description` | `string` | La première ligne du contenu Markdown | La description de votre document qui deviendra `<meta name="description" content="..."/>` et `<meta property="og:description" content="..."/>` dans `<head>`, utilisés par les moteurs de recherche. |
+| `image` | `string` | `undefined` | Cover or thumbnail image that will be used as the `<meta property="og:image" content="..."/>` in the `<head>`, enhancing link previews on social media and messaging platforms. |
+| `slug` | `string` | Chemin du fichier | Permet de personnaliser l'URL de l'article du blog (`/<routeBasePath>/<slug>`). Prise en charge de multiples formats : `slug: my-blog-post`, `slug: /my/path/to/blog/post`, slug: `/`. |
+| `last_update` | `FrontMatterLastUpdate` | `undefined` | Permet de remplacer l'auteur et/ou la date de la dernière mise à jour. La date peut être n'importe quelle [chaîne de date interprétable](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Date/parse). |
+
+```mdx-code-block
+</APITable>
+```
+
+```ts
+type FrontMatterLastUpdate = {date?: string; author?: string};
+
+type Tag = string | {label: string; permalink: string};
+
+// Une clé d'auteur fait référence à un auteur du fichier authors.yml du plugin global
+type AuthorKey = string;
+
+type Author = {
+  key?: AuthorKey;
+  name: string;
+  title?: string;
+  url?: string;
+  image_url?: string;
+};
+
+// Le champ authors du frontMatter permet plusieurs formes possibles
+type Authors = AuthorKey | Author | (AuthorKey | Author)[];
+```
+
+Exemple :
+
+```md
+---
+titre: Bienvenue Docusaurus
+authors:
+  - slorber
+  - yangshun
+  - name: Joel Marcey
+    title: Co-créateur de Docusaurus 1
+    url: https://github. om/JoelMarcey
+    image_url: https://github.com/JoelMarcey.png
+tags: [hello, docusaurus-v2]
+description: Ceci est mon premier article sur Docusaurus.
+image: https://i.imgur.com/mErPwqL.png
+hide_table_of_contents: false
+---
+
+Un article de blog en Markdown
+```
+
+## i18n {/* #i18n */}
+
+Lisez d'abord [l'introduction i18n](../../i18n/i18n-introduction.mdx) .
+
+### Emplacement des fichiers de traduction {/* #translation-files-location */}
+
+- **Chemin de base** : `website/i18n/[locale]/docusaurus-plugin-content-blog`
+- **Chemin d'accès multi-instance** : `website/i18n/[locale]/docusaurus-plugin-content-blog-[pluginId]`
+- **Fichiers JSON** : extrait avec [`docusaurus write-translations`](../../cli.mdx#docusaurus-write-translations-sitedir)
+- **Fichiers Markdown** : `website/i18n/[locale]/docusaurus-plugin-content-blog`
+
+### Exemple de structure du système de fichiers {/* #example-file-system-structure */}
+
+```bash
+website/i18n/[locale]/docusaurus-plugin-content-blog
+│
+│ # traductions pour website/blog
+├── authors.yml
+├── first-blog-post.md
+├── second-blog-post.md
+│
+│ # traductions pour les options du plugin qui seront rendues
+└── options.json
+```

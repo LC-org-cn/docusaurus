@@ -1,0 +1,82 @@
+{
+  "version.label": {
+    "message": "3.9.2",
+    "description": "The label for version 3.9.2"
+  },
+  "sidebar.docs.category.开始上手": {
+    "message": "Getting Started",
+    "description": "The label for category 'Getting Started' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.指南": {
+    "message": "Guides",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides.link.generated-index.title": {
+    "message": "Docusaurus 指南",
+    "description": "The generated-index page title for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides.link.generated-index.description": {
+    "message": "我们来了解最重要的 Docusaurus 概念！",
+    "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.文档": {
+    "message": "Docs",
+    "description": "The label for category 'Docs' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.侧边栏": {
+    "message": "Sidebar",
+    "description": "The label for category 'Sidebar' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Markdown 特性": {
+    "message": "Markdown Features",
+    "description": "The label for category 'Markdown Features' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.国际化": {
+    "message": "Internationalization",
+    "description": "The label for category 'Internationalization' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.进阶指南": {
+    "message": "Advanced Guides",
+    "description": "The label for category 'Advanced Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.升级": {
+    "message": "Upgrading",
+    "description": "The label for category 'Upgrading' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.到 Docusaurus v2": {
+    "message": "To Docusaurus v2",
+    "description": "The label for category 'To Docusaurus v2' in sidebar 'docs'"
+  },
+  "sidebar.docs.doc.教程": {
+    "message": "Tutorial",
+    "description": "The label for the doc item 'Tutorial' in sidebar 'docs', linking to the doc i18n/tutorial"
+  },
+  "sidebar.docs.doc.使用 Git": {
+    "message": "Using Git",
+    "description": "The label for the doc item 'Using Git' in sidebar 'docs', linking to the doc i18n/git"
+  },
+  "sidebar.docs.doc.使用 Crowdin": {
+    "message": "Using Crowdin",
+    "description": "The label for the doc item 'Using Crowdin' in sidebar 'docs', linking to the doc i18n/crowdin"
+  },
+  "sidebar.api.category.插件方法总览": {
+    "message": "Plugin method references",
+    "description": "The label for category 'Plugin method references' in sidebar 'api'"
+  },
+  "sidebar.api.category.插件": {
+    "message": "Plugins",
+    "description": "The label for category 'Plugins' in sidebar 'api'"
+  },
+  "sidebar.api.category.主题": {
+    "message": "Themes",
+    "description": "The label for category 'Themes' in sidebar 'api'"
+  },
+  "sidebar.api.category.杂项": {
+    "message": "Miscellaneous",
+    "description": "The label for category 'Miscellaneous' in sidebar 'api'"
+  },
+  "sidebar.api.category.📦 eslint-plugin": {
+    "message": "📦 eslint-plugin",
+    "description": "The label for category '📦 eslint-plugin' in sidebar 'api'"
+  }
+}

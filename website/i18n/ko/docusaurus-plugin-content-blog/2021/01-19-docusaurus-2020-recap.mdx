@@ -1,0 +1,135 @@
+---
+title: 도큐사우루스 2020 요약
+authors: [slorber]
+tags: [recap]
+image: /img/docusaurus-2020-recap.png
+---
+
+**2020 was great for Docusaurus**, despite [a regrettable start](https://docusaurus.io/blog/2020/01/07/tribute-to-endi) and a tumultuous year for everyone.
+
+We continued to invest in [Docusaurus 2](https://docusaurus.io/), and made it reach **full feature parity** with [Docusaurus 1](https://v1.docusaurus.io/).
+
+We now **recommend Docusaurus 2** as the **default choice** to start a new Docusaurus project and encourage v1 users to [migrate to Docusaurus 2](https://docusaurus.io/docs/migration).
+
+We are **still in alpha**, but expect **some good news very soon**!
+
+![Three Docusaurus plushies laid side-by-side on the table](/img/blog/2020-recap/docusaurus-plushie-banner.jpeg)
+
+{/* truncate */}
+
+## 도큐사우루스 2에서 이런 걸 했습니다 {/* #docusaurus-2-highlights */}
+
+우리는 올해 많은 기능을 작업했습니다. 그 중 중요한 몇몇을 정리해보고자 합니다.
+
+- **i18n**: easily translate your Docusaurus site, released soon! ([preview](https://github.com/facebook/docusaurus/pull/3325), [doc](https://docusaurus.io/docs/next/i18n/introduction))
+- **Version dropdown**: enable contextual version switch
+- **Versioning options**: solving the most common pain-points users had with versioning
+- **Contextual search**: search in the current version, use the brand-new DocSearch 3 experience
+- **Markdown pages**: use Markdown instead of React components to create standalone pages
+- **Better theme**: various UI, UX and accessibility improvements
+- **PWA**: add offline support to your site, and make it installable
+- **Fail-fast**: strict config validation, detect broken links, and prevent bad production deployments
+- **Multi-instance**: use the docs plugin twice on a single site (e.g. iOS/Android SDK docs)
+- **Migration CLI**: automate the upgrade from Docusaurus 1
+- **CodeSandbox**: assess Docusaurus easily from your browser with [new.docusaurus.io](https://new.docusaurus.io/)
+- **Canary releases**: use the `@canary` npm tag to use the upcoming release before anyone else
+- **TypeScript**: progressive adoption for internal code, and improve usage for users
+- **Publish Infima**: it is now [open-source](https://github.com/facebookincubator/infima)
+
+## 도큐사우루스 2가 이렇게 성장하고 있습니다 {/* #docusaurus-2-growth */}
+
+The plan to [rebuild Docusaurus from scratch in 2019](https://docusaurus.io/blog/2019/12/30/docusaurus-2019-recap) paid off: after a slow start, Docusaurus 2 has been widely adopted and has **already outgrown Docusaurus 1** usage.
+
+![Docusaurus v1 vs. v2 npm trends of the year 2020. 도큐사우루스 v2의 설치는 눈에 띄게 증가하고 있는 반면 v1은 약간 하향세입니다. v1 설치는 15000에서 시작해서 10000으로 줄어들었지만 v2는 2000에서 시작해서 25000까지 늘어났습니다. The intersection happens around June 2020.](/img/blog/2020-recap/docusaurus-npm-trends.png)
+
+Notable **projects, startups, large companies, and individuals** adopted Docusaurus 2 ([showcase](https://docusaurus.io/showcase)):
+
+- [Supabase](https://supabase.io)
+- [React Navigation](https://reactnavigation.org)
+- [React Redux](https://react-redux.js.org/)
+- [Vector](https://vector.dev)
+- [Algolia DocSearch](https://docsearch.algolia.com)
+- [SAP Cloud SDK](https://sap.github.io/cloud-sdk)
+- [Palo Alto Cortex XSOAR](https://xsoar.pan.dev)
+- [Quddús George's website](https://portfoliosaurus.now.sh)
+
+We helped **large scale Docusaurus 1 sites to upgrade**, ensuring a proper **migration path** and **feature parity**.
+
+[React Native](https://reactnative.dev/) was successfully upgraded to Docusaurus 2 ([archived v1 site](http://archive.reactnative.dev/)):
+
+![React Native's new website built with Docusaurus v2](/img/blog/2020-recap/react-native-screenshot.png)
+
+Localized Docusaurus 1 sites (like **Jest**) will be able to upgrade too:
+
+![Jest's new website built with Docusaurus v2 in Japanese](/img/blog/2020-recap/jest-screenshot.png)
+
+We also saw the **[first right-to-left](https://datagit.ir/)** Docusaurus 2 site published:
+
+![Datagit's website in Persian, a right-to-left language. The sidebar appears on the right of the window and the TOC appears on the left.](/img/blog/2020-recap/datagit-rtl-screenshot.png)
+
+## 깃헙 활동 {/* #github-activity */}
+
+- **Stars**: 14632 → 20946 (+43.2% y/y)
+- **Total Contributors**: 303 → 512 (+68.9% y/y). 대부분은 페이스북 소속이 아닌 기여자입니다.
+- **Weekly npm Downloads**: 2356 → 25592 (+986% y/y)
+- **On GitHub**, Docusaurus 1 is used by 6311 projects (+62.9% y/y) while Docusaurus 2 is used by 5039 projects (+1940% y/y)
+
+## 메이저 리그 해킹 기여자와 협업 {/* #collaboration-with-major-league-hacking */}
+
+We have welcomed [Major League Hacking](https://mlh.io/) (MLH) fellows for 2 seasons already.
+
+We are very thankful for the **various contributions** they made, such as:
+
+- v1에서 v2로 이전하기 위한 마이그레이션 CLI 기반 작업
+- 리액트 네이티브 웹 사이트를 v1에서 v2로 이전하는데 기여
+- 구성 유효성 체크를 좀 더 엄격하고 철저하게 만들고 유용한 에러 메시지를 반환하도록 작업
+- 코드샌드박스 지원 추가
+- CI 파이프라인 개선: 빌드 크기, 라이트하우스 봇
+
+2021년에도 협업이 계속 이어지기를 기대합니다.
+
+## 미디어 {/* #media */}
+
+Dmitry Vinnik (Developer Advocate @ Facebook) explains Docusaurus in [60 seconds](https://www.youtube.com/watch?v=_An9EsKPhp0) or [15min](https://www.youtube.com/watch?v=Yhyx7otSksg) videos.
+
+Rachel Nabors (Documentation Engineer @ Facebook) talked a bit about Docusaurus in [React Native Radio 178 (podcast)](https://reactnativeradio.com/episodes/178-documenting-react-native-with-rachel-nabors-gWxwySPl), and William Candillon the [React Native website migration (video)](https://www.youtube.com/watch?v=-zhjq2ECKq4).
+
+여러 블로그 포스트에서도 도큐사우루스를 다루어주었습니다.
+
+- [To the Makers of Docusaurus](https://portfoliosaurus.now.sh/blog/toTheMakers) by Quddus George
+- [Richer API documentation with Redoc and Docusaurus](https://davidgoss.co/blog/api-documentation-redoc-docusaurus/) by David Goss
+- [How to Build a Plugin for Docusaurus v2](https://aknapen.nl/blog/how-to-build-a-plugin-for-docusaurus-v2/) by Adriaan Knapen
+- [React Tracked Documentation Website with Docusaurus v2](https://blog.axlight.com/posts/react-tracked-documentation-website-with-docusaurus-v2/) by Daishi Kato
+- [Easy documentation with Docusaurus](https://blog.logrocket.com/easy-documentation-with-docusaurus/) by Anshul Goyal (MLH fellow)
+- [Build Beautiful Documentation Websites with Docusaurus](https://lo-victoria.com/build-beautiful-documentation-websites-with-docusaurus) by Victoria Lo
+
+## 커뮤니티 {/* #community */}
+
+The Docusaurus community continues to grow, the [Discord](https://discord.gg/docusaurus) server is quite active, and [Stack Overflow questions](https://stackoverflow.com/questions/tagged/docusaurus) keep being posted.
+
+The **modular architecture** of Docusaurus 2 allowed the community to build and publish [third-party plugins](https://docusaurus.io/community/resources#community-plugins-). As we would like to federate better our community, if you are building a plugin, please [let us know](https://github.com/facebook/docusaurus/discussions/4025).
+
+## 다음 단계는 뭔가요? {/* #whats-next */}
+
+As the **core features of Docusaurus 2** have finally been built, we will be able to dedicate more time to solve the pain points and bugs reported by the community, and make Docusaurus stable and convenient enough to enter the **beta and release-candidate phase**.
+
+With proper support for **i18n and versioning**, and **large scale migrations** such as **React Native** and **Jest**, we now have a clear migration path for all Docusaurus 1 sites.
+
+We still have a few **major features** that we would like to work on:
+
+- [Create a theme gallery](https://github.com/facebook/docusaurus/issues/3522), make it easy to switch from one another, and include **first-class Tailwind support**
+- [Upgrade to Webpack 5](https://github.com/facebook/docusaurus/issues/4027), improve performances and build times
+- [Better compatibility with CommonMark](https://github.com/facebook/docusaurus/issues/3018), as MDX and makes it harder for CommonMark-based sites to adopt Docusaurus
+- [Upgrade to MDX 2.0](https://github.com/facebook/docusaurus/issues/4029)
+- 2021년에 발견될 다른 작업들
+
+Huge thanks to the community for [their contributions in 2020](https://github.com/facebook/docusaurus/graphs/contributors?from=2020-01-01&to=2021-01-01&type=c), especially:
+
+- [Joel Marcey](https://github.com/JoelMarcey) for creating Docusaurus and supporting the project all this time
+- the core team - [Alexey Pyltsyn](https://github.com/lex111), [Sébastien Lorber](https://sebastienlorber.com), [Yangshun Tay](https://x.com/yangshunz)
+- 메이저 리그 해킹 그리고 페이스북 인턴 여러분의 눈에 띄는 작업
+- DocSearch 3에 대한 Algolia 팀의 지원
+- [Bartosz Kaszubowski](https://github.com/Simek) for his investment in the React Native migration
+- 커뮤니티 기여자 모두에게 감사드립니다. 서로 격려해주세요.
+
+2021년에도 다같이 힘내자구요! 🎉

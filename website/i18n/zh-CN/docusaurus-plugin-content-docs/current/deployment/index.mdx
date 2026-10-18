@@ -1,0 +1,165 @@
+---
+description: 在一系列静态网站托管服务上完成你的 Docusaurus 应用的生产部署。
+---
+
+# 部署
+
+要为生产环境构建网站的静态文件，请运行：
+
+```bash npm2yarn
+npm run build
+```
+
+Once it finishes, the static files will be generated within the `build` directory.
+
+:::note
+
+The only responsibility of Docusaurus is to build your site and emit static files in `build`.
+
+现在，该由你来决定怎么托管这些静态文件了。
+
+:::
+
+You can deploy your site to static site hosting services such as [Vercel](https://vercel.com/), [GitHub Pages](https://pages.github.com/), [Netlify](https://www.netlify.com/), [Render](https://render.com/docs/static-sites), and [Surge](https://surge.sh/help/getting-started-with-surge).
+
+Docusaurus 网站是静态渲染的，而且一般不需要 JavaScript 也能运行！
+
+## 配置 {/* #configuration */}
+
+The following parameters are required in `docusaurus.config.js` to optimize routing and serve files from the correct location:
+
+| 参数 | 描述 |
+| --- | --- |
+| `url` | 站点 URL。 For a site deployed at `https://my-org.com/my-project/`, `url` is `https://my-org.com/`. |
+| `baseUrl` | 站点的 base URL，带有末尾斜杠。 For a site deployed at `https://my-org.com/my-project/`, `baseUrl` is `/my-project/`. |
+
+## 本地测试构建 {/* #testing-build-locally */}
+
+在部署到生产环境前，事先进行本地测试尤为重要。 Docusaurus provides a [`docusaurus serve`](../cli.mdx#docusaurus-serve-sitedir) command for that:
+
+```bash npm2yarn
+npm run serve
+```
+
+By default, this will load your site at [`http://localhost:3000/`](http://localhost:3000/).
+
+## 末尾斜杠配置 {/* #trailing-slashes */}
+
+Docusaurus has a [`trailingSlash` config](../api/docusaurus.config.js.mdx#trailingSlash) to allow customizing URLs/links and emitted filename patterns.
+
+你一般不需要修改默认值。 Unfortunately, each static hosting provider has a **different behavior**, and deploying the exact same site to various hosts can lead to distinct results. 根据你的托管商的不同，你可能需要修改此配置。
+
+:::tip
+
+Use [slorber/trailing-slash-guide](https://github.com/slorber/trailing-slash-guide) to understand better the behavior of your host and configure `trailingSlash` appropriately.
+
+:::
+
+## 使用环境变量 {/* #using-environment-variables */}
+
+把可能敏感的信息放在环境变量中的做法很常见。 However, in a typical Docusaurus website, the `docusaurus.config.js` file is the only interface to the Node.js environment (see [our architecture overview](../advanced/architecture.mdx)), while everything else (MDX pages, React components, etc.) are client side and do not have direct access to the `process` global variable. In this case, you can consider using [`customFields`](../api/docusaurus.config.js.mdx#customFields) to pass environment variables to the client side.
+
+```js title="docusaurus.config.js"
+// If you are using dotenv (https://www.npmjs.com/package/dotenv)
+import 'dotenv/config';
+
+export default {
+  title: '...',
+  url: process.env.URL, // You can use environment variables to control site specifics as well
+  // highlight-start
+  customFields: {
+    // Put your custom environment here
+    teamEmail: process.env.EMAIL,
+  },
+  // highlight-end
+};
+```
+
+```jsx title="home.jsx"
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+
+export default function Home() {
+  const {
+    siteConfig: {customFields},
+  } = useDocusaurusContext();
+  return <div>Contact us through {customFields.teamEmail}!</div>;
+}
+```
+
+## 选择托管服务商 {/* #choosing-a-hosting-provider */}
+
+有几种常见的托管选择：
+
+- [Self-hosting](#self-hosting) with an HTTP server like Apache2 or Nginx.
+- Static hosting providers (e.g. [Netlify](./netlify.mdx) and [Vercel](./vercel.mdx)). 我们会以它们为参考，但同样的道理也可以适用于其他提供商。
+- [GitHub Pages](./github-pages.mdx) (by definition, it is also static hosting provider, but we compare it separately).
+
+如果你不清楚选择哪一个，问自己下面几个问题：
+
+<details>
+
+<summary>
+  How many resources (money, person-hours, etc.) am I willing to invest in this?
+</summary>
+
+- 🔴 自行托管要求网络以及 Linux 和 web 服务器管理方面的经验。 这是最困难的选项，需要最多的时间来成功管理。 就费用而言，云服务几乎永远不会是免费的，而购买/部署本地服务器的费用甚至可能更高。
+- 🟢 Static hosting providers can help you set up a working website in almost no time and offer features like server-side redirects that are easily configurable. 许多提供商提供了非常慷慨的构建时间配额，甚至免费套餐也够用，你基本不会超过限额。 但是，免费计划也存在一些限制，一旦达到这些限制，你就需要付费了。 要了解详情，请查看你的提供商的定价页面。
+- 🟡 GitHub Pages 部署的工作流程设置起来可能很麻烦。 (Evidence: see the length of [Deploying to GitHub Pages](./github-pages.mdx)!) 但是，这项服务（包括构建和部署）对所有公共仓库都永久免费，并且我们也有详细教程，帮助你正确运行它。
+
+</details>
+
+<details>
+
+<summary>How much server-side customization do I need?</summary>
+
+- 🟢 自行托管时，你可以控制整个服务器的配置。 你可以配置虚拟主机，基于请求的 URL 来服务不同的内容；你可以去做复杂的服务端重定向；你可以实现鉴权…… 如果你需要很多服务器端功能，请选择自行托管网站。
+- 🟡 Static hosting providers usually offers some server-side configuration (e.g. URL formatting (trailing slashes), server-side redirects, etc.).
+- 🔴 GitHub Pages 不暴露任何服务端配置，除了强制使用 HTTPS 和设置 CNAME 记录。
+
+</details>
+
+<details>
+
+<summary>Do I need collaboration-friendly deployment workflows?</summary>
+
+- 🟡 自行托管服务可以利用持续部署功能，如 Netlify，但需要投入更大的精力。 通常，你将指定专人管理部署，而且相对于其他两个选项，它的工作流也不会非常基于 Git 。
+- 🟢 Netlify 和 Vercel 对每个 Pull Request 都会生成部署预览，这对于在合并到生产环境之前的团队审核工作非常有用。 你也可以做团队管理，不同成员拥有不同的部署访问权限。
+- 🟡 GitHub 页面不能做部署预览，至少方法非常复杂。 每个仓库只能和一个站点部署相关联。 另一方面，你还是可以控制哪些人有站点部署的写权限。
+
+</details>
+
+不存在通用方案。 你需要权衡你的需求和资源，然后再做决定。
+
+## 自行托管 {/* #self-hosting */}
+
+Docusaurus can be self-hosted using [`docusaurus serve`](../cli.mdx#docusaurus-serve-sitedir). Change port using `--port` and `--host` to change host.
+
+```bash npm2yarn
+npm run serve -- --build --port 80 --host 0.0.0.0
+```
+
+:::warning
+
+相较于其他静态托管提供商 / CDN，这不是最佳解决方案。
+
+:::
+
+## Hosting provider guides {/* #hosting-provider-guides */}
+
+Here's a list of popular hosting providers and how they should be configured to deploy Docusaurus sites most efficiently. Docusaurus 不附属于这些服务里的任意哪家，提供这些信息只是出于便利性。
+
+```mdx-code-block
+import DocCardList from '@theme/DocCardList';
+
+<DocCardList />
+```
+
+:::tip Other hosting solutions
+
+We can only officially document a small subset of hosting providers.
+
+However, a Docusaurus site is just static files, and almost any hosting provider able to serve static websites can deploy it.
+
+Check our **[Deployment Platforms](https://github.com/facebook/docusaurus/discussions/categories/deployment-platforms)** GitHub Discussions category: the community shares its experience with other platforms there, and hosting providers are welcome to explain how to deploy Docusaurus on their service.
+
+:::

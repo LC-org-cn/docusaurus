@@ -1,0 +1,419 @@
+---
+sidebar_position: 2
+slug: /api/plugins/@docusaurus/plugin-content-blog
+---
+
+# 📦 plugin-content-blog
+
+import APITable from '@site/src/components/APITable';
+
+Provides the [Blog](blog.mdx) feature and is the default blog plugin for Docusaurus.
+
+:::warning some features production only
+
+The [feed feature](../../blog.mdx#feed) works by extracting the build output, and is **only active in production**.
+
+:::
+
+## 安装流程 {/* #installation */}
+
+```bash npm2yarn
+npm install --save @docusaurus/plugin-content-blog
+```
+
+:::tip
+
+If you use the preset `@docusaurus/preset-classic`, you don't need to install this plugin as a dependency.
+
+You can configure this plugin through the [preset options](../../using-plugins.mdx#docusauruspreset-classic).
+
+:::
+
+## 配置 {/* #configuration */}
+
+接受的字段：
+
+```mdx-code-block
+<APITable>
+```
+
+| 参数 | 类型 | 默认值 | 描述 |
+| --- | --- | --- | --- |
+| `path` | `string` | `'blog'` | 博客内容目录的文件系统路径，相对于站点目录。 |
+| `editUrl` | <code>string \| [EditUrlFn](#EditUrlFn)</code> | `undefined` | 编辑文档的基础 URL。 The final URL is computed by `editUrl + relativePostPath`. 使用函数可以允许你更精细地控制每一个文件。 完全忽略这个变量就会禁用编辑链接。 |
+| `editLocalizedFiles` | `boolean` | `false` | 编辑 URL 会指向本地化的文件，而不是原始的未翻译文件。 Ignored when `editUrl` is a function. |
+| `blogTitle` | `string` | `'Blog'` | 用于增进 SEO 的博客页面标题。 |
+| `blogDescription` | `string` | `'Blog'` | 用于增进 SEO 的博客页面元描述。 |
+| `blogSidebarCount` | <code>number \| 'ALL'</code> | `5` | 在博客侧边栏中展示的博文项目数量。 `'ALL'` to show all blog posts; `0` to disable. |
+| `blogSidebarTitle` | `string` | `'Recent posts'` | 博客侧边栏的标题。 |
+| `routeBasePath` | `string` | `'blog'` | 站点博客部分的 URL 前缀。 **DO NOT** include a trailing slash. Use `/` to put the blog at root path. |
+| `tagsBasePath` | `string` | `'tags'` | 博客标签部分的 URL 前缀。 Will be appended to `routeBasePath`. |
+| `pageBasePath` | `string` | `'page'` | URL route for the pages section of your blog. Will be appended to `routeBasePath`. |
+| `archiveBasePath` | <code>string \| null</code> | `'archive'` | 博客归档部分的 URL 前缀。 Will be appended to `routeBasePath`. **DO NOT** include a trailing slash. Use `null` to disable generation of archive. |
+| `authorsBasePath` | `string` | `'authors'` | URL route for the authors pages of your blog. Will be appended to `path`. |
+| `include` | `string[]` | `['**/*.{md,mdx}']` | 相对于内容路径的 glob 模式列表，匹配到的 Markdown 文件会被构建。 |
+| `exclude` | `string[]` | _See example configuration_ | Glob 模式列表，匹配到的 Markdown 文件会被排除。 Serves as refinement based on the `include` option. |
+| `postsPerPage` | <code>number \| 'ALL'</code> | `10` | 每个博文列表页面显示的博文数量。 Use `'ALL'` to display all posts on one listing page. |
+| `blogListComponent` | `string` | `'@theme/BlogListPage'` | 博客列表页的根组件。 |
+| `blogPostComponent` | `string` | `'@theme/BlogPostPage'` | 每个博文页面的根组件。 |
+| `blogTagsListComponent` | `string` | `'@theme/BlogTagsListPage'` | 标签列表页的根组件。 |
+| `blogTagsPostsComponent` | `string` | `'@theme/BlogTagsPostsPage'` | 「包含某标签的所有博文」页面的根组件。 |
+| `blogArchiveComponent` | `string` | `'@theme/BlogArchivePage'` | 博客归档页的根组件。 |
+| `blogAuthorsPostsComponent` | `string` | `'@theme/Blog/Pages/BlogAuthorsPostsPage'` | Root component of the blog author page. |
+| `blogAuthorsListComponent` | `string` | `'@theme/Blog/Pages/BlogAuthorsListPage'` | Root component of the blog authors page index. |
+| `remarkPlugins` | `any[]` | `[]` | 传递给 MDX 的 Remark 插件。 |
+| `rehypePlugins` | `any[]` | `[]` | 传递给 MDX 的 Rehype 插件。 |
+| `recmaPlugins` | `any[]` | `[]` | Recma plugins passed to MDX. |
+| `beforeDefaultRemarkPlugins` | `any[]` | `[]` | 在 Docusaurus 默认 Remark 插件之前传递给 MDX 的自定义 Remark 插件。 |
+| `beforeDefaultRehypePlugins` | `any[]` | `[]` | 在 Docusaurus 默认 Rehype 插件之前传递给 MDX 的自定义 Rehype 插件。 |
+| `truncateMarker` | `RegExp` | `/<!--\s*truncate\s*-->/` \| `\{\/\*\s*truncate\s*\*\/\}/` | 标明摘要结束处的标记。 |
+| `showReadingTime` | `boolean` | `true` | 在博文上显示估计阅读时间。 |
+| `readingTime` | `ReadingTimeFn` | 默认阅读时间 | 用于自定义显示的阅读时间数字的回调。 |
+| `authorsMapPath` | `string` | `'authors.yml'` | 作者记录表的文件路径，相对于博客内容目录。 |
+| `feedOptions` | _See below_ | `{type: ['rss', 'atom']}` | 博客订阅源。 |
+| `feedOptions.type` | <code>[FeedType](#FeedType) \| [FeedType](#FeedType)[] \| 'all' \| null</code> | **Required** | 要生成的订阅源类型。 Use `null` to disable generation. |
+| `feedOptions.createFeedItems` | <code>[CreateFeedItemsFn](#CreateFeedItemsFn) \| undefined</code> | `undefined` | An optional function which can be used to transform and / or filter the items in the feed. |
+| `feedOptions.limit` | `number \| null \| false` | `20` | Limits the feed to the specified number of posts, `false` or `null` for all entries. Defaults to `20`. |
+| `feedOptions.title` | `string` | `siteConfig.title` | 订阅源的标题。 |
+| `feedOptions.description` | `string` | <code>\`$\{siteConfig.title} Blog\`</code> | 订阅源的描述。 |
+| `feedOptions.copyright` | `string` | `undefined` | 版权信息。 |
+| `feedOptions.xslt` | <code>boolean \| [FeedXSLTOptions](#FeedXSLTOptions)</code> | `undefined` | Permits to style the blog XML feeds with XSLT so that browsers render them nicely. |
+| `feedOptions.language` | `string` (See [documentation](http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes) for possible values) | `undefined` | 订阅源的语言元数据。 |
+| `sortPosts` | <code>'descending' \| 'ascending'</code> | `'descending'` | 决定博文排序的方向。 |
+| `processBlogPosts` | <code>[ProcessBlogPostsFn](#ProcessBlogPostsFn)</code> | `undefined` | An optional function which can be used to transform blog posts (filter, modify, delete, etc...). |
+| `showLastUpdateAuthor` | `boolean` | `false` | Whether to display the author who last updated the blog post. |
+| `showLastUpdateTime` | `boolean` | `false` | Whether to display the last date the blog post was updated. This requires access to git history during the build, so will not work correctly with shallow clones (a common default for CI systems). With GitHub `actions/checkout`, use `fetch-depth: 0`. When deploying to Vercel, set the environment variable `VERCEL_DEEP_CLONE=true`. |
+| `tags` | `string \| false \| null \| undefined` | `tags.yml` | Path to the YAML tags file listing pre-defined tags. Relative to the blog content directory. |
+| `onInlineTags` | `'ignore' \| 'log' \| 'warn' \| 'throw'` | `warn` | The plugin behavior when blog posts contain inline tags (not appearing in the list of pre-defined tags, usually `tags.yml`). |
+| `onUntruncatedBlogPosts` | `'ignore' \| 'log' \| 'warn' \| 'throw'` | `warn` | The plugin behavior when blog posts do not contain a truncate marker. |
+
+```mdx-code-block
+</APITable>
+```
+
+### 类型 {/* #types */}
+
+#### `EditUrlFn` {/* #EditUrlFn */}
+
+```ts
+type EditUrlFunction = (params: {
+  blogDirPath: string;
+  blogPath: string;
+  permalink: string;
+  locale: string;
+}) => string | undefined;
+```
+
+#### `ReadingTimeFn` {/* #ReadingTimeFn */}
+
+```ts
+type ReadingTimeOptions = {
+  wordsPerMinute: number;
+};
+
+type ReadingTimeCalculator = (params: {
+  content: string;
+  locale: string;
+  frontMatter?: BlogPostFrontMatter & Record<string, unknown>;
+  options?: ReadingTimeOptions;
+}) => number;
+
+type ReadingTimeFn = (params: {
+  content: string;
+  locale: string;
+  frontMatter: BlogPostFrontMatter & Record<string, unknown>;
+  defaultReadingTime: ReadingTimeCalculator;
+}) => number | undefined;
+```
+
+#### `FeedType` {/* #FeedType */}
+
+```ts
+type FeedType = 'rss' | 'atom' | 'json';
+```
+
+#### `FeedXSLTOptions` {/* #FeedXSLTOptions */}
+
+Permits to style the blog XML feeds so that browsers render them nicely with [XSLT](https://developer.mozilla.org/en-US/docs/Web/XSLT).
+
+- Use `true` to let the blog use its built-in `.xsl` and `.css` files to style the blog feed
+- Use a falsy value (`undefined | null | false`) to disable the feature
+- Use a `string` to provide a file path to a custom `.xsl` file relative to the blog content folder. By convention, you must provide a `.css` file with the exact same name.
+
+```ts
+type FeedXSLTOptions =
+  | boolean
+  | undefined
+  | null
+  | {
+      rss?: string | boolean | null | undefined;
+      atom?: string | boolean | null | undefined;
+    };
+```
+
+#### `CreateFeedItemsFn` {/* #CreateFeedItemsFn */}
+
+```ts
+type CreateFeedItemsFn = (params: {
+  blogPosts: BlogPost[];
+  siteConfig: DocusaurusConfig;
+  outDir: string;
+  defaultCreateFeedItemsFn: CreateFeedItemsFn;
+}) => Promise<BlogFeedItem[]>;
+```
+
+#### `ProcessBlogPostsFn` {/* #ProcessBlogPostsFn */}
+
+```ts
+type ProcessBlogPostsFn = (params: {
+  blogPosts: BlogPost[];
+}) => Promise<void | BlogPost[]>;
+```
+
+### 示例配置 {/* #ex-config */}
+
+你可以通过预设选项或插件选项来配置这个插件。
+
+:::tip
+
+大多数 Docusaurus 用户通过预设选项配置此插件。
+
+:::
+
+```js config-tabs
+// Preset Options: blog
+// Plugin Options: @docusaurus/plugin-content-blog
+
+const config = {
+  path: 'blog',
+  // Simple use-case: string editUrl
+  // editUrl: 'https://github.com/facebook/docusaurus/edit/main/website/',
+  // Advanced use-case: functional editUrl
+  editUrl: ({locale, blogDirPath, blogPath, permalink}) =>
+    `https://github.com/facebook/docusaurus/edit/main/website/${blogDirPath}/${blogPath}`,
+  editLocalizedFiles: false,
+  blogTitle: 'Blog title',
+  blogDescription: 'Blog',
+  blogSidebarCount: 5,
+  blogSidebarTitle: 'All our posts',
+  routeBasePath: 'blog',
+  include: ['**/*.{md,mdx}'],
+  exclude: [
+    '**/_*.{js,jsx,ts,tsx,md,mdx}',
+    '**/_*/**',
+    '**/*.test.{js,jsx,ts,tsx}',
+    '**/__tests__/**',
+  ],
+  postsPerPage: 10,
+  blogListComponent: '@theme/BlogListPage',
+  blogPostComponent: '@theme/BlogPostPage',
+  blogTagsListComponent: '@theme/BlogTagsListPage',
+  blogTagsPostsComponent: '@theme/BlogTagsPostsPage',
+  remarkPlugins: [require('./my-remark-plugin')],
+  rehypePlugins: [],
+  beforeDefaultRemarkPlugins: [],
+  beforeDefaultRehypePlugins: [],
+  truncateMarker: /<!--\s*(truncate)\s*-->/,
+  showReadingTime: true,
+  feedOptions: {
+    type: '',
+    title: '',
+    description: '',
+    copyright: '',
+    language: undefined,
+    createFeedItems: async (params) => {
+      const {blogPosts, defaultCreateFeedItems, ...rest} = params;
+      return defaultCreateFeedItems({
+        // keep only the 10 most recent blog posts in the feed
+        blogPosts: blogPosts.filter((item, index) => index < 10),
+        ...rest,
+      });
+    },
+  },
+};
+```
+
+## Markdown 前言 {/* #markdown-front-matter */}
+
+Markdown documents can use the following Markdown [front matter](../../guides/markdown-features/markdown-features-intro.mdx#front-matter) metadata fields, enclosed by a line `---` on either side.
+
+接受的字段：
+
+```mdx-code-block
+<APITable>
+```
+
+| 参数 | 类型 | 默认值 | 描述 |
+| --- | --- | --- | --- |
+| `authors` | `Authors` | `undefined` | 博文作者列表（或者唯一作者）。 Read the [`authors` guide](../../blog.mdx#blog-post-authors) for more explanations. Prefer `authors` over the `author_*` front matter fields, even for single author blog posts. |
+| `author` | `string` | `undefined` | ⚠️ Prefer using `authors`. 博文作者的名字。 |
+| `author_url` | `string` | `undefined` | ⚠️ Prefer using `authors`. 作者名字链接指向的 URL。 This could be a GitHub, X, Facebook profile URL, etc. |
+| `author_image_url` | `string` | `undefined` | ⚠️ Prefer using `authors`. 作者头像图片的 URL。 |
+| `author_title` | `string` | `undefined` | ⚠️ Prefer using `authors`. 作者的描述。 |
+| `title` | `string` | Markdown 标题 | 博文的标题。 |
+| `title_meta` | `string` | `frontMatter.title` | The blog post SEO metadata title, used in `<head>` for `<title>` and `og:title`. Permits to override `title` when the displayed title and SEO title should be different. |
+| `sidebar_label` | `string` | `title` | 博客侧边栏的自定义标签替代默认标签("title")。 |
+| `date` | `string` | 文件名或文件创建时间 | 博文的创建时间。 If not specified, this can be extracted from the file or folder name, e.g, `2021-04-15-blog-post.mdx`, `2021-04-15-blog-post/index.mdx`, `2021/04/15/blog-post.mdx`. 如果也没有，会使用 Markdown 文件的创建时间。 |
+| `tags` | `Tag[]` | `undefined` | A list of strings or objects of two string fields `label` and `permalink` to tag to your post. Strings can be a reference to keys of a [tags file](#tags-file) (usually `tags.yml`) |
+| `draft` | `boolean` | `false` | 博文草稿只会在开发模式下显示。 |
+| `unlisted` | `boolean` | `false` | 未列出的页面在开发过程中和生产端上都可用。 They will be "hidden" in production, not indexed, excluded from sitemaps, and can only be accessed by users having a direct link. |
+| `hide_table_of_contents` | `boolean` | `false` | 是否隐藏右侧的文档目录。 |
+| `toc_min_heading_level` | `number` | `2` | 目录中显示的最小标题层级。 必须介于 2 到 6 之间，并且小于等于最大值。 |
+| `toc_max_heading_level` | `number` | `3` | 目录中显示的最大标题层级。 必须介于 2 和 6。 |
+| `keywords` | `string[]` | `undefined` | Keywords meta tag, which will become the `<meta name="keywords" content="keyword1,keyword2,..."/>` in `<head>`, used by search engines. |
+| `description` | `string` | Markdown 正文的第一行 | The description of your document, which will become the `<meta name="description" content="..."/>` and `<meta property="og:description" content="..."/>` in `<head>`, used by search engines. |
+| `image` | `string` | `undefined` | Cover or thumbnail image that will be used as the `<meta property="og:image" content="..."/>` in the `<head>`, enhancing link previews on social media and messaging platforms. |
+| `slug` | `string` | 文件路径 | Allows to customize the blog post URL (`/<routeBasePath>/<slug>`). Support multiple patterns: `slug: my-blog-post`, `slug: /my/path/to/blog/post`, slug: `/`. |
+| `last_update` | `FrontMatterLastUpdate` | `undefined` | Allows overriding the last update author/date. Date can be any [parsable date string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse). |
+
+```mdx-code-block
+</APITable>
+```
+
+```ts
+type FrontMatterLastUpdate = {date?: string; author?: string};
+
+type Tag = string | {label: string; permalink: string};
+
+// An author key references an author from the global plugin authors.yml file
+type AuthorKey = string;
+
+// Social platform name -> Social platform link
+// 示例： {MyPlatform: 'https://myplatform.com/myusername'}
+// Pre-defined platforms
+// ("x", "github", "twitter", "linkedin", "stackoverflow", "instagram", "bluesky", "mastodon", "threads", "twitch", "youtube", "email") accept handles:
+// Example: {github: 'slorber'}
+type AuthorSocials = Record<string, string>;
+
+type Author = {
+  key?: AuthorKey;
+  name: string;
+  title?: string;
+  url?: string;
+  image_url?: string;
+  socials?: AuthorSocials;
+};
+
+// The front matter authors field allows various possible shapes
+type Authors = AuthorKey | Author | (AuthorKey | Author)[];
+```
+
+Example:
+
+```md
+---
+title: Welcome Docusaurus
+authors:
+  - slorber
+  - yangshun
+  - name: Joel Marcey
+    title: Co-creator of Docusaurus 1
+    url: https://github.com/JoelMarcey
+    image_url: https://github.com/JoelMarcey.png
+    socials:
+      x: joelmarcey
+      github: JoelMarcey
+tags: [docusaurus]
+description: This is my first post on Docusaurus.
+image: https://i.imgur.com/mErPwqL.png
+hide_table_of_contents: false
+---
+
+A Markdown blog post
+```
+
+import TagsFileApiRefSection from './_partial-tags-file-api-ref-section.mdx';
+
+<TagsFileApiRefSection />
+
+## 作者文件 {/* #authors-file */}
+
+Use the [`authors` plugin option](#authors) to configure the path of a YAML authors file.
+
+By convention, the plugin will look for a `authors.yml` file at the root of your blog content folder(s).
+
+This file can contain a list of predefined [global blog authors](../../blog.mdx#global-authors). You can reference these authors by their keys in Markdown files thanks to the [`authors` front matter](#markdown-front-matter).
+
+### 类型 {/* #authors-file-types */}
+
+The YAML content of the provided authors file should respect the following shape:
+
+```tsx
+type AuthorsMapInput = {
+  [authorKey: string]: AuthorInput;
+};
+
+type AuthorInput = {
+  name?: string;
+  title?: string;
+  description?: string;
+  imageURL?: string;
+  url?: string;
+  email?: string;
+  page?: boolean | {permalink: string};
+  socials?: Record<string, string>;
+  [customAuthorAttribute: string]: unknown;
+};
+```
+
+### 示例 {/* #authors-file-example */}
+
+```yml title="tags.yml"
+slorber:
+  name: Sébastien Lorber
+  title: Docusaurus maintainer
+  url: https://sebastienlorber.com
+  image_url: https://github.com/slorber.png
+  page: true
+  socials:
+    x: sebastienlorber
+    github: slorber
+    email: seb@example.com
+
+jmarcey:
+  name: Joel Marcey
+  title: Co-creator of Docusaurus 1
+  url: https://github.com/JoelMarcey
+  image_url: https://github.com/JoelMarcey.png
+  email: jimarcey@gmail.com
+  page:
+    permalink: '/joel-marcey'
+  socials:
+    x: joelmarcey
+    github: JoelMarcey
+```
+
+```md title="blog/my-blog-post.md"
+---
+authors: [slorber, jmarcey]
+---
+
+# My Blog Post
+
+Content
+```
+
+## i18n {/* #i18n */}
+
+Read the [i18n introduction](../../i18n/i18n-introduction.mdx) first.
+
+### 翻译文件位置 {/* #translation-files-location */}
+
+- **Base path**: `website/i18n/[locale]/docusaurus-plugin-content-blog`
+- **Multi-instance path**: `website/i18n/[locale]/docusaurus-plugin-content-blog-[pluginId]`
+- **JSON files**: extracted with [`docusaurus write-translations`](../../cli.mdx#docusaurus-write-translations-sitedir)
+- **Markdown files**: `website/i18n/[locale]/docusaurus-plugin-content-blog`
+
+### 文件系统结构示例 {/* #example-file-system-structure */}
+
+```bash
+website/i18n/[locale]/docusaurus-plugin-content-blog
+│
+│ # translations for website/blog
+├── authors.yml
+├── first-blog-post.md
+├── second-blog-post.md
+│
+│ # translations for the plugin options that will be rendered
+└── options.json
+```

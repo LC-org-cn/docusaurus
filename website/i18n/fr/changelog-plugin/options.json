@@ -1,0 +1,14 @@
+{
+  "title": {
+    "message": "Journal des modifications de Docusaurus",
+    "description": "The title for the blog used in SEO"
+  },
+  "description": {
+    "message": "Tenez-vous au courant des nouvelles fonctionnalités de chaque version",
+    "description": "The description for the blog used in SEO"
+  },
+  "sidebar.title": {
+    "message": "Changelog",
+    "description": "The label for the left sidebar"
+  }
+}

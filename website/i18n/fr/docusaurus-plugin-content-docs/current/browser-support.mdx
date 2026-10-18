@@ -1,0 +1,101 @@
+---
+description: Comment conserver une taille de paquet raisonnable tout en assurant une prise en charge suffisante du navigateur.
+---
+
+# Navigateurs pris en charge
+
+Docusaurus permet aux sites de définir la liste des navigateurs pris en charge via une [configuration de la liste des navigateurs](https://github.com/browserslist/browserslist).
+
+## Objectif {/* #purpose */}
+
+Les sites web doivent trouver un équilibre entre la rétrocompatibilité et la taille des bundles. Comme les anciens navigateurs ne prennent pas en charge les API ou la syntaxe modernes, il faut plus de code pour implémenter la même fonctionnalité.
+
+Par exemple, vous pouvez utiliser la [syntaxe de chaînage optionnel](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) :
+
+```js
+const value = obj?.prop?.val;
+```
+
+...qui n'est malheureusement reconnu que par les versions de navigateurs publiées après 2020. Pour être compatible avec les versions antérieures du navigateur, lors de la construction de votre site pour la production, notre chargeur JS transpile votre code vers une syntaxe plus détaillée :
+
+```js
+var _obj, _obj$prop;
+
+const value =
+  (_obj = obj) === null || _obj === void 0
+    ? void 0
+    : (_obj$prop = _obj.prop) === null || _obj$prop === void 0
+      ? void 0
+      : _obj$prop.val;
+```
+
+Cependant, cela pénalise tous les autres utilisateurs en augmentant le temps de chargement du site, car la ligne de 29 caractères devient maintenant 168 caractères, soit 6 fois plus ! (Dans la pratique, ce sera mieux parce que les noms utilisés seront plus courts.) En contrepartie, le chargeur JS ne transpose la syntaxe que dans la mesure où elle est prise en charge par toutes les versions de navigateur définies dans la liste des navigateurs.
+
+La liste des navigateurs par défaut est fournie par le fichier `package.json` sous la forme d'un champ racine `browserslist`.
+
+:::warning
+
+Sur les anciens navigateurs, la sortie compilée utilisera une syntaxe JS non prise en charge (trop récente), ce qui entraînera l'échec de l'initialisation de React et l'obtention d'un site web statique contenant uniquement du HTML/CSS et pas de JS.
+
+:::
+
+## Valeurs par défaut {/* #default-values */}
+
+Les sites web initialisés avec le template classique par défaut ont ce qui suit dans `package.json` :
+
+```json title="package.json"
+{
+  "name": "docusaurus",
+  // ...
+  // highlight-next-line
+  "browserslist": ["baseline widely available"]
+  // ...
+}
+```
+
+Explained in natural language, the browsers supported are the versions of the core browsers (Chrome, Edge, Firefox and Safari, on desktop and mobile) that support all the [Baseline Widely available](https://web.dev/baseline) web platform features, i.e. features that have been available in all core browsers for at least 30 months.
+
+The same browser list is used in development and production, so that your site behaves the same with `docusaurus start` and `docusaurus build`.
+
+:::tip
+
+You can use a different browser list for each environment with an object keyed by environment (`production`, `development`). Refer to the [browserslist configuration documentation](https://github.com/browserslist/browserslist#configuring-for-different-environments).
+
+:::
+
+Vous pouvez « exploiter » n'importe quelle configuration avec le CLI de `browserslist` pour obtenir la liste réelle :
+
+```bash
+npx browserslist
+```
+
+The output is all browsers supported. Below is the output in September 2026:
+
+```text
+and_chr 151
+and_ff 153
+chrome 151
+chrome 150
+...
+chrome 123
+edge 151
+edge 150
+...
+edge 123
+firefox 154
+firefox 153
+...
+firefox 124
+ios_saf 26.6
+ios_saf 26.5
+...
+ios_saf 17.4
+safari 26.6
+safari 26.5
+...
+safari 17.4
+```
+
+## En savoir plus {/* #read-more */}
+
+Vous pouvez consulter la [documentation de browserslist](https://github.com/browserslist/browserslist/blob/main/README.md) pour plus de spécifications, notamment les [requêtes](https://github.com/browserslist/browserslist/blob/main/README.md#queries) et les [bonnes pratiques](https://github.com/browserslist/browserslist/blob/main/README.md#best-practices).

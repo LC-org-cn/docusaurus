@@ -1,0 +1,34 @@
+{
+  "title": {
+    "message": "Docusaurus",
+    "description": "The title in the navbar"
+  },
+  "item.label.文档": {
+    "message": "Docs",
+    "description": "Navbar item with label Docs"
+  },
+  "item.label.API": {
+    "message": "API",
+    "description": "Navbar item with label API"
+  },
+  "item.label.博客": {
+    "message": "Blog",
+    "description": "Navbar item with label Blog"
+  },
+  "item.label.案例展示": {
+    "message": "Showcase",
+    "description": "Navbar item with label Showcase"
+  },
+  "item.label.社区": {
+    "message": "Community",
+    "description": "Navbar item with label Community"
+  },
+  "item.label.测试": {
+    "message": "Tests",
+    "description": "Navbar item with label Tests"
+  },
+  "item.label.调试": {
+    "message": "Debug",
+    "description": "Navbar item with label Debug"
+  }
+}

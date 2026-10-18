@@ -1,0 +1,91 @@
+---
+sidebar_position: 7
+slug: /api/plugins/@docusaurus/plugin-svgr
+---
+
+# 📦 plugin-svgr
+
+import APITable from '@site/src/components/APITable';
+
+[SVGR](https://react-svgr.com/)插件用于在构建时间将SVG 文件自动转换为React组件。
+
+## 安装流程 {/* #installation */}
+
+```bash npm2yarn
+npm install --save @docusaurus/plugin-svgr
+```
+
+:::tip
+
+If you use the preset `@docusaurus/preset-classic`, you don't need to install this plugin as a dependency.
+
+You can configure this plugin through the [preset options](../../using-plugins.mdx#docusauruspreset-classic).
+
+:::
+
+## 配置 {/* #configuration */}
+
+接受的字段：
+
+```mdx-code-block
+<APITable>
+```
+
+| 参数 | 类型 | 默认值 | 描述 |
+| --- | --- | --- | --- |
+| `svgrConfig` | `object` | `{}` | The [SVGR config options](https://react-svgr.com/docs/options/), shallow-merged over the [default SVGR config](#default-config) |
+
+```mdx-code-block
+</APITable>
+```
+
+### 示例配置 {/* #ex-config */}
+
+你可以通过插件选项来配置这个插件。
+
+```js config-tabs
+// Preset Options: svgr
+// Plugin Options: @docusaurus/plugin-svgr
+
+const config = {
+  svgrConfig: {/* SVGR config */},
+};
+```
+
+## Default config {/* #default-config */}
+
+The `svgrConfig` option is shallow-merged over the following default SVGR config:
+
+```js
+const defaultSvgrConfig = {
+  prettier: false,
+  svgo: true,
+  titleProp: true,
+  svgoConfig: {
+    plugins: [
+      {
+        name: 'preset-default',
+        params: {
+          overrides: {
+            removeTitle: false,
+            removeViewBox: false,
+          },
+        },
+      },
+      {
+        name: 'prefixIds',
+        params: {
+          delim: '',
+          // Short hash of the SVG file path, relative to the site directory
+          prefix: (node, info) => `svg-${hash(info.path)}-`,
+          prefixClassNames: false,
+        },
+      },
+    ],
+  },
+};
+```
+
+The `prefixIds` plugin prefixes SVG ids (for example, `id="a"` becomes `id="svg-3f2a1c-a"`) to avoid clashes between multiple SVGs inlined in the same page. Class names are not prefixed.
+
+Providing `svgoConfig` replaces the default [SVGO](https://svgo.dev/) config entirely. Use `svgoConfig: undefined` to read your own [`svgo.config.js` file](https://svgo.dev/docs/introduction/#configuration) instead.

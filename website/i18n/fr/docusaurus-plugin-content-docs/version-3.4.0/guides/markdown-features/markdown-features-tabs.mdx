@@ -1,0 +1,378 @@
+---
+id: tabs
+description: Utiliser des onglets dans le Markdown de Docusaurus
+slug: /markdown-features/tabs
+---
+
+# Onglets
+
+```mdx-code-block
+import BrowserWindow from '@site/src/components/BrowserWindow';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import styles from '@site/versioned_docs/version-3.4.0/guides/markdown-features/markdown-features-tabs-styles.module.css';
+```
+
+Docusaurus fournit le composant `<Tabs>` que vous pouvez utiliser dans Markdown grâce à [MDX](./markdown-features-react.mdx) :
+
+{/* prettier-ignore */}
+```jsx
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+  <TabItem value="apple" label="Apple" default>
+    Ceci est une pomme 🍎
+  </TabItem>
+  <TabItem value="orange" label="Orange">
+    Ceci est une orange 🍊
+  </TabItem>
+  <TabItem value="banana" label="Banana">
+    Ceci est une banane 🍌
+  </TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs>
+    <TabItem value="apple" label="Apple">Ceci est une pomme 🍎</TabItem>
+    <TabItem value="orange" label="Orange">Ceci est une orange 🍊</TabItem>
+    <TabItem value="banana" label="Banana">Ceci est une banane 🍌</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+---
+
+Il est également possible de fournir des props `values` et `defaultValue` à `Tabs` :
+
+```jsx
+<Tabs
+  defaultValue="apple"
+  values={[
+    {label: 'Apple', value: 'apple'},
+    {label: 'Orange', value: 'orange'},
+    {label: 'Banana', value: 'banana'},
+  ]}>
+  <TabItem value="apple">Ceci est une pomme 🍎</TabItem>
+  <TabItem value="orange">Ceci est une orange 🍊</TabItem>
+  <TabItem value="banana">Ceci est une banane 🍌</TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs
+    defaultValue="apple"
+    values={[
+      {label: 'Apple', value: 'apple'},
+      {label: 'Orange', value: 'orange'},
+      {label: 'Banana', value: 'banana'},
+    ]}>
+    <TabItem value="apple">Ceci est une pomme 🍎</TabItem>
+    <TabItem value="orange">Ceci est une orange 🍊</TabItem>
+    <TabItem value="banana">Ceci est une banane 🍌</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+<details>
+  <summary><code>Tabs</code> props take precedence over the <code>TabItem</code> props:</summary>
+
+```jsx
+<Tabs
+  defaultValue="apple"
+  values={[
+    {label: 'Apple 1', value: 'apple'},
+    {label: 'Orange 1', value: 'orange'},
+    {label: 'Banana 1', value: 'banana'},
+  ]}>
+  <TabItem value="apple" label="Apple 2">
+    Ceci est une pomme 🍎
+  </TabItem>
+  <TabItem value="orange" label="Orange 2">
+    Ceci est une orange 🍊
+  </TabItem>
+  <TabItem value="banana" label="Banana 2" default>
+    Ceci est une banane 🍌
+  </TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs
+    defaultValue="apple"
+    values={[
+      {label: 'Apple 1', value: 'apple'},
+      {label: 'Orange 1', value: 'orange'},
+      {label: 'Banana 1', value: 'banana'},
+    ]}>
+    <TabItem value="apple" label="Apple 2">Ceci est une pomme 🍎</TabItem>
+    <TabItem value="orange" label="Orange 2">Ceci est une orange 🍊</TabItem>
+    <TabItem value="banana" label="Banana 2" default>Ceci est une banane 🍌</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+</details>
+
+:::tip
+
+Par défaut, tous les onglets sont rendus avec anticipation pendant le processus de construction, et les moteurs de recherche peuvent indexer les onglets cachés.
+
+Il est possible de n'afficher que l'onglet par défaut avec `<Tabs lazy />`.
+
+:::
+
+## Affichage d'un onglet par défaut {/* #displaying-a-default-tab */}
+
+Le premier onglet est affiché par défaut, et pour remplacer ce comportement, vous pouvez spécifier un onglet par défaut en ajoutant `default` à l'un des éléments de l'onglet. Vous pouvez également définir la propriété `defaultValue` du composant `Tabs` sur la valeur d'étiquette de votre choix. Par exemple, dans l'exemple ci-dessus, le fait de définir `default` pour l'onglet `value="apple"` ou de définir `defaultValue="apple"` pour les onglets force l'onglet "Apple" à être ouvert par défaut.
+
+Docusaurus lancera une erreur si une `defaultValue` est fournie pour les `Tabs` mais qu'elle fait référence à une valeur inexistante. Si vous voulez qu'aucun des onglets ne soit affiché par défaut, utilisez `defaultValue={null}`.
+
+## Synchronisation des choix d'onglets {/* #syncing-tab-choices */}
+
+Vous pouvez souhaiter que plusieurs onglets du même type soient synchronisés les uns avec les autres. Par exemple, vous pourriez vouloir fournir des instructions différentes pour les utilisateurs de Windows et ceux de macOS, et vous voulez changer tous les onglets d'instructions spécifiques au système d'exploitation en un seul clic. Pour y parvenir, vous pouvez donner à tous les onglets liés le même prop `groupId`. Notez que si vous faites cela, le choix persistera dans le `localStorage` et toutes les instances `<Tab>` avec le même `groupId` se mettront à jour automatiquement lorsque la valeur de l'une d'entre elles sera modifiée. Notez que les ID de groupe sont des espaces de noms globaux.
+
+```jsx
+// highlight-next-line
+<Tabs groupId="operating-systems">
+  <TabItem value="win" label="Windows">Utilisez Ctrl + C pour copier.</TabItem>
+  <TabItem value="mac" label="macOS">Utilisez Command + C pour copier.</TabItem>
+</Tabs>
+
+// highlight-next-line
+<Tabs groupId="operating-systems">
+  <TabItem value="win" label="Windows">Utilisez Ctrl + V pour coller.</TabItem>
+  <TabItem value="mac" label="macOS">Utilisez Command + V pour coller.</TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs groupId="operating-systems">
+    <TabItem value="win" label="Windows">Utilisez Ctrl + C pour copier.</TabItem>
+    <TabItem value="mac" label="macOS">Utilisez Command + C pour copier.</TabItem>
+  </Tabs>
+
+  <Tabs groupId="operating-systems">
+    <TabItem value="win" label="Windows">Utilisez Ctrl + V pour coller.</TabItem>
+    <TabItem value="mac" label="macOS">Utilisez Command + V pour coller.</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+Pour tous les groupes d'onglets qui ont le même `groupId`, les valeurs possibles ne doivent pas nécessairement être les mêmes. Si dans un groupe d'onglet une valeur choisie n'existe pas dans un autre groupe d'onglet avec le même `groupId`, le groupe d'onglet avec la valeur manquante ne changera pas d'onglet. Vous pouvez le voir dans l'exemple suivant. Essayez de sélectionner Linux, et les autres groupes d'onglets ci-dessus ne changeront pas.
+
+```jsx
+<Tabs groupId="operating-systems">
+  <TabItem value="win" label="Windows">
+    Je suis Windows.
+  </TabItem>
+  <TabItem value="mac" label="macOS">
+    Je suis macOS.
+  </TabItem>
+  <TabItem value="linux" label="Linux">
+    Je suis Linux.
+  </TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs groupId="operating-systems">
+    <TabItem value="win" label="Windows">Je suis Windows.</TabItem>
+    <TabItem value="mac" label="macOS">Je suis macOS.</TabItem>
+    <TabItem value="linux" label="Linux">Je suis Linux.</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+---
+
+Les choix d'onglets avec des ID de groupe différents n'interféreront pas les uns avec les autres :
+
+```jsx
+// highlight-next-line
+<Tabs groupId="operating-systems">
+  <TabItem value="win" label="Windows">Windows dans windows.</TabItem>
+  <TabItem value="mac" label="macOS">macOS est macOS.</TabItem>
+</Tabs>
+
+// highlight-next-line
+<Tabs groupId="non-mac-operating-systems">
+  <TabItem value="win" label="Windows">Windows est windows.</TabItem>
+  <TabItem value="unix" label="Unix">Unix est unix.</TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs groupId="operating-systems">
+    <TabItem value="win" label="Windows">Windows dans windows.</TabItem>
+    <TabItem value="mac" label="macOS">macOS est macOS.</TabItem>
+  </Tabs>
+
+  <Tabs groupId="non-mac-operating-systems">
+    <TabItem value="win" label="Windows">Windows est windows.</TabItem>
+    <TabItem value="unix" label="Unix">Unix est unix.</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+## Personnalisation des onglets {/* #customizing-tabs */}
+
+Vous pouvez personnaliser l'apparence d'un ensemble d'onglets. Vous pouvez passer la chaîne dans la prop `className` et la classe CSS spécifiée sera ajoutée au composant `Tabs` :
+
+```jsx
+// highlight-next-line
+<Tabs className="unique-tabs">
+  <TabItem value="Apple">Ceci est une pomme 🍎</TabItem>
+  <TabItem value="Orange">Ceci est une orange 🍊</TabItem>
+  <TabItem value="Banana">Ceci est une banane 🍌</TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs className="unique-tabs">
+    <TabItem value="Apple">Ceci est une pomme 🍎</TabItem>
+    <TabItem value="Orange">Ceci est une orange 🍊</TabItem>
+    <TabItem value="Banana">Ceci est une banane 🍌</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+### Personnalisation des entêtes d'onglets {/* #customizing-tab-headings */}
+
+Vous pouvez également personnaliser chaque titre d'onglet indépendamment en utilisant le champ `attributs`. Les props supplémentaires peuvent être passées aux entêtes soit à travers la prop `values` dans `Tabs`, ou aux props de chaque `TabItem` — de la même manière que vous déclarez `label`.
+
+{/* prettier-ignore */}
+```jsx title="some-doc.mdx"
+import styles from './styles.module.css';
+
+<Tabs>
+  <TabItem value="apple" label="Pomme" attributes={{className: styles.red}}>
+    Ceci est une pomme 🍎
+  </TabItem>
+  <TabItem value="orange" label="Orange" attributes={{className: styles.orange}}>
+    Ceci est une orange 🍊
+  </TabItem>
+  <TabItem value="banana" label="Banane" attributes={{className: styles.yellow}}>
+    Ceci est une banane 🍌
+  </TabItem>
+</Tabs>
+```
+
+```css title="styles.module.css"
+.red {
+  color: red;
+}
+.red[aria-selected='true'] {
+  border-bottom-color: red;
+}
+
+.orange {
+  color: orange;
+}
+.orange[aria-selected='true'] {
+  border-bottom-color: orange;
+}
+
+.yellow {
+  color: yellow;
+}
+.yellow[aria-selected='true'] {
+  border-bottom-color: yellow;
+}
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs>
+    <TabItem value="apple" label="Pomme" attributes={{className: styles.red}}>
+      Ceci est une pomme 🍎
+    </TabItem>
+    <TabItem value="orange" label="Orange" attributes={{className: styles.orange}}>
+      Ceci est une orange 🍊
+    </TabItem>
+    <TabItem value="banana" label="Banane" attributes={{className: styles.yellow}}>
+      Ceci est une banane 🍌
+    </TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+:::tip
+
+`className` serait fusionné avec d'autres noms de classes par défaut. Vous pouvez également utiliser un champ personnalisé `data-value` (`{'data-value': 'apple'}`) jumelé avec les sélecteurs d'attributs CSS :
+
+```css title="styles.module.css"
+li[role='tab'][data-value='apple'] {
+  color: red;
+}
+```
+
+:::
+
+## Query string {/* #query-string */}
+
+Il est possible de maintenir l'onglet sélectionné dans les paramètres de recherche d'url. Ceci vous permet de partager un lien vers une page qui présélectionne l'onglet - en reliant depuis votre application Android à la documentation avec les onglets Android pré-sélectionnés. Cette fonction ne fournit pas de lien d'ancrage - le navigateur ne fera pas défiler jusqu'à l'onglet.
+
+Utilisez la prop `queryString` pour activer cette fonctionnalité et définir le nom du paramètre de recherche à utiliser.
+
+```tsx
+// highlight-next-line
+<Tabs queryString="current-os">
+  <TabItem value="android" label="Android">
+    Android
+  </TabItem>
+  <TabItem value="ios" label="iOS">
+    iOS
+  </TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs queryString='current-os'>
+    <TabItem value="android" label="Android">Android</TabItem>
+    <TabItem value="ios" label="iOS">iOS</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+Dès qu'un onglet est cliqué, un paramètre de recherche est ajouté à la fin de l'url : `?current-os=android` ou `?current-os=ios`.
+
+:::tip
+
+`queryString` peut être utilisé avec `groupId`.
+
+Pour plus de commodité, lorsque la prop `queryString` est `true`, la valeur `groupId` sera utilisée comme solution de repli.
+
+```tsx
+// highlight-next-line
+<Tabs groupId="current-os" queryString>
+  <TabItem value="android" label="Android">
+    Android
+  </TabItem>
+  <TabItem value="ios" label="iOS">
+    iOS
+  </TabItem>
+</Tabs>
+```
+
+```mdx-code-block
+<BrowserWindow>
+  <Tabs queryString groupId="current-os">
+    <TabItem value="android" label="Android">Android</TabItem>
+    <TabItem value="ios" label="iOS">iOS</TabItem>
+  </Tabs>
+</BrowserWindow>
+```
+
+Lorsque la page est chargée, le choix de la chaîne de requête d'onglet sera restauré en priorité par rapport au choix `groupId` (en utilisant `localStorage`).
+
+:::

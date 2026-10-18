@@ -1,0 +1,14 @@
+{
+  "title": {
+    "message": "Docusaurus 博客",
+    "description": "The title for the blog used in SEO"
+  },
+  "description": {
+    "message": "阅读来自于开发团队的 Docusaurus 的博客文章",
+    "description": "The description for the blog used in SEO"
+  },
+  "sidebar.title": {
+    "message": "所有帖子",
+    "description": "The label for the left sidebar"
+  }
+}

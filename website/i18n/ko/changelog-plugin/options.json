@@ -1,0 +1,14 @@
+{
+  "title": {
+    "message": "도큐사우루스 변경 기록",
+    "description": "The title for the blog used in SEO"
+  },
+  "description": {
+    "message": "모든 릴리스의 새로운 기능에 대한 최신 상태를 유지하세요",
+    "description": "The description for the blog used in SEO"
+  },
+  "sidebar.title": {
+    "message": "변경 기록",
+    "description": "The label for the left sidebar"
+  }
+}
