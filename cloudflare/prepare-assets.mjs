@@ -1,53 +1,110 @@
 /**
- * Post-process the Docusaurus build output for Cloudflare Workers static
- * assets.
+ * Prepare the Docusaurus build output for Cloudflare.
  *
- * Run after `pnpm build:website` and before `wrangler deploy`. It rewrites the
- * one file Cloudflare cannot read as-is, and fails loudly when the build output
- * exceeds a limit Cloudflare enforces at deploy time.
+ * The site is published as two Cloudflare projects because the free plan
+ * applies its static file quota (20,000 files) to each project separately:
+ *
+ *   Worker  "docusaurus-docs"  -> website/build        (en, fr, zh-CN)
+ *   Pages   "docusaurus-pages" -> website/build-pages  (pt-BR, ko)
+ *
+ * The Worker proxies the Pages-owned locale prefixes to the Pages project, so
+ * the whole site stays reachable through a single URL.
+ *
+ * This script moves the Pages locales out of the Worker build, rewrites
+ * _redirects into the syntax Cloudflare accepts, and checks both sides against
+ * the quotas.
  */
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
+const WORKER_BUILD_DIR = 'website/build';
+const PAGES_BUILD_DIR = 'website/build-pages';
+
 const LIMITS = {
   /**
-   * Cloudflare Workers static assets: 20,000 files on the Free plan, 100,000
-   * on Workers Paid. Override with CF_ASSET_FILE_LIMIT after upgrading.
+   * Cloudflare allows 20,000 static files per Worker version, and per Pages
+   * deployment.
    */
   files: Number(process.env.CF_ASSET_FILE_LIMIT ?? 20_000),
-  /** Cloudflare Workers static assets: 25 MiB per file. */
+  /** Cloudflare allows 25 MiB per static file. */
   fileSizeBytes: 25 * 1024 * 1024,
-  /** Cloudflare `_redirects`: 2,100 rules (2,000 static + 100 dynamic). */
+  /** Cloudflare _redirects: 2,100 rules (2,000 static + 100 dynamic). */
   redirectRules: 2_100,
 };
 
-/** The only status codes Cloudflare Workers `_redirects` accepts. */
+/** The only status codes Cloudflare _redirects accepts. */
 const SUPPORTED_REDIRECT_STATUS_CODES = new Set([200, 301, 302, 303, 307, 308]);
 
 async function main() {
-  const buildDir = path.resolve(process.cwd(), 'website/build');
-  await exitIfMissing(buildDir, 'build directory');
+  const workerDir = path.resolve(process.cwd(), WORKER_BUILD_DIR);
+  const pagesDir = path.resolve(process.cwd(), PAGES_BUILD_DIR);
+  const pagesLocales = readPagesLocales();
 
-  const redirects = await sanitizeRedirects(path.join(buildDir, '_redirects'));
+  await exitIfMissing(workerDir, 'Worker build directory');
+  await exitIfLocalesMissing(workerDir, pagesLocales);
+  await splitPagesLocales(workerDir, pagesDir, pagesLocales);
+  await copyHeadersFile(workerDir, pagesDir);
 
-  if (redirects.droppedCount > 0) {
-    console.log(
-      `[prepare-assets] _redirects: dropped ${redirects.droppedCount} rule(s) Cloudflare cannot read`,
-    );
-    for (const [reason, count] of Object.entries(redirects.droppedByReason)) {
-      console.log(`  - ${reason}: ${count}`);
-    }
-  } else {
-    console.log('[prepare-assets] _redirects: nothing to rewrite');
-  }
-
+  const redirects = await sanitizeRedirects(path.join(workerDir, '_redirects'));
   const report = {
-    ...(await collectBuildStats(await listFiles(buildDir))),
-    redirectRules: redirects.ruleCount,
+    worker: {
+      label: WORKER_BUILD_DIR,
+      ...(await collectBuildStats(await listFiles(workerDir))),
+    },
+    pages: {
+      label: PAGES_BUILD_DIR,
+      ...(await collectBuildStats(await listFiles(pagesDir))),
+    },
+    redirects,
   };
+
+  reportRedirects(report.redirects);
   reportBuild(report);
   exitOnExceededLimits(report);
+}
+
+/**
+ * Which locales the Pages project serves; everything else stays on the Worker.
+ */
+function readPagesLocales() {
+  return (process.env.PAGES_LOCALES ?? 'pt-BR,ko')
+    .split(',')
+    .map((locale) => locale.trim())
+    .filter(Boolean);
+}
+
+/**
+ * Move the Pages locales instead of copying them: the Worker must not keep a
+ * copy, or it would blow through its own 20,000 file quota.
+ */
+async function splitPagesLocales(workerDir, pagesDir, locales) {
+  await fs.rm(pagesDir, {recursive: true, force: true});
+  await fs.mkdir(pagesDir, {recursive: true});
+
+  for (const locale of locales) {
+    await fs.rename(path.join(workerDir, locale), path.join(pagesDir, locale));
+  }
+
+  console.log(`[prepare-assets] moved to Pages: ${locales.join(', ')}`);
+}
+
+/**
+ * Pages serves its locales under the same paths as the Worker, so the caching
+ * rules from _headers apply there too.
+ */
+async function copyHeadersFile(workerDir, pagesDir) {
+  const headersFile = '_headers';
+
+  try {
+    await fs.copyFile(
+      path.join(workerDir, headersFile),
+      path.join(pagesDir, headersFile),
+    );
+    console.log('[prepare-assets] copied _headers to the Pages build');
+  } catch {
+    // The build has no _headers file: nothing to copy.
+  }
 }
 
 async function exitIfMissing(target, description) {
@@ -56,6 +113,27 @@ async function exitIfMissing(target, description) {
   } catch {
     console.error(`[prepare-assets] ${description} not found: ${target}`);
     console.error('[prepare-assets] run "pnpm build:website" first');
+    process.exit(1);
+  }
+}
+
+async function exitIfLocalesMissing(workerDir, locales) {
+  const missing = [];
+  for (const locale of locales) {
+    try {
+      await fs.access(path.join(workerDir, locale));
+    } catch {
+      missing.push(locale);
+    }
+  }
+
+  if (missing.length > 0) {
+    console.error(
+      `[prepare-assets] PAGES_LOCALES lists locales that were not built: ${missing.join(', ')}`,
+    );
+    console.error(
+      '[prepare-assets] align DOCUSAURUS_LOCALES with PAGES_LOCALES',
+    );
     process.exit(1);
   }
 }
@@ -77,7 +155,7 @@ async function listFiles(dir) {
 
 async function collectBuildStats(files) {
   let totalBytes = 0;
-  let largestFile = {path: files[0], size: 0};
+  let largestFile = {path: files[0] ?? '', size: 0};
 
   for (const file of files) {
     const {size} = await fs.stat(file);
@@ -91,19 +169,16 @@ async function collectBuildStats(files) {
 }
 
 /**
- * Rewrite website/static/_redirects into the subset of rules Cloudflare
- * Workers understands:
+ * Rewrite _redirects into the subset of rules Cloudflare understands:
  *
  *   - domain-level sources ("https://v2.docusaurus.io/*") are Netlify-only and
  *     target docusaurus.io, so they are dropped;
- *   - the Netlify "forced redirect" marker ("301!") is not part of the
+ *   - the Netlify forced-redirect marker ("301!") is not part of the
  *     Cloudflare grammar, so it is stripped (Cloudflare always prefers the
  *     redirect over a matching asset anyway);
  *   - status codes outside Cloudflare's set (Netlify's custom "404" rules) are
  *     dropped; not_found_handling: "404-page" already serves the nearest
  *     404.html, which is what those rules were emulating.
- *
- * @returns {Promise<{ruleCount: number, droppedCount: number, droppedByReason: object}>}
  */
 async function sanitizeRedirects(redirectsPath) {
   const lines = await readLines(redirectsPath);
@@ -172,8 +247,8 @@ function formatRule({source, destination, status}) {
 function buildRedirectsFile(keptLines) {
   const banner = [
     '# This file was rewritten by cloudflare/prepare-assets.mjs.',
-    '# Rules Cloudflare Workers _redirects cannot express were removed:',
-    '# domain-level sources, Netlify "301!" markers and custom 404 statuses.',
+    '# Rules Cloudflare _redirects cannot express were removed: domain-level',
+    '# sources, Netlify "301!" markers and custom 404 status codes.',
     '',
   ];
   return `${[...banner, ...keptLines].join('\n').trimEnd()}\n`;
@@ -193,39 +268,60 @@ function isRule(line) {
   return trimmed.length > 0 && !trimmed.startsWith('#');
 }
 
-function reportBuild({fileCount, totalBytes, largestFile, redirectRules}) {
-  console.log('[prepare-assets] build output');
+function reportRedirects({ruleCount, droppedCount, droppedByReason}) {
+  if (droppedCount === 0) {
+    console.log('[prepare-assets] _redirects: nothing to rewrite');
+    return;
+  }
   console.log(
-    `  files:          ${formatCount(fileCount)} / ${formatCount(LIMITS.files)}`,
+    `[prepare-assets] _redirects: kept ${ruleCount}, dropped ${droppedCount} rule(s) Cloudflare cannot read`,
   );
-  console.log(`  total size:     ${formatBytes(totalBytes)}`);
-  console.log(`  largest file:   ${formatBytes(largestFile.size)}`);
+  for (const [reason, count] of Object.entries(droppedByReason)) {
+    console.log(`  - ${reason}: ${count}`);
+  }
+}
+
+function reportBuild({worker, pages, redirects}) {
+  console.log('[prepare-assets] build output');
+  for (const side of [worker, pages]) {
+    console.log(`  ${side.label}`);
+    console.log(
+      `    files:        ${formatCount(side.fileCount)} / ${formatCount(LIMITS.files)}`,
+    );
+    console.log(`    total size:   ${formatBytes(side.totalBytes)}`);
+    console.log(`    largest file: ${formatBytes(side.largestFile.size)}`);
+  }
   console.log(
-    `  redirect rules: ${formatCount(redirectRules)} / ${formatCount(LIMITS.redirectRules)}`,
+    `    redirects:    ${formatCount(redirects.ruleCount)} / ${formatCount(LIMITS.redirectRules)} (Worker only)`,
   );
 }
 
-function exitOnExceededLimits({fileCount, largestFile, redirectRules}) {
+function exitOnExceededLimits({worker, pages, redirects}) {
   const problems = [];
 
-  if (fileCount > LIMITS.files) {
-    problems.push(`${fileCount} files exceeds the ${LIMITS.files} file limit`);
+  for (const side of [worker, pages]) {
+    if (side.fileCount > LIMITS.files) {
+      problems.push(
+        `${side.label} has ${side.fileCount} files, over the ${LIMITS.files} limit`,
+      );
+    }
+    if (side.largestFile.size > LIMITS.fileSizeBytes) {
+      const name = path.basename(side.largestFile.path);
+      problems.push(
+        `${side.label}: ${name} is ${formatBytes(side.largestFile.size)}, over the 25 MiB limit`,
+      );
+    }
   }
-  if (largestFile.size > LIMITS.fileSizeBytes) {
-    const name = path.basename(largestFile.path);
+
+  if (redirects.ruleCount > LIMITS.redirectRules) {
     problems.push(
-      `${name} is ${formatBytes(largestFile.size)}, over the 25 MiB limit`,
-    );
-  }
-  if (redirectRules > LIMITS.redirectRules) {
-    problems.push(
-      `${redirectRules} redirect rules exceeds the ${LIMITS.redirectRules} limit`,
+      `${redirects.ruleCount} redirect rules exceeds the ${LIMITS.redirectRules} limit`,
     );
   }
 
   if (problems.length === 0) {
     console.log(
-      '[prepare-assets] OK: build output is deployable to Cloudflare',
+      '[prepare-assets] OK: both projects are deployable to Cloudflare',
     );
     return;
   }

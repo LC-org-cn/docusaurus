@@ -1,15 +1,24 @@
 /**
  * Cloudflare Worker for the Docusaurus site.
  *
- * Static pages are served straight from the ASSETS binding. This script only
- * runs for the routes listed in `assets.run_worker_first` ("/api/*"), plus any
- * request that matches no asset at all.
+ * The site is split across two Cloudflare projects because the free plan
+ * applies its 20,000 static file quota to each project separately:
+ *
+ *   this Worker          website/build        en, fr, zh-CN + /api
+ *   Pages "docusaurus-pages"  website/build-pages  pt-BR, ko
+ *
+ * Requests for the Pages locales are proxied there, so the site is still
+ * reachable through a single URL.
  *
  * Bindings (see wrangler.jsonc):
  *   DB      D1 database   "docusaurus-db"     - docs page feedback
  *   KV      KV namespace  "docusaurus-kv"     - derived counters and caching
  *   BUCKET  R2 bucket     "docusaurus-assets" - bulk storage, kept under 1 GB
- *   ASSETS  static assets "./website/build"   - the built site
+ *   ASSETS  static assets "./website/build"   - the Worker's own files
+ *
+ * Vars (see wrangler.jsonc):
+ *   PAGES_ORIGIN   deployment URL of the Pages project
+ *   PAGES_LOCALES  locale prefixes that live on Pages, e.g. "pt-BR,ko"
  */
 
 const JSON_HEADERS = {
@@ -32,17 +41,70 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    if (!url.pathname.startsWith('/api/')) {
-      return env.ASSETS.fetch(request);
+    if (url.pathname.startsWith('/api/')) {
+      try {
+        return await routeApiRequest(request, env, url);
+      } catch (error) {
+        return apiError(`unhandled error: ${error.message}`, 500);
+      }
     }
 
-    try {
-      return await routeApiRequest(request, env, url);
-    } catch (error) {
-      return apiError(`unhandled error: ${error.message}`, 500);
+    if (isPagesPath(url, env)) {
+      return proxyToPages(request, env, url);
     }
+
+    return env.ASSETS.fetch(request);
   },
 };
+
+/** @returns {string[]} the locale prefixes served by the Pages project. */
+function readPagesLocales(env) {
+  return String(env.PAGES_LOCALES ?? '')
+    .split(',')
+    .map((locale) => locale.trim())
+    .filter(Boolean);
+}
+
+function isPagesPath(url, env) {
+  const [firstSegment] = url.pathname.split('/').filter(Boolean);
+  if (!firstSegment) {
+    return false;
+  }
+  return readPagesLocales(env).includes(decodeURIComponent(firstSegment));
+}
+
+async function proxyToPages(request, env, url) {
+  if (!env.PAGES_ORIGIN) {
+    return new Response('PAGES_ORIGIN is not configured\n', {status: 502});
+  }
+
+  const target = new URL(env.PAGES_ORIGIN);
+  target.pathname = url.pathname;
+  target.search = url.search;
+
+  try {
+    return await fetch(buildProxyRequest(request, target));
+  } catch (error) {
+    return new Response(`Pages proxy failed: ${error.message}\n`, {
+      status: 502,
+    });
+  }
+}
+
+function buildProxyRequest(request, target) {
+  const init = {
+    method: request.method,
+    headers: request.headers,
+    redirect: 'manual',
+  };
+
+  const hasBody = request.method !== 'GET' && request.method !== 'HEAD';
+  if (hasBody) {
+    init.body = request.body;
+  }
+
+  return new Request(target, init);
+}
 
 async function routeApiRequest(request, env, url) {
   const route = `${request.method} ${url.pathname}`;
@@ -72,6 +134,8 @@ async function getHealth(env) {
   return json({
     ok: Object.values(bindings).every((status) => status === 'ok'),
     worker: 'docusaurus-docs',
+    pagesOrigin: env.PAGES_ORIGIN ?? null,
+    pagesLocales: readPagesLocales(env),
     bindings,
     time: new Date().toISOString(),
   });

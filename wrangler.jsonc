@@ -1,11 +1,24 @@
 {
   // Cloudflare Workers configuration for this Docusaurus site.
-  // - "./website/build" is produced by `pnpm build:website`
-  // - the Worker script only handles /api/*, everything else is static assets
+  //
+  // The site is published as two Cloudflare projects because the free plan
+  // applies its 20,000 static file limit to each project separately:
+  //   - this Worker serves website/build (en, fr, zh-CN) plus /api/*
+  //   - the "docusaurus-pages" Pages project serves website/build-pages
+  //     (pt-BR, ko), and the Worker proxies those paths to it
+  // cloudflare/prepare-assets.mjs performs the split.
   "name": "docusaurus-docs",
   "compatibility_date": "2026-10-17",
 
   "main": "cloudflare/worker.mjs",
+
+  "vars": {
+    // Deployment URL of the "docusaurus-pages" Pages project.
+    "PAGES_ORIGIN": "https://docusaurus-pages-8v2.pages.dev",
+    // Locale prefixes that live on Pages. Keep in sync with PAGES_LOCALES in
+    // .github/workflows/deploy-cloudflare.yml and with run_worker_first below.
+    "PAGES_LOCALES": "pt-BR,ko",
+  },
 
   "assets": {
     "directory": "./website/build",
@@ -16,9 +29,10 @@
     // The production build uses trailingSlash: false, so pages are emitted as
     // "/docs/x.html"; the default handling maps "/docs/x" onto them.
     "html_handling": "auto-trailing-slash",
-    // Keep static asset serving exactly as it would be for an assets-only
-    // Worker; only the JSON API is routed through the Worker script.
-    "run_worker_first": ["/api/*"],
+    // Only these paths reach the Worker script: the JSON API, and the locale
+    // prefixes served by the Pages project. Everything else is served straight
+    // from the assets, exactly like an assets-only Worker.
+    "run_worker_first": ["/api/*", "/pt-BR", "/pt-BR/*", "/ko", "/ko/*"],
   },
 
   "d1_databases": [

@@ -1,7 +1,14 @@
-name: Deploy to Cloudflare Workers
+name: Deploy to Cloudflare
 
 # Push to this fork's main branch -> build the Docusaurus website and publish it
-# to the "docusaurus-docs" Worker (static assets + JSON API on /api/*).
+# to two Cloudflare projects:
+#
+#   Worker "docusaurus-docs"   website/build        en, fr, zh-CN + /api
+#   Pages  "docusaurus-pages"  website/build-pages  pt-BR, ko
+#
+# The free plan applies its 20,000 static file limit to each project separately,
+# so splitting the site across the two keeps every language online. The Worker
+# proxies the Pages-owned locales, so the site stays on a single URL.
 on:
   push:
     branches: [main]
@@ -23,11 +30,16 @@ jobs:
     env:
       # Same setting the Netlify production build uses.
       NODE_OPTIONS: --max_old_space_size=8192
-      # Cloudflare Workers Free allows 20,000 static files per Worker version,
-      # and a full 5-locale build of this site is ~27,500 files. Build a subset
-      # instead: add more locales here (e.g. "en,fr,zh-CN" fits in three), or
-      # build all five ("en,fr,pt-BR,ko,zh-CN") after upgrading to Workers Paid.
-      DOCUSAURUS_LOCALES: en,zh-CN
+      # Every locale is published; PAGES_LOCALES decides which of them go to
+      # the Pages project instead of the Worker.
+      DOCUSAURUS_LOCALES: en,fr,pt-BR,ko,zh-CN
+      PAGES_LOCALES: pt-BR,ko
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      # Optional. Set this repository secret to download the docs translations
+      # from Crowdin (project 428890). While it is missing, the non-English
+      # locales are built from the English source content.
+      CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -48,12 +60,23 @@ jobs:
         # build depends on.
         run: pnpm install --frozen-lockfile
 
+      - name: Download translations from Crowdin
+        # Skipped until CROWDIN_PERSONAL_TOKEN is configured. The repository
+        # only contains the English sources; the translations live on Crowdin
+        # and are downloaded into website/i18n/ before the build.
+        if: env.CROWDIN_PERSONAL_TOKEN != ''
+        working-directory: website
+        run: |
+          pnpm docusaurus write-translations
+          pnpm --dir .. crowdin:download:website
+
       - name: Build website
         run: pnpm build:website
 
       - name: Prepare assets for Cloudflare
-        # Drops the domain-level _redirects rules Cloudflare does not support,
-        # and fails early if the build exceeds Cloudflare's limits.
+        # Moves the Pages locales out of the Worker build, rewrites _redirects
+        # into the syntax Cloudflare accepts, and fails early if either project
+        # would exceed a quota.
         run: node cloudflare/prepare-assets.mjs
 
       # Installed globally on purpose: cloudflare/wrangler-action installs
@@ -64,12 +87,12 @@ jobs:
 
       - name: Apply D1 schema
         run: wrangler d1 execute docusaurus-db --remote --yes --file=cloudflare/schema.sql
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Deploy to Cloudflare Pages
+        # Run from the build directory: the repository root wrangler.jsonc is
+        # the Worker configuration, not a Pages one.
+        working-directory: website/build-pages
+        run: wrangler pages deploy . --project-name docusaurus-pages --branch main --commit-dirty=true
 
       - name: Deploy to Cloudflare Workers
         run: wrangler deploy
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
