@@ -193,15 +193,48 @@ function findRule(sourcePath) {
  */
 async function rewriteRelativeAssets(content, sourcePath) {
   const sourceDir = path.dirname(path.resolve(process.cwd(), sourcePath.slice(1)));
-  const frontMatter = content.match(FRONT_MATTER_PATTERN);
+  const withImports = await restoreSourceImports(content, sourcePath);
+  const frontMatter = withImports.match(FRONT_MATTER_PATTERN);
 
   if (!frontMatter) {
-    return rewriteUrls(content, sourceDir);
+    return rewriteUrls(withImports, sourceDir);
   }
 
   const [whole, open, yaml, close] = frontMatter;
-  return `${open}${await rewriteFrontMatter(yaml, sourceDir)}${close}${await rewriteUrls(content.slice(whole.length), sourceDir)}`;
+  return `${open}${await rewriteFrontMatter(yaml, sourceDir)}${close}${await rewriteUrls(withImports.slice(whole.length), sourceDir)}`;
 }
+
+/**
+ * Import statements are code, not prose, but Crowdin hands them to translators
+ * like any other string: one pt-BR translator renamed "ShowcaseCarouselV2Theming"
+ * to "ShowcaseCarouselV2Temas", which left the component undefined at render
+ * time. Whenever a translation has the same number of import lines as the
+ * source, the source wins.
+ */
+async function restoreSourceImports(content, sourcePath) {
+  const source = await readSourceFile(sourcePath);
+  if (source === null) {
+    return content;
+  }
+
+  const sourceImports = [...source.matchAll(IMPORT_LINE_PATTERN)].map((match) => match[0]);
+  const contentImports = [...content.matchAll(IMPORT_LINE_PATTERN)].map((match) => match[0]);
+  if (sourceImports.length === 0 || sourceImports.length !== contentImports.length) {
+    return content;
+  }
+
+  let result = content;
+  for (const [index, translated] of contentImports.entries()) {
+    if (translated !== sourceImports[index]) {
+      result = result.replace(translated, sourceImports[index]);
+    }
+  }
+
+  return result;
+}
+
+/** Any line that is an ES import, including the side-effect form. */
+const IMPORT_LINE_PATTERN = /^import\b[^\n]*$/gm;
 
 /**
  * Front matter values must be quoted once they start with "@" (YAML reserves
@@ -334,10 +367,14 @@ async function rewriteUrls(text, sourceDir) {
 const FENCED_BLOCK_PATTERN = /^[ \t]*\`\`\`([^\n]*)\n[\s\S]*?^[ \t]*\`\`\`[ \t]*$/gm;
 
 async function rewriteUrlsInText(text, sourceDir) {
-  let result = text;
+  const urls = new Map();
+  for (const match of text.matchAll(URL_PATTERN)) {
+    urls.set(match[2], isModuleReference(match[1]));
+  }
 
-  for (const url of new Set([...text.matchAll(URL_PATTERN)].map((match) => match[2]))) {
-    const sitePath = await resolveSiteAssetPath(url, sourceDir);
+  let result = text;
+  for (const [url, isModule] of urls) {
+    const sitePath = await resolveSiteAssetPath(url, sourceDir, isModule);
     if (sitePath !== null) {
       result = result.split(url).join(sitePath);
     }
@@ -346,21 +383,32 @@ async function rewriteUrlsInText(text, sourceDir) {
   return result;
 }
 
+/** "import ... from", "import" and "require(...)" are module references. */
+function isModuleReference(prefix) {
+  return (
+    prefix.startsWith('require') ||
+    prefix.startsWith('from') ||
+    prefix.startsWith('import')
+  );
+}
+
 /** @returns {Promise<string | null>} the "@site/..." path, or null to keep the URL. */
-async function resolveSiteAssetPath(url, sourceDir) {
+async function resolveSiteAssetPath(url, sourceDir, isModule = false) {
   if (!url.startsWith('./') && !url.startsWith('../')) {
     return null;
   }
 
   const [pathname] = url.split(/[?#]/);
   const target = path.resolve(sourceDir, pathname);
-  if (CONTENT_EXTENSIONS.has(path.extname(target))) {
-    // Links to other documents stay relative so they remain locale-aware.
+  if (!isModule && CONTENT_EXTENSIONS.has(path.extname(target))) {
+    // Markdown links to other documents stay relative so they keep pointing at
+    // the localized copy. Module imports of an .mdx partial are different: the
+    // partial is not translated, so the import has to reach the source tree.
     return null;
   }
 
   const resolved = await resolveExistingFile(target);
-  if (resolved === null || CONTENT_EXTENSIONS.has(path.extname(resolved))) {
+  if (resolved === null || (!isModule && CONTENT_EXTENSIONS.has(path.extname(resolved)))) {
     return null;
   }
 
