@@ -16,7 +16,7 @@
 改完直接 `git commit && git push`，Actions 会自动重建并部署（约 20-30 分钟）。想先本地看效果：
 
 ```bash
-pnpm install          # 只需一次，会顺带构建 29 个 packages
+pnpm install          # 只需一次，会顺带构建所有 packages
 pnpm start:website    # 本地开发服务器，热更新
 ```
 
@@ -64,7 +64,10 @@ pnpm docusaurus docs:version 3.11.0
 3. 把 token 加到你的 fork：`Settings → Secrets and variables → Actions → New repository secret`，名字必须是 **`CROWDIN_PERSONAL_TOKEN`**；
 4. 下次 push（或在 Actions 页面手动 `Run workflow`）就会自动下载翻译再构建。
 
-配套效果：翻译下载步骤在没配 token 时会自动跳过，所以现在不配也不会让部署失败。
+配套效果：
+
+- 没配 token 时这一步自动跳过，部署照常成功；
+- token 配错或 Crowdin 临时抽风时，这一步只会打一条 warning，仍然用英文兜底完成部署，不会把整条流水线卡死。
 
 ## Cloudflare 资源
 

@@ -68,7 +68,8 @@ jobs:
         working-directory: website
         run: |
           pnpm docusaurus write-translations
-          pnpm --dir .. crowdin:download:website
+          pnpm --dir .. crowdin:download:website || \
+            echo '::warning::Crowdin download failed; building the non-English locales from the English sources'
 
       - name: Build website
         run: pnpm build:website
