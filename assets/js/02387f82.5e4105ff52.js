@@ -1,0 +1,1 @@
+"use strict";(globalThis.rspackChunkwebsite||=[]).push([[55614],{54255(t){t.exports=JSON.parse('{"categoryGeneratedIndex":{"title":"Getting Started","slug":"/category/getting-started","permalink":"/category/getting-started","sidebar":"docs","navigation":{"next":{"title":"Installation","permalink":"/installation"}}}}')}}]);
